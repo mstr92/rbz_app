@@ -1,0 +1,10 @@
+ion-content {
+  background-color: red;
+
+}
+ion-content[padding]{
+ --padding-top: var(--ion-padding, 0px);
+  --padding-start: var(--ion-padding, 0px);
+  --padding-end: var(--ion-padding, 0px);
+}
+

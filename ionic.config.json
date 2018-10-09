@@ -1,0 +1,7 @@
+{
+  "name": "rbz_app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
