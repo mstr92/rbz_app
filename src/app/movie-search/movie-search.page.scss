@@ -1,10 +1,38 @@
 ion-content {
-  background-color: red;
-
+  background-color: var(--ion-movie-search-background-color);
+}
+ion-toolbar {
+  background-color: var(--ion-movie-search-background-color);
+  --background: var(--ion-movie-search-background-color);
 }
 ion-content[padding]{
  --padding-top: var(--ion-padding, 0px);
   --padding-start: var(--ion-padding, 0px);
   --padding-end: var(--ion-padding, 0px);
+}
+ion-searchbar {
+  padding: 2px 2px 2px 2px !important;
+}
+ion-button {
+  width: 50%;
+}
+ion-toggle {
+  --background-checked: var(--ion-color-negative);
+  --background: var(--ion-color-positive);
+  --handle-background: var(--ion-color-positive);
+  --handle-background-checked: var(--ion-color-negative);
+  bottom: 0.5em;
+}
+ion-row {
+  border-bottom: 2px solid black;
+  height: 2em;
+}
+ion-col {
+  text-align: center;
+  color: lightgray;
+}
+.activated {
+  font-weight: bold;
+  color: black;
 }
 

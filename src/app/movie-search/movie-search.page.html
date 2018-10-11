@@ -1,3 +1,24 @@
 <ion-content padding>
-  <ion-searchbar animated class="searchbar" color="light"></ion-searchbar>
+    <ion-searchbar #searchbar value="{{search_query}}" animated class="searchbar" color="light"
+                   autofocus ></ion-searchbar>
+
+    <ion-row >
+        <ion-col [style.color]="isToggled ? 'lightgrey' : 'green'" #positive size="4">
+            POSITIVE
+        </ion-col>
+        <ion-col size="3">
+            <ion-toggle [(ngModel)]="isToggled" (ionChange)="notify()"></ion-toggle>
+        </ion-col>
+        <ion-col [style.color]="isToggled ? 'red' : 'lightgrey'" size="4">
+            NEGATIVE
+        </ion-col>
+    </ion-row>
+
+
 </ion-content>
+<ion-footer>
+    <ion-toolbar position="bottom">
+        <ion-button slot="start" expand="full" (click)="closeModal()">Cancel</ion-button>
+        <ion-button slot="end" expand="full">Add</ion-button>
+    </ion-toolbar>
+</ion-footer>

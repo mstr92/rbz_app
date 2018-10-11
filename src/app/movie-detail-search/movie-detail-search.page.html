@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-searchbar animated class="searchbar" color="light" (click)="moveToFirst()"></ion-searchbar>
+    <ion-searchbar #movieSeachBar animated="false" class="searchbar" color="light"  (click)="openDetailSearch()"></ion-searchbar>
 
     <ion-card>
         <ion-card-header>
