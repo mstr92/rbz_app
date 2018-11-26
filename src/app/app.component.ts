@@ -18,14 +18,9 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
-    },
-    {
-      title: 'Movie Query',
-      url: '/movie-query',
-      icon: 'list'
+      title: 'My Favourites',
+      url: '/favourites',
+      icon: 'star'
     }
   ];
 

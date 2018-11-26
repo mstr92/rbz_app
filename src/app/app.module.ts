@@ -14,6 +14,8 @@ import {MovieQueryPageModule} from './movie-query/movie-query.module';
 import {NetworkServiceService} from '../service/network-service.service';
 import {Network} from '@ionic-native/network/ngx';
 import {MovieSearchPageModule} from './movie-search/movie-search.module';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import {FavouritesService} from '../service/favourites.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,8 +31,10 @@ import {MovieSearchPageModule} from './movie-search/movie-search.module';
     StatusBar,
     SplashScreen,
     NetworkServiceService,
+    FavouritesService,
     Keyboard,
     Network,
+    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
