@@ -1,21 +1,13 @@
-ion-content {
-  background-color: var(--ion-movie-search-background-color);
-}
 ion-toolbar {
-  background-color: var(--ion-movie-search-background-color);
-  --background: var(--ion-movie-search-background-color);
+  background-color: var(  --ion-toolbar-background-color);
+  --background: var(--ion-toolbar-background-color);
 }
-ion-content[padding]{
- --padding-top: var(--ion-padding, 0px);
-  --padding-start: var(--ion-padding, 0px);
-  --padding-end: var(--ion-padding, 0px);
+
+.bottom-toolbar{
+  background-color: var(--ion-background-color);
+  --background: var(--ion-background-color);
 }
-ion-searchbar {
-  padding: 2px 2px 2px 2px !important;
-}
-ion-button {
-  width: 50%;
-}
+
 ion-toggle {
   --background-checked: var(--ion-color-negative);
   --background: var(--ion-color-positive);
@@ -24,15 +16,85 @@ ion-toggle {
   bottom: 0.5em;
 }
 ion-row {
-  border-bottom: 2px solid black;
   height: 2em;
 }
 ion-col {
   text-align: center;
   color: lightgray;
-}
-.activated {
   font-weight: bold;
-  color: black;
+}
+
+ion-card-header {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  background-color: var(--ion-color-card-header-bg);
+}
+ion-card-title {
+  font-size: 1.2em;
+  text-shadow: -1px 1px 0px black;
+  color: var(--ion-color-primary-contrast)
+}
+ion-card-content {
+  padding: 0;
+}
+ion-card {
+  border-radius: 0;
+  margin: 0;
+}
+.movie-checkbox {
+  display: inline-block;
+  border-radius: 10px;
+  --background: rgba(0,0,0,0);
+  --checkmark-color: black;
+  --border-color-checked: black;
+  --size: 2.5em;
+  background-size: cover;
+}
+.movie-positive{
+  --background-checked: rgba(0,128,10,0.6);
+}
+.movie-negative {
+  --background-checked: rgba(245,61,61,0.6);
+}
+ion-checkbox {
+  margin-right: 20px;
+}
+
+ion-button {
+  --background: var(--ion-toolbar-background-color-full);
+  margin-left: 0.1em;
+  margin-right: 0.1em;
+  width: 50%;
+  --border-radius: 0;
+}
+
+.positive {
+  --background-checked: var(--ion-color-success);
+  --border-color-checked: var(--ion-color-success);
+}
+.negative {
+  --background-checked: var(--ion-color-danger);
+  --border-color-checked: var(--ion-color-danger);
+}
+
+.toggle-positive {
+  color: var(--ion-color-success);
+  visibility: visible;
+}
+.toggle-negative {
+  color: var(--ion-color-danger);
+  visibility: visible;
+}
+.toggle-neutral{
+  color: var(--ion-color-medium);
+  visibility: visible;
+}
+.movie-header {
+  border-radius: 10px 10px 0px 0px;
+}
+.bottom-toolbar {
+  margin:0;
+  padding:0;
+  --background: var(--ion-background-color);
 }
 

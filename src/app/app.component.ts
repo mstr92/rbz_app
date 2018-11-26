@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Network } from '@ionic-native/network/ngx';
+import { NetworkServiceService} from '../service/network-service.service';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +23,8 @@ export class AppComponent {
       icon: 'list'
     },
     {
-      title: 'Movie Search',
-      url: '/MovieDetailSearch',
+      title: 'Movie Query',
+      url: '/movie-query',
       icon: 'list'
     }
   ];
@@ -30,13 +32,28 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    public events: Events,
+    public network: Network,
+    public networkService: NetworkServiceService
   ) {
-    this.initializeApp();
+      this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
+        this.networkService.initializeNetworkEvents();
+
+        // // Offline event
+        // this.events.subscribe('network:offline', () => {
+        //     alert('network:offline ==> ' + this.network.type);
+        // });
+        //
+        // // Online event
+        // this.events.subscribe('network:online', () => {
+        //     alert('network:online ==> ' + this.network.type);
+        // });
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });

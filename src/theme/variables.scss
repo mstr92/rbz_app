@@ -28,7 +28,7 @@
   --ion-color-tertiary-tint: #f5b255;
 
   /** success **/
-  --ion-color-success: #10dc60;
+  --ion-color-success: green;
   --ion-color-success-rgb: 16,220,96;
   --ion-color-success-contrast: #fff;
   --ion-color-success-contrast-rgb: 255,255,255;
@@ -84,6 +84,7 @@
   --ion-background-color: #e7e9f0;
 
   --ion-toolbar-background-color: rgba(46,64,87,0.8);
+  --ion-toolbar-background-color-full: rgba(46,64,87,1);
   --ion-toolbar-text-color: var(--ion-color-primary-contrast);
   --ion-movie-search-background-color: #b2b4b7;
 }

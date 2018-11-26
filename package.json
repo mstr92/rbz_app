@@ -1,8 +1,8 @@
 {
   "name": "rbz_app",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Herbert Fuchs, BSc",
+  "homepage": "",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,12 +21,29 @@
     "@angular/platform-browser-dynamic": "~6.1.1",
     "@angular/router": "~6.1.1",
     "@ionic-native/core": "5.0.0-beta.15",
+    "@ionic-native/file": "^5.0.0-beta.21",
+    "@ionic-native/keyboard": "^5.0.0-beta.21",
+    "@ionic-native/network": "^5.0.0-beta.21",
     "@ionic-native/splash-screen": "5.0.0-beta.15",
     "@ionic-native/status-bar": "5.0.0-beta.15",
     "@ionic/angular": "4.0.0-beta.7",
+    "cordova-android": "7.0.0",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-file": "^6.0.1",
+    "cordova-plugin-ionic-keyboard": "^2.1.3",
+    "cordova-plugin-ionic-webview": "^2.2.5",
+    "cordova-plugin-network-information": "^2.0.1",
+    "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-plugin-whitelist": "^1.3.3",
     "core-js": "^2.5.3",
+    "fs": "0.0.1-security",
     "ionic2-auto-complete": "^1.6.2-alpha",
+    "mysql-ssh": "^1.0.6",
+    "mysql2": "^1.6.4",
     "rxjs": "6.2.2",
+    "rxjs-compat": "^6.3.3",
+    "ssh2": "^0.6.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -57,5 +74,22 @@
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-file": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      }
+    },
+    "platforms": [
+      "android"
+    ]
+  }
 }

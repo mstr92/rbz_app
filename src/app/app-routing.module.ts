@@ -15,11 +15,10 @@ const routes: Routes = [
     path: 'list',
     loadChildren: './list/list.module#ListPageModule'
   },
-  {
-    path: 'MovieDetailSearch',
-    loadChildren: './movie-detail-search/movie-detail-search.module#MovieDetailSearchPageModule'
-  },
-  { path: 'movie-search', loadChildren: './movie-search/movie-search.module#MovieSearchPageModule' }
+  { path: 'movie-search', loadChildren: './movie-search/movie-search.module#MovieSearchPageModule' },
+  { path: 'movie-result', loadChildren: './movie-result/movie-result.module#MovieResultPageModule' },
+  { path: 'movie-query', loadChildren: './movie-query/movie-query.module#MovieQueryPageModule' }
+
 ];
 
 @NgModule({
