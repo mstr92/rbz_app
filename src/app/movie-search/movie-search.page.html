@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content padding>
     <ion-searchbar #searchbar animated class="searchbar" color="light"
-                   autofocus [(ngModel)]="searchTerm" (keyup)="setFilteredData()"></ion-searchbar>
+                   autofocus [(ngModel)]="searchTerm" (keyup.enter)="setFilteredData()"></ion-searchbar>
     <ion-row>
         <ion-col [class]="!isToggled ? 'toggle-positive' : 'toggle-neutral'" #positive size="4">
             POSITIVE
@@ -19,49 +19,58 @@
             NEGATIVE
         </ion-col>
     </ion-row>
-
-    <ion-card *ngIf="search_data.movie.data.length > 0">
+    <ion-card *ngIf="searchTerm.length == 0" class="chat-item">
+        <ion-card-content>
+            <ion-item>
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <ion-label class="information"> Please enter search query!</ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="search_movies.length > 0" class="chat-item">
         <ion-card-header class="movie-header">
             <ion-card-title>Movies</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of search_data.movie.data" (click)="selectEntity(entry.id, 'movie')">
-                    <ion-checkbox value="entry.selected" class="movie-checkbox movie-positive" [style.backgroundImage]="'url(assets/image/' + entry.img + ')'"></ion-checkbox>
+                <ion-item lines="inset" *ngFor="let entry of search_movies" (click)="addToMovieList(entry[0].id)">
+                    <ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="true" [style.backgroundImage]="'url('+ entry[0].image +')'"></ion-checkbox>
+                    <ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="false" [style.backgroundImage]="'url('+ entry[0].image +')'"></ion-checkbox>
                     <ion-label>
-                        <h2>{{entry.name}}</h2>
-                        <h3>{{entry.year}}</h3>
+                        <h2>{{entry[0].title}}</h2>
+                        <h3>{{entry[0].year}}</h3>
                     </ion-label>
                 </ion-item>
             </ion-list>
         </ion-card-content>
     </ion-card>
-    <ion-card *ngIf="search_data.actor.length > 0">
+    <ion-card *ngIf="search_actors.length > 0">
         <ion-card-header>
-            <ion-card-title>Movies</ion-card-title>
+            <ion-card-title>Actors</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of search_data.actor.data" (click)="selectEntity(entry.id, 'actor')">
-                    <ion-checkbox value="entry.selected" class="movie-checkbox" [style.backgroundImage]="'url(assets/image/' + entry.img + ')'"></ion-checkbox>
+                <ion-item lines="inset" *ngFor="let entry of search_actors" (click)="addToActorList(entry[0].id)">
+                    <ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>
+                    <ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>
                     <ion-label>
-                        <h2>{{entry.name}}</h2>
-                        <h3>{{entry.year}}</h3>
+                       {{entry[0].firstname}} {{entry[0].lastname}}
                     </ion-label>
                 </ion-item>
             </ion-list>
         </ion-card-content>
     </ion-card>
 
-    <ion-card *ngIf="filtered_genres.length > 0">
+    <ion-card *ngIf="search_genres.length > 0">
         <ion-card-header>
             <ion-card-title>Genre</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of filtered_genres" (click)="selectEntity(entry.id, 'genre')">
-                    <ion-checkbox value="entry.selected"></ion-checkbox>
-                    <ion-label>{{entry.name}}</ion-label>
+                <ion-item lines="inset" *ngFor="let genre of search_genres" (click)="addToGenreList(genre[0].id)">
+                    <ion-checkbox *ngIf="genre[1]" [class]="genre[0].alignment" checked="true"></ion-checkbox>
+                    <ion-checkbox *ngIf="!genre[1]" [class]="genre[0].alignment" checked="false"></ion-checkbox>
+                    <ion-label>{{genre[0].name}}</ion-label>
                 </ion-item>
             </ion-list>
         </ion-card-content>
@@ -77,7 +86,7 @@
                     {{searchTerm}}
                 </ion-item>
                 <ion-item *ngFor="let keyword of keywords">
-                    <ion-checkbox  [class]="keyword.alignment" checked="true" (click)="deleteKeywordFromList(keyword)"></ion-checkbox>
+                    <ion-checkbox [class]="keyword.alignment" checked="true" (click)="deleteKeywordFromList(keyword)"></ion-checkbox>
                     {{keyword.name}}
                 </ion-item>
             </ion-list>

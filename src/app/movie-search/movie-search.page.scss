@@ -1,11 +1,14 @@
+ion-content {
+  background: linear-gradient(-120deg, var(--ion-background-color-light), var(--ion-background-color-dark));
+}
 ion-toolbar {
-  background-color: var(  --ion-toolbar-background-color);
-  --background: var(--ion-toolbar-background-color);
+  background-color: var(--ion-color-dark);
+  --background: var(--ion-color-dark);
 }
 
 .bottom-toolbar{
-  background-color: var(--ion-background-color);
-  --background: var(--ion-background-color);
+  background-color: var(--ion-color-dark);
+  --background: var(--ion-color-dark);
 }
 
 ion-toggle {
@@ -27,7 +30,7 @@ ion-col {
 ion-card-header {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  background-color: var(--ion-color-card-header-bg);
+  background-color: var(--ion-color-primary);
 }
 ion-card-title {
   font-size: 1.2em;
@@ -36,6 +39,11 @@ ion-card-title {
 }
 ion-card-content {
   padding: 0;
+  background-color: var(--ion-color-primary-contrast)
+}
+.information {
+  font-weight: bold;
+  padding-left: 1em;
 }
 ion-card {
   border-radius: 0;
@@ -51,42 +59,42 @@ ion-card {
   background-size: cover;
 }
 .movie-positive{
-  --background-checked: rgba(0,128,10,0.6);
+  --background-checked: var(--ion-color-positive-low-opacity)
 }
 .movie-negative {
-  --background-checked: rgba(245,61,61,0.6);
+  --background-checked: var(--ion-color-negative-low-opacity)
 }
 ion-checkbox {
   margin-right: 20px;
 }
 
 ion-button {
-  --background: var(--ion-toolbar-background-color-full);
+  --background: var(--ion-color-dark);
   margin-left: 0.1em;
   margin-right: 0.1em;
   width: 50%;
   --border-radius: 0;
 }
-
 .positive {
-  --background-checked: var(--ion-color-success);
-  --border-color-checked: var(--ion-color-success);
+  --background-checked: var(--ion-color-positive);
+  --border-color-checked: var(--ion-color-positive);
+  visibility: inherit;
 }
 .negative {
-  --background-checked: var(--ion-color-danger);
-  --border-color-checked: var(--ion-color-danger);
+  --background-checked: var(--ion-color-negative);
+  --border-color-checked: var(--ion-color-negative);
+  visibility: inherit;
 }
-
 .toggle-positive {
-  color: var(--ion-color-success);
+  color: var(--ion-color-positive);
   visibility: visible;
 }
 .toggle-negative {
-  color: var(--ion-color-danger);
+  color: var(--ion-color-negative);
   visibility: visible;
 }
 .toggle-neutral{
-  color: var(--ion-color-medium);
+  color: var(--ion-color-light);
   visibility: visible;
 }
 .movie-header {
@@ -95,6 +103,5 @@ ion-button {
 .bottom-toolbar {
   margin:0;
   padding:0;
-  --background: var(--ion-background-color);
+  --background: var(--ion-color-dark);
 }
-

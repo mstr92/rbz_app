@@ -4,7 +4,7 @@
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
-  --ion-color-primary: #488aff;
+  //--ion-color-primary: #488aff;
   --ion-color-primary-rgb: 72,138,255;
   --ion-color-primary-contrast: #fff;
   --ion-color-primary-contrast-rgb: 255,255,255;
@@ -52,7 +52,7 @@
   --ion-color-danger-tint: #f65050;
 
   /** light **/
-  --ion-color-light: #ffffff;
+  //--ion-color-light: #ffffff;
   --ion-color-light-rgb: 244,244,244;
   --ion-color-light-contrast: #000;
   --ion-color-light-contrast-rgb: 0,0,0;
@@ -68,23 +68,29 @@
   --ion-color-medium-tint: #a2a4ab;
   
   /** dark **/
-  --ion-color-dark: #222;
+  //--ion-color-dark: #1e1e1e;
   --ion-color-dark-rgb: 34,34,34;
   --ion-color-dark-contrast: #fff;
   --ion-color-dark-contrast-rgb: 255,255,255;
   --ion-color-dark-shade: #1e1e1e;
   --ion-color-dark-tint: #383838;
 
-  /** card styling**/
+  /** Custom colors **/
   --ion-color-negative: red;
   --ion-color-positive: green;
-  --ion-color-card-header-bg: rgba(46,64,87,0.8);
-  --ion-color-card-content-bg: var(--ion-color-primary-contrast);
+  --ion-color-negative-low-opacity: rgba(255,0,0,0.6);
+  --ion-color-positive-low-opacity: rgba(0,255,0,0.6);
+  --ion-color-dark: #1e1e1e; //toolbar
+  --ion-color-primary: #2E4057; //blue color rbz.io
+  --ion-background-color-light: #99989b;
+  --ion-background-color-dark: #6c6c6c;
+  --ion-color-light: #e6e5e8;
 
-  --ion-background-color: #e7e9f0;
 
-  --ion-toolbar-background-color: rgba(46,64,87,0.8);
-  --ion-toolbar-background-color-full: rgba(46,64,87,1);
+  /** card styling**/
+  --ion-toolbar-background-color: var(--ion-color-dark);
+  --ion-toolbar-background-color-full: var(--ion-color-dark);
+
   --ion-toolbar-text-color: var(--ion-color-primary-contrast);
-  --ion-movie-search-background-color: #b2b4b7;
+  --ion-movie-search-background-color: var(--ion-color-primary-contrast);
 }

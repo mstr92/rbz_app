@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -16,13 +17,15 @@ import {Network} from '@ionic-native/network/ngx';
 import {MovieSearchPageModule} from './movie-search/movie-search.module';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import {FavouritesService} from '../service/favourites.service';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+      BrowserAnimationsModule,
+      IonicModule.forRoot(),
     AppRoutingModule,
     MovieQueryPageModule,
     MovieSearchPageModule
@@ -34,6 +37,7 @@ import {FavouritesService} from '../service/favourites.service';
     FavouritesService,
     Keyboard,
     Network,
+    HTTP,
     NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
