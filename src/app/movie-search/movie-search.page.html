@@ -23,7 +23,7 @@
         <ion-card-content>
             <ion-item>
                 <ion-icon name="information-circle-outline"></ion-icon>
-                <ion-label class="information"> Please enter search query!</ion-label>
+                <ion-label class="information"> Please enter a search query!</ion-label>
             </ion-item>
         </ion-card-content>
     </ion-card>
@@ -34,8 +34,14 @@
         <ion-card-content>
             <ion-list>
                 <ion-item lines="inset" *ngFor="let entry of search_movies" (click)="addToMovieList(entry[0].id)">
-                    <ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="true" [style.backgroundImage]="'url('+ entry[0].image +')'"></ion-checkbox>
-                    <ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="false" [style.backgroundImage]="'url('+ entry[0].image +')'"></ion-checkbox>
+                    <ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"
+                                  checked="true"
+                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
+                    </ion-checkbox>
+                    <ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"
+                                  checked="false"
+                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
+                    </ion-checkbox>
                     <ion-label>
                         <h2>{{entry[0].title}}</h2>
                         <h3>{{entry[0].year}}</h3>
@@ -75,13 +81,13 @@
             </ion-list>
         </ion-card-content>
     </ion-card>
-    <ion-card *ngIf="searchTerm.length > 0">
+    <ion-card *ngIf="searchTerm.length > 0 || keywords.length > 0">
         <ion-card-header>
             <ion-card-title>Keyword</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item #keywordItem *ngIf="!keyWordNotInList()">
+                <ion-item #keywordItem *ngIf="keyWordNotInList() && searchTerm.length > 0">
                     <ion-checkbox  #keywordCheckbox (click)="addToKeywordList(searchTerm)" ></ion-checkbox>
                     {{searchTerm}}
                 </ion-item>

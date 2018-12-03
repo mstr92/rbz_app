@@ -1,0 +1,313 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Movies
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-button expand="full" color="light" style="text-transform: none;" class="search-button"(click)="openDetailSearch()">
+    <ion-icon name="search"></ion-icon>
+    Search...
+  </ion-button>
+  <!------------------------------------------------------>
+  <!-------------------- Movies -------------------------->
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Movies
+        <ion-icon *ngIf="search_data.data.movies.length > 0"
+                  [name]="icon_maxmin_visible.movie ? 'ios-arrow-up' : 'ios-arrow-down'"
+                  class="card-maxmin-entries" (click)="minmaxCardContent('movie')"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="search_data.data.movies.length == 0" class="information-item">
+      <ion-item>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label class="information"> No Movie selected!</ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.movies.length > 0"
+                      [class]="icon_maxmin_visible.movie ? 'content-min-view' : 'content-max-view'">
+      <ion-chip *ngFor="let entry of search_data.data.movies">
+        <div class="chip-{{entry.alignment}}"></div>
+        <ion-label>{{entry.title}}</ion-label>
+        <ion-chip-button (click)="deleteEntry(entry, 'movies')">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip-button>
+      </ion-chip>
+    </ion-card-content>
+    <ion-card-content  *ngIf="search_data.data.movies.length > 0"
+                      [class]="icon_maxmin_visible.movie ? 'content-max-view' : 'content-min-view'">
+      <ion-list #slidingList>
+        <ion-item-sliding *ngFor="let entry of search_data.data.movies">
+          <ion-item lines="inset">
+            <ion-avatar slot="start">
+              <div class="entity-image {{entry.alignment}} movie"></div>
+              <img src="{{entry.image}}">
+            </ion-avatar>
+            <ion-label>{{entry.title}}</ion-label>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="secondary" (click)="changeAlignment(entry, 'movies')">
+              <ion-icon name="md-swap"></ion-icon>
+              {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+            </button>
+            <button ion-button color="danger" (click)="deleteEntry(entry, 'movies')">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <!------------------------------------------------------>
+  <!-------------------- Actor  -------------------------->
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Actors
+        <ion-icon *ngIf="search_data.data.actors.length > 0"
+                  [name]="icon_maxmin_visible.actor ? 'ios-arrow-up' : 'ios-arrow-down'"
+                  class="card-maxmin-entries" (click)="minmaxCardContent('actor')"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="search_data.data.actors.length == 0" class="information-item">
+      <ion-item>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label class="information"> No Actor selected!</ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.actors.length > 0"
+                      [class]="icon_maxmin_visible.actor ? 'content-min-view' : 'content-max-view'">
+      <ion-chip *ngFor="let entry of search_data.data.actors">
+        <div class="chip-{{entry.alignment}}"></div>
+        <ion-label>{{entry.firstname}} {{entry.lastname}}</ion-label>
+        <ion-chip-button (click)="deleteEntry(entry, 'actors')">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip-button>
+      </ion-chip>
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.actors.length > 0"
+                      [class]="icon_maxmin_visible.actor ? 'content-max-view' : 'content-min-view'">
+      <ion-list #slidingList>
+        <ion-item-sliding *ngFor="let entry of search_data.data.actors">
+          <ion-item lines="inset">
+            <ion-avatar slot="start">
+              <div class="entity-image {{entry.alignment}} alphabet"></div>
+              <img src="assets/image/alphabet/{{entry.lastname.charAt(0)}}.ico">
+            </ion-avatar>
+            <ion-label>{{entry.firstname}} {{entry.lastname}}</ion-label>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="secondary" (click)="changeAlignment(entry, 'actors')">
+              <ion-icon name="md-swap"></ion-icon>
+              {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+            </button>
+            <button ion-button color="danger" (click)="deleteEntry(entry, 'actors')">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <!------------------------------------------------------>
+  <!-------------------- Genre  -------------------------->
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Genres
+        <ion-icon *ngIf="search_data.data.genres.length > 0"
+                  [name]="icon_maxmin_visible.genre ? 'ios-arrow-up' : 'ios-arrow-down'"
+                  class="card-maxmin-entries" (click)="minmaxCardContent('genre')"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="search_data.data.genres.length == 0" class="information-item">
+      <ion-item>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label class="information"> No Genre selected!</ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.genres.length > 0"
+                      [class]="icon_maxmin_visible.genre ? 'content-min-view' : 'content-max-view'">
+      <ion-chip *ngFor="let entry of search_data.data.genres">
+        <div class="chip-{{entry.alignment}}"></div>
+        <ion-label>{{entry.name}}</ion-label>
+        <ion-chip-button (click)="deleteEntry(entry, 'search_genres')">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip-button>
+      </ion-chip>
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.genres.length > 0"
+                      [class]="icon_maxmin_visible.genre ? 'content-max-view' : 'content-min-view'">
+      <ion-list #slidingList>
+        <ion-item-sliding *ngFor="let entry of search_data.data.genres">
+          <ion-item lines="inset">
+            <ion-avatar slot="start">
+              <div class="entity-image {{entry.alignment}} alphabet"></div>
+              <img src="assets/image/alphabet/{{entry.name.charAt(0).toUpperCase()}}.ico">
+            </ion-avatar>
+            <ion-label>{{entry.name}}</ion-label>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="secondary" (click)="changeAlignment(entry, 'search_genres')">
+              <ion-icon name="md-swap"></ion-icon>
+              {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+            </button>
+            <button ion-button color="danger" (click)="deleteEntry(entry, 'search_genres')">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <!------------------------------------------------------>
+  <!-------------------- Keyword  ------------------------>
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Keywords
+        <ion-icon *ngIf="search_data.data.keywords.length > 0"
+                  [name]="icon_maxmin_visible.keyword ? 'ios-arrow-up' : 'ios-arrow-down'"
+                  class="card-maxmin-entries" (click)="minmaxCardContent('keyword')"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+          <div *ngIf="search_data.data.keywords.length == 0" class="information-item">
+      <ion-item>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label class="information"> No Keyword selected!</ion-label>
+      </ion-item>
+          </div>
+    <div *ngIf="search_data.data.keywords.length > 0"
+                      [class]="icon_maxmin_visible.keyword ? 'content-min-view' : 'content-max-view'">
+      <ion-chip *ngFor="let entry of search_data.data.keywords">
+        <div class="chip-{{entry.alignment}}"></div>
+        <ion-label>{{entry.name}}</ion-label>
+        <ion-chip-button (click)="deleteEntry(entry, 'keywords')">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip-button>
+      </ion-chip>
+    </div>
+    <div *ngIf="search_data.data.keywords.length > 0"
+                      [class]="icon_maxmin_visible.keyword ? 'content-max-view' : 'content-min-view'">
+      <ion-list #slidingList>
+        <ion-item-sliding *ngFor="let entry of search_data.data.keywords">
+          <ion-item lines="inset">
+            <ion-avatar slot="start">
+              <div class="entity-image {{entry.alignment}} alphabet"></div>
+              <img src="assets/image/alphabet/{{entry.name.charAt(0).toUpperCase()}}.ico">
+            </ion-avatar>
+            <ion-label>{{entry.name}}</ion-label>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="secondary" (click)="changeAlignment(entry,'keywords')">
+              <ion-icon name="md-swap"></ion-icon>
+              {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+            </button>
+            <button ion-button color="danger" (click)="deleteEntry(entry, 'keywords')">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+    </ion-card-content>
+  </ion-card>
+  <!------------------------------------------------------>
+  <!-------------------- YEAR ---------------------------->
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Year
+        <!--<ion-icon [name]="icon_maxmin_visible.year ? 'ios-arrow-up' : 'ios-arrow-down'"-->
+        <!--class="card-maxmin-entries" (click)="minmaxCardContent('year')"></ion-icon>-->
+      </ion-card-title>
+    </ion-card-header>
+    <!--<ion-card-content [class]="icon_maxmin_visible.year ? 'content-min-view' : 'content-max-view'">-->
+    <!--</ion-card-content>-->
+    <!--<ion-card-content [class]="icon_maxmin_visible.year ? 'content-max-view' :  'content-min-view'">-->
+    <ion-card-content>
+      <ion-item-sliding #movie_year_pos>
+        <ion-item class="positive-entity-year" lines="full">
+          <ion-grid class="year-grid">
+            <ion-row class="year-row">
+              <ion-col size="10">
+                {{year_pos.lower}}
+              </ion-col>
+              <ion-col>
+                {{year_pos.upper}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="year-row-range">
+              <ion-range color="success" min="1950" max="2030" dualKnobs="true" [(ngModel)]="year_pos"
+                         [disabled]=!movie_year_enabled.positive>
+              </ion-range>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-item-options>
+          <button class="slide-button-range" ion-button color="secondary"
+                  (click)="negateValue('positive', movie_year_pos)">
+            <ion-icon name="md-swap"></ion-icon>
+            {{movie_year_enabled.positive ? 'Deactivate' : 'Activate'}}
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+      <ion-item-sliding #movie_year_neg>
+        <ion-item class="negative-entity-year">
+          <ion-grid class="year-grid">
+            <ion-row class="year-row">
+              <ion-col size="10">
+                {{year_neg.lower}}
+              </ion-col>
+              <ion-col>
+                {{year_neg.upper}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="year-row-range">
+              <ion-range color="danger" min="1950" max="2030" dualKnobs="true" [(ngModel)]="year_neg"
+                         [disabled]=!movie_year_enabled.negative>
+              </ion-range>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-item-options>
+          <button class="slide-button-range" ion-button color="secondary"
+                  (click)="negateValue('negative', movie_year_neg)">
+            <ion-icon name="md-swap"></ion-icon>
+            {{movie_year_enabled.negative ? 'Deactivate' : 'Activate'}}
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-card-content>
+  </ion-card>
+  <!------------------------------------------------------>
+  <!-------------------- Number of Results ---------------------------->
+  <!------------------------------------------------------>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Number of Results
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label slot="end" class="label-number-results">{{number_results}}</ion-label>
+        <ion-range min="1" max="25" [(ngModel)]="number_results" class="number-of-results"></ion-range>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-button expand="full" class="button-recommendation" (click)="presentLoadingWithOptions()">Start Recommendation!</ion-button>
+
+

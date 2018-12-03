@@ -1,0 +1,96 @@
+ion-card-title {
+  font-size: 1.5em;
+}
+ion-card-subtitle {
+  font-size: 1em;
+  border-bottom: 1px solid gray;
+  padding-bottom: 0.5em;
+  margin-bottom: 0;
+}
+ion-card > ion-img {
+  height: 8em;
+  object-fit: cover;
+  position: relative;
+}
+ion-card-header {
+  padding-bottom: 0;
+}
+ion-card-content {
+  padding-top:0em;
+  padding-bottom:0.5em;
+}
+.favourite-icon {
+  font-size: 2.8em;
+  color: var(--ion-color-danger);
+  position:absolute;
+  top: 0.2em;
+  right: 0.2em;
+}
+.button-img {
+  height: 2em;
+  width: 5em;
+  //border: 1px solid lightgray;
+ // background-color:lightgray;
+ // object-fit: fill;
+ // border-radius: 5px;
+}
+ion-button {
+  --background: var(--ion-background-color-light);
+}
+ion-grid {
+  padding: 0;
+}
+ion-fab {
+  top: 0em;
+}
+
+ion-fab-list > ion-fab-button {
+  --background: var(--ion-color-primary);
+}
+ion-fab-button > ion-icon {
+  color: var(--ion-color-primary-contrast);
+}
+
+.fab-main-button{
+  --box-shadow: none;
+  --background: rgba(0,0,0,0);
+  font-size: 3em;
+}
+
+.fab-rating {
+  left: -0.6em;
+  top: -0.6em;
+
+}
+.icon-rating {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}
+.rating-yellow {
+  color: #ffca36 !important;
+  visibility: inherit;
+}
+.rating-light {
+  color: var(--ion-color-primary-contrast);
+  visibility: inherit;
+}
+.icon-rating-label {
+  position: absolute;
+  font-size: 1em;
+  color: var(--ion-color-primary);
+  margin: 2px 0 0 0 !important;
+  font-weight: bold;
+}
+.fab-rating-list {
+  margin-left: 3.8em;
+}
+.fab-rating-button {
+ width: 3em;
+ height: 2.8em
+}
+.favourite {
+  position: absolute;
+  color: var(--ion-color-danger) !important;
+  height: 1.4em !important;
+  width: 1.4em !important;
+}

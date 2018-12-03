@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      My Favourites
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-button (click)="favService.getMovie()">Test</ion-button>
+  <ion-button (click)="favService.initializeStorage()">Init</ion-button>
+</ion-content>

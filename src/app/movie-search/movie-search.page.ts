@@ -1,5 +1,5 @@
 import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {Checkbox, ModalController, NavController, NavParams} from '@ionic/angular';
+import {Checkbox, ModalController, NavController, NavParams, Platform} from '@ionic/angular';
 import {Searchbar, Item} from '@ionic/angular';
 import {PartialMovieSearchRequest, Movie, Actor, Year, Genre, Keyword} from '../../interfaces/movieInterface';
 import {Keyboard} from '@ionic-native/keyboard/ngx';
@@ -35,7 +35,14 @@ export class MovieSearchPage implements OnInit {
     constructor(navCtrl: NavController,
                 params: NavParams,
                 public modalCtrl: ModalController,
-                private keyboard: Keyboard, public http: Http) {
+                private keyboard: Keyboard,
+                public http: Http,
+                public platform: Platform
+                ) {
+        // Disable Hardware Back Button in Modal
+        this.platform.backButton.subscribe(() => {
+        });
+
         this.current_selected_search = params.get('data');
         this.selected_genres = this.current_selected_search.genres;
         this.selected_actors = this.current_selected_search.actors;
@@ -214,7 +221,7 @@ export class MovieSearchPage implements OnInit {
     }
 
     keyWordNotInList() {
-        return this.keywords.find(e => e.name === this.searchTerm);
+        return !this.keywords.find(e => e.name === this.searchTerm);
     }
 
     // TODO: also used in movie detail search page -> auslagern

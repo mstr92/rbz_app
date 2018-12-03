@@ -1,0 +1,85 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Recommendation
+        </ion-title>
+    </ion-toolbar>
+    <ion-fab vertical="top" horizontal="end" edge=true>
+        <ion-fab-button class="fab-main-button">
+            <ion-icon name="settings"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list>
+            <ion-fab-button onclick="changeRequest()">
+                <ion-icon name="md-swap"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button onclick="saveResult()">
+                <ion-icon name="save"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+</ion-header>
+<ion-content padding>
+    <ion-card *ngFor="let movie of movies.result">
+        <ion-img src={{movie.image}}></ion-img>
+        <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
+            <ion-fab-button>
+                <ion-icon name="star" [class]="movie.rating > 0 ? 'icon-rating rating-yellow' : 'icon-rating rating-light' "></ion-icon>
+                <ion-label *ngIf="movie.rating > 0" class="icon-rating-label">{{movie.rating}}</ion-label>
+            </ion-fab-button>
+            <ion-fab-list side="end" class="fab-rating-list">
+                <ion-fab-button  class="fab-rating-button" (click)="setRating(1, movie)">
+                    <ion-icon name="star" [id]="'rating1' + movie.id"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-button  class="fab-rating-button" (click)="setRating(2, movie)">
+                    <ion-icon name="star" [id]="'rating2' + movie.id"></ion-icon>
+                </ion-fab-button >
+                <ion-fab-button class="fab-rating-button" (click)="setRating(3, movie)">
+                    <ion-icon name="star" [id]="'rating3' + movie.id"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-button class="fab-rating-button" (click)="setRating(4, movie)">
+                    <ion-icon name="star" [id]="'rating4' + movie.id" ></ion-icon>
+                </ion-fab-button>
+                <ion-fab-button  class="fab-rating-button" (click)="setRating(5, movie)">
+                    <ion-icon name="star" [id]="'rating5' + movie.id"></ion-icon>
+                </ion-fab-button>
+            </ion-fab-list>
+        </ion-fab>
+        <!--<ion-fab vertical="top" horizontal="end" class="fab-favourite" >-->
+        <ion-icon *ngIf="disableCorrectFavourite(movie)" [name]="movie.favourite ? 'heart' : 'heart-empty'" class="favourite-icon" (click)="addToFavourite(movie)"></ion-icon>
+        <ion-card-header>
+            <ion-card-title>{{movie.title}}</ion-card-title>
+            <ion-card-subtitle>{{movie.year}}</ion-card-subtitle>
+            <!--<ion-card-subtitle>Brat Pitt, Liam Hemsworth, Max Mustermann</ion-card-subtitle>-->
+        </ion-card-header>
+        <ion-card-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-button expand="block" side="left" (click)="openImdb(movie)">
+                            <ion-img class="button-img" src="../../assets/image/logo/imdb_logo.png"></ion-img>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button expand="block" side="right" (click)="openAmazonVideo(movie)">
+                            <ion-img class="button-img" src="../../assets/image/logo/amazon_logo.png"></ion-img>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <!--<ion-img src="../../assets/image/logo/imdb_logo.png" (click)="openImdb(movie)"></ion-img>-->
+            <!--</ion-col>-->
+            <!--<ion-col>-->
+            <!--<ion-img src="../../assets/image/logo/amazon_logo.png" (click)="openAmazonVideo(movie)"></ion-img>-->
+            <!--</ion-col>-->
+            <!--&lt;!&ndash;<ion-col>&ndash;&gt;-->
+            <!--&lt;!&ndash;<ion-img src="../../assets/image/logo/werstreamtes_logo.png"></ion-img>&ndash;&gt;-->
+            <!--&lt;!&ndash;</ion-col>&ndash;&gt;-->
+            <!--</ion-row>-->
+            <!--</ion-grid>-->
+        </ion-card-content>
+    </ion-card>
+</ion-content>

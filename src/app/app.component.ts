@@ -21,6 +21,21 @@ export class AppComponent {
       title: 'My Favourites',
       url: '/favourites',
       icon: 'star'
+    },
+    {
+        title: 'History',
+        url: '/history',
+        icon: 'clock'
+    },
+    {
+        title: 'Help',
+        url: '/help',
+        icon: 'help-circle'
+    },
+    {
+        title: 'About',
+        url: '/about',
+        icon: 'information-circle'
     }
   ];
 
