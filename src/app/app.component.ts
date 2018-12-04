@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { NetworkServiceService} from '../service/network-service.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -20,7 +21,7 @@ export class AppComponent {
     {
       title: 'My Favourites',
       url: '/favourites',
-      icon: 'star'
+      icon: 'heart'
     },
     {
         title: 'History',
@@ -45,7 +46,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     public events: Events,
     public network: Network,
-    public networkService: NetworkServiceService
+    public networkService: NetworkServiceService,
   ) {
       this.initializeApp();
   }

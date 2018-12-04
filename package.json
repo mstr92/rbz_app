@@ -47,6 +47,7 @@
     "ionic2-auto-complete": "^1.6.2-alpha",
     "mysql-ssh": "^1.0.6",
     "mysql2": "^1.6.4",
+    "network-status-angular": "^1.0.4",
     "rxjs": "6.2.2",
     "rxjs-compat": "^6.3.3",
     "ssh2": "^0.6.1",

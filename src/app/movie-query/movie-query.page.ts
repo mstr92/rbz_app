@@ -49,7 +49,6 @@ export class MovieQueryPage implements OnInit {
         };
     }
 
-
     openDetailSearch() {
         const res = this.openSearchModal();
     }
@@ -73,6 +72,12 @@ export class MovieQueryPage implements OnInit {
             }
             this.search_data.data.genres = data.data.genres;
             this.search_data.data.movies = data.data.movies;
+            this.search_data.data.actors = data.data.actors;
+
+            this.search_data.data['genres'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
+            this.search_data.data['movies'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
+            this.search_data.data['keywords'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
+            this.search_data.data['actors'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
         }
     }
 
@@ -83,9 +88,8 @@ export class MovieQueryPage implements OnInit {
 
     async changeAlignment(entry, entity) {
         entry.alignment = entry.alignment === 'positive' ? 'negative' : 'positive';
+        this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
         await this.slidingList.closeSlidingItems();
-        // TODO: Sort funktioniert nicht, wenn neu gezeichnet sliding des ersten elements geht nicht mehr
-        // this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
     }
 
     async deleteEntry(entry, entity) {

@@ -2,7 +2,6 @@ import {Injectable, ViewChild} from '@angular/core';
 import {MovieResult, Movie, Genre, Actor} from '../interfaces/movieInterface';
 import {Http} from '@angular/http';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -11,7 +10,7 @@ export class ResultparserService {
         result: []
     };
 
-    constructor(public http: Http,) {
+    constructor(public http: Http) {
     }
 
     parseMovieResult(result) {
@@ -33,7 +32,7 @@ export class ResultparserService {
                 const year_extracted = year[i].split(/': /)[1];
                 const id_prefetch = id[i].split(/': /)[1];
                 const id_extracted = id_prefetch.substring(0, id_prefetch.length - 1);
-                //TODO: Check if in favourite
+
                 if(i == year.length - 1) {
                     search_string += "movie_id = '" + imdb_id_extracted + "'";
                 } else {

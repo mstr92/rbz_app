@@ -9,6 +9,25 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <ion-button (click)="favService.getMovie()">Test</ion-button>
-  <ion-button (click)="favService.initializeStorage()">Init</ion-button>
+  <!--<ion-button (click)="favService.clearMovieHistory()">Init</ion-button>-->
+  <ion-list #slidingList>
+    <ion-item-sliding *ngFor="let movie of fav_movies">
+      <ion-item lines="inset">
+        <ion-avatar slot="start">
+          <img src="assets/image/alphabet/{{movie.title.charAt(0).toUpperCase()}}.ico">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{movie.title}}</h2>
+          <h3>{{movie.year}}</h3>
+        </ion-label>
+
+      </ion-item>
+      <ion-item-options>
+        <button ion-button color="danger" (click)="deleteMovie(movie)">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

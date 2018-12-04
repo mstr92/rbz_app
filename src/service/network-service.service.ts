@@ -1,41 +1,42 @@
-import { Injectable } from '@angular/core';
-import { AlertController, Events } from '@ionic/angular';
-import { Network } from '@ionic-native/network/ngx';
-
-export enum ConnectionStatusEnum {
-    Online,
-    Offline
-}
+import {Injectable} from '@angular/core';
+import {AlertController, Events} from '@ionic/angular';
+import {NetworkStatusAngularService} from 'network-status-angular';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class NetworkServiceService {
 
-    previousStatus;
+    alert;
+    alertPresent = false;
 
-    constructor(public alertCtrl: AlertController,
-                public network: Network,
-                public eventCtrl: Events) {
-
-        console.log('Hello NetworkProvider Provider');
-
-        this.previousStatus = ConnectionStatusEnum.Online;
+    constructor(public alertController: AlertController,
+                public networkStatus: NetworkStatusAngularService) {
     }
-    public initializeNetworkEvents(): void {
-        // this.network.onDisconnect().subscribe(() => {
-        //     if (this.previousStatus === ConnectionStatusEnum.Online) {
-        //         console.log('online');
-        //        this.eventCtrl.publish('network:offline');
-        //     }
-        //     this.previousStatus = ConnectionStatusEnum.Offline;
-        // });
-        // this.network.onConnect().subscribe(() => {
-        //     if (this.previousStatus === ConnectionStatusEnum.Offline) {
-        //         console.log('offline');
-        //         this.eventCtrl.publish('network:online');
-        //     }
-        //     this.previousStatus = ConnectionStatusEnum.Online;
-        // });
+
+    public initializeNetworkEvents() {
+        console.log('start watching network connection...');
+        this.networkStatus.status.subscribe(status => {
+            if (!status) { // disconnected
+                this.presentAlertConfirm();
+            } else {
+                this.alert.dismiss();
+                this.alertPresent = false;
+            }
+        });
+    }
+
+    async presentAlertConfirm() {
+        if (!this.alertPresent) {
+            this.alertPresent = true;
+            this.alert = await this.alertController.create({
+                header: 'No Internet Connection!',
+                keyboardClose: true,
+                backdropDismiss: false,
+                message: 'Uh..oh.. Looks like you have lost the internet connection!' +
+                    'Please connect again otherwise the app does not work anymore!',
+            });
+            await this.alert.present();
+        }
     }
 }

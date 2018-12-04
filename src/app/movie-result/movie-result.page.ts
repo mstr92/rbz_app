@@ -3,6 +3,7 @@ import {FavouritesService} from '../../service/favourites.service';
 import {Movie, MovieResult} from '../../interfaces/movieInterface';
 import {Result} from '../../assets/data_test';
 import {ResultparserService} from '../../service/resultparser.service';
+import {element} from 'protractor';
 
 
 @Component({
@@ -16,7 +17,16 @@ export class MovieResultPage implements OnInit {
 
     constructor(public favService: FavouritesService, public parser: ResultparserService) {
         this.movies = this.parser.parseMovieResult(Result.res);
-        console.log(this.movies);
+
+        this.favService.getMovies().then(data => {
+            data.forEach(element => {
+                this.movies.result.forEach(movie => {
+                    if(element.imdb_id == movie.imdb_id) {
+                        movie.favourite = true;
+                    }
+                })
+            })
+        });
     }
 
     ngOnInit() {
@@ -25,7 +35,11 @@ export class MovieResultPage implements OnInit {
 
     addToFavourite(fav) {
         const movie = fav;
-        this.favService.addMovie(movie);
+        if(fav.favourite) {
+            this.favService.deleteMovie(movie);
+        } else {
+            this.favService.addMovie(movie);
+        }
         fav.favourite = !fav.favourite;
     }
 
