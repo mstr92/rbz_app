@@ -12,13 +12,14 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {Keyboard} from '@ionic-native/keyboard/ngx';
 import {MovieQueryPageModule} from './movie-query/movie-query.module';
-import {NetworkServiceService} from '../service/network-service.service';
+import {NetworkServiceService} from '../service/network/network-service.service';
 import {Network} from '@ionic-native/network/ngx';
 import {MovieSearchPageModule} from './movie-search/movie-search.module';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
-import {FavouritesService} from '../service/favourites.service';
+import {FavouritesService} from '../service/favourites/favourites.service';
 import {HTTP} from '@ionic-native/http/ngx';
 import {NetworkStatusAngularModule} from 'network-status-angular';
+import {SocialSharing } from '@ionic-native/social-sharing/ngx'
 
 @NgModule({
     declarations: [AppComponent],
@@ -28,7 +29,7 @@ import {NetworkStatusAngularModule} from 'network-status-angular';
         BrowserAnimationsModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        MovieQueryPageModule,
+        // MovieQueryPageModule,
         MovieSearchPageModule,
         NetworkStatusAngularModule.forRoot(),
     ],
@@ -41,6 +42,7 @@ import {NetworkStatusAngularModule} from 'network-status-angular';
         Network,
         HTTP,
         NativeStorage,
+        SocialSharing,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

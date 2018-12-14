@@ -181,14 +181,13 @@
                   class="card-maxmin-entries" (click)="minmaxCardContent('keyword')"></ion-icon>
       </ion-card-title>
     </ion-card-header>
-    <ion-card-content>
-          <div *ngIf="search_data.data.keywords.length == 0" class="information-item">
+    <ion-card-content *ngIf="search_data.data.keywords.length == 0" class="information-item">
       <ion-item>
         <ion-icon name="information-circle-outline"></ion-icon>
         <ion-label class="information"> No Keyword selected!</ion-label>
       </ion-item>
-          </div>
-    <div *ngIf="search_data.data.keywords.length > 0"
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.keywords.length > 0"
                       [class]="icon_maxmin_visible.keyword ? 'content-min-view' : 'content-max-view'">
       <ion-chip *ngFor="let entry of search_data.data.keywords">
         <div class="chip-{{entry.alignment}}"></div>
@@ -197,8 +196,8 @@
           <ion-icon name="close-circle"></ion-icon>
         </ion-chip-button>
       </ion-chip>
-    </div>
-    <div *ngIf="search_data.data.keywords.length > 0"
+    </ion-card-content>
+    <ion-card-content *ngIf="search_data.data.keywords.length > 0"
                       [class]="icon_maxmin_visible.keyword ? 'content-max-view' : 'content-min-view'">
       <ion-list #slidingList>
         <ion-item-sliding *ngFor="let entry of search_data.data.keywords">
@@ -221,7 +220,6 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
-    </div>
     </ion-card-content>
   </ion-card>
   <!------------------------------------------------------>
@@ -230,13 +228,8 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Year
-        <!--<ion-icon [name]="icon_maxmin_visible.year ? 'ios-arrow-up' : 'ios-arrow-down'"-->
-        <!--class="card-maxmin-entries" (click)="minmaxCardContent('year')"></ion-icon>-->
       </ion-card-title>
     </ion-card-header>
-    <!--<ion-card-content [class]="icon_maxmin_visible.year ? 'content-min-view' : 'content-max-view'">-->
-    <!--</ion-card-content>-->
-    <!--<ion-card-content [class]="icon_maxmin_visible.year ? 'content-max-view' :  'content-min-view'">-->
     <ion-card-content>
       <ion-item-sliding #movie_year_pos>
         <ion-item class="positive-entity-year" lines="full">

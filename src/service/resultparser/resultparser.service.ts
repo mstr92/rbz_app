@@ -1,5 +1,5 @@
 import {Injectable, ViewChild} from '@angular/core';
-import {MovieResult, Movie, Genre, Actor} from '../interfaces/movieInterface';
+import {MovieResult, Movie, Genre, Actor} from '../../interfaces/movieInterface';
 import {Http} from '@angular/http';
 
 @Injectable({
@@ -38,18 +38,22 @@ export class ResultparserService {
                 } else {
                     search_string += "movie_id = '" + imdb_id_extracted + "' OR ";
                 }
-                let movie: Movie = {
-                    id: id_extracted,
-                    imdb_id: imdb_id_extracted,
-                    title: title_extracted,
-                    image: '',
-                    year: year_extracted,
-                    favourite: false,
-                };
-                movies.push(movie);
+                // this.http.get('http://127.0.0.1:5000/movie/details/' + imdb_id_extracted).subscribe(data => {
+                //     const response = JSON.parse(data.text());
+                    let movie: Movie = {
+                        id: id_extracted,
+                        imdb_id: imdb_id_extracted,
+                        title: title_extracted,
+                        image: '',//response.poster,
+                        //actors: response.actors,
+                        year: year_extracted,
+                        favourite: false,
+                    };
+                    movies.push(movie);
+                // });
             }
 
-            this.http.get('http://127.0.0.1:5000/movieWP/'+ search_string).subscribe(data => {
+            this.http.get('http://127.0.0.1:5000/movie/poster/'+ search_string).subscribe(data => {
                 const dataJson = data.json();
                 dataJson.data.forEach(element => {
                     let obj = movies.find(obj => obj.imdb_id == element.movie_id);

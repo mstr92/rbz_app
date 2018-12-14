@@ -4,6 +4,7 @@ export interface Movie {
     title: string;
     image: string;
     year?: number;
+    actors?: string;
     alignment?: string;
     favourite?: boolean;
     rating?: number;

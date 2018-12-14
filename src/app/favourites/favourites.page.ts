@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FavouritesService} from '../../service/favourites.service';
+import {FavouritesService} from '../../service/favourites/favourites.service';
 import {Movie} from '../../interfaces/movieInterface';
 
 @Component({

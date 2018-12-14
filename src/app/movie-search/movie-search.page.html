@@ -9,13 +9,13 @@
     <ion-searchbar #searchbar animated class="searchbar" color="light"
                    autofocus [(ngModel)]="searchTerm" (keyup.enter)="setFilteredData()"></ion-searchbar>
     <ion-row>
-        <ion-col [class]="!isToggled ? 'toggle-positive' : 'toggle-neutral'" #positive size="4">
+        <ion-col [class]="!isNegativeAlignment ? 'toggle-positive' : 'toggle-neutral'" #positive size="4">
             POSITIVE
         </ion-col>
         <ion-col size="3">
-            <ion-toggle [(ngModel)]="isToggled"></ion-toggle>
+            <ion-toggle [(ngModel)]="isNegativeAlignment"></ion-toggle>
         </ion-col>
-        <ion-col [class]="!isToggled ? 'toggle-neutral' : 'toggle-negative'" size="4">
+        <ion-col [class]="!isNegativeAlignment ? 'toggle-neutral' : 'toggle-negative'" size="4">
             NEGATIVE
         </ion-col>
     </ion-row>

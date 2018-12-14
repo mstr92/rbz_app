@@ -27,6 +27,7 @@
     "@ionic-native/keyboard": "^5.0.0-beta.21",
     "@ionic-native/native-storage": "^5.0.0-beta.21",
     "@ionic-native/network": "^5.0.0-beta.21",
+    "@ionic-native/social-sharing": "^5.0.0-beta.22",
     "@ionic-native/splash-screen": "5.0.0-beta.15",
     "@ionic-native/status-bar": "5.0.0-beta.15",
     "@ionic/angular": "4.0.0-beta.7",
@@ -42,7 +43,9 @@
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-plugin-x-socialsharing": "^5.4.3",
     "core-js": "^2.5.3",
+    "es6-promise-plugin": "^4.2.2",
     "fs": "0.0.1-security",
     "ionic2-auto-complete": "^1.6.2-alpha",
     "mysql-ssh": "^1.0.6",
@@ -95,7 +98,10 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-nativestorage": {},
-      "cordova-plugin-advanced-http": {}
+      "cordova-plugin-advanced-http": {},
+      "cordova-plugin-x-socialsharing": {
+        "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
+      }
     },
     "platforms": [
       "android"

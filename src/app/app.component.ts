@@ -4,7 +4,7 @@ import { Platform, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { NetworkServiceService} from '../service/network-service.service';
+import { NetworkServiceService} from '../service/network/network-service.service';
 
 
 @Component({

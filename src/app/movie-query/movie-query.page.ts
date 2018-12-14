@@ -3,7 +3,8 @@ import {ModalController, NavController} from '@ionic/angular';
 import {MovieSearchPage} from '../movie-search/movie-search.page';
 import {CompleteMovieSearchRequest, PartialMovieSearchRequest, Movie, Actor, Year, Genre, Keyword} from '../../interfaces/movieInterface';
 import { LoadingController } from '@ionic/angular';
-import {QuerybuilderService} from '../../service/querybuilder.service';
+import {QuerybuilderService} from '../../service/querybuilder/querybuilder.service';
+import {HelperService} from '../../service/helper/helper.service';
 
 @Component({
   selector: 'app-movie-query',
@@ -26,13 +27,14 @@ export class MovieQueryPage implements OnInit {
         upper: 2020,
         lower: 1960
     };
-    number_results = 1;
+    number_results = 10;
     @ViewChild('slidingList') slidingList;
 
     constructor(public modalCtrl: ModalController,
                 public loadingController: LoadingController,
                 public navCtrl: NavController,
-                public queryBuilder: QuerybuilderService) {
+                public queryBuilder: QuerybuilderService,
+                public helperService: HelperService) {
         this.icon_maxmin_visible = {movie: true, year: true, actor: true, genre: true, keyword: true};
     }
 
@@ -93,14 +95,8 @@ export class MovieQueryPage implements OnInit {
     }
 
     async deleteEntry(entry, entity) {
-        this.search_data.data[entity] = this.arrayRemove(this.search_data.data[entity], entry);
+        this.search_data.data[entity] = this.helperService.arrayRemove(this.search_data.data[entity], entry);
         await this.slidingList.closeSlidingItems();
-    }
-
-    private arrayRemove(arr, value) {
-        return arr.filter(function (ele) {
-            return ele !== value;
-        });
     }
 
     negateValue(value, slidingItem) {
@@ -117,7 +113,7 @@ export class MovieQueryPage implements OnInit {
             keyboardClose: true
         });
         // TODO: send query to server, check if a response is send back, go after some time or loaded data to result page
-        this.queryBuilder.buildMovieQuery(this.search_data)
+        this.queryBuilder.buildMovieQuery(this.search_data);
         this.navCtrl.navigateForward('/movie-result');
         return await loading.present();
     }

@@ -12,12 +12,18 @@
             <ion-icon name="settings"></ion-icon>
         </ion-fab-button>
         <ion-fab-list>
-            <ion-fab-button onclick="changeRequest()">
+            <div>
+            <ion-label class="fab-label">Refine Request</ion-label>
+            <ion-button (click)="changeRequest()">
                 <ion-icon name="md-swap"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button onclick="saveResult()">
-                <ion-icon name="save"></ion-icon>
-            </ion-fab-button>
+            </ion-button>
+            </div>
+            <div>
+            <ion-label class="fab-label">Share</ion-label>
+            <ion-button (click)="shareResult()">
+                <ion-icon name="share"></ion-icon>
+            </ion-button>
+            </div>
         </ion-fab-list>
     </ion-fab>
 </ion-header>
@@ -26,60 +32,78 @@
         <ion-img src={{movie.image}}></ion-img>
         <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
             <ion-fab-button>
-                <ion-icon name="star" [class]="movie.rating > 0 ? 'icon-rating rating-yellow' : 'icon-rating rating-light' "></ion-icon>
+                <ion-icon name="star"
+                          [class]="movie.rating > 0 ? 'icon-rating rating-yellow' : 'icon-rating rating-light' "></ion-icon>
                 <ion-label *ngIf="movie.rating > 0" class="icon-rating-label">{{movie.rating}}</ion-label>
             </ion-fab-button>
             <ion-fab-list side="end" class="fab-rating-list">
-                <ion-fab-button  class="fab-rating-button" (click)="setRating(1, movie)">
+                <label class="rating-label">How do you like this movie?</label>
+                <ion-fab-button class="fab-rating-button" (click)="setRating(1, movie)">
                     <ion-icon name="star" [id]="'rating1' + movie.id"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-button  class="fab-rating-button" (click)="setRating(2, movie)">
+                <ion-fab-button class="fab-rating-button" (click)="setRating(2, movie)">
                     <ion-icon name="star" [id]="'rating2' + movie.id"></ion-icon>
-                </ion-fab-button >
+                </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(3, movie)">
                     <ion-icon name="star" [id]="'rating3' + movie.id"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(4, movie)">
-                    <ion-icon name="star" [id]="'rating4' + movie.id" ></ion-icon>
+                    <ion-icon name="star" [id]="'rating4' + movie.id"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-button  class="fab-rating-button" (click)="setRating(5, movie)">
+                <ion-fab-button class="fab-rating-button" (click)="setRating(5, movie)">
                     <ion-icon name="star" [id]="'rating5' + movie.id"></ion-icon>
                 </ion-fab-button>
             </ion-fab-list>
         </ion-fab>
         <!--<ion-fab vertical="top" horizontal="end" class="fab-favourite" >-->
-        <ion-icon *ngIf="disableCorrectFavourite(movie)" [name]="movie.favourite ? 'heart' : 'heart-empty'" class="favourite-icon" (click)="addToFavourite(movie)"></ion-icon>
+        <ion-icon *ngIf="disableCorrectFavourite(movie)" [name]="movie.favourite ? 'heart' : 'heart-empty'"
+                  class="favourite-icon" (click)="addToFavourite(movie)"></ion-icon>
         <ion-card-header>
-            <ion-card-title>{{movie.title}}</ion-card-title>
-            <ion-card-subtitle>{{movie.year}}</ion-card-subtitle>
+            <ion-card-title>{{movie.title}} ({{movie.year}})</ion-card-title>
+            {{movie.actors}}
             <!--<ion-card-subtitle>Brat Pitt, Liam Hemsworth, Max Mustermann</ion-card-subtitle>-->
         </ion-card-header>
         <ion-card-content>
             <ion-grid>
                 <ion-row>
                     <ion-col>
-                        <ion-button expand="block" side="left" (click)="openImdb(movie)">
+                        <ion-button expand="block" side="left" (click)="openImdb(movie)" class="goTo-Button">
                             <ion-img class="button-img" src="../../assets/image/logo/imdb_logo.png"></ion-img>
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button expand="block" side="right" (click)="openAmazonVideo(movie)">
+                        <ion-button expand="block" side="right" (click)="openAmazonVideo(movie)" class="goTo-Button">
                             <ion-img class="button-img" src="../../assets/image/logo/amazon_logo.png"></ion-img>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button expand="block" side="right" (click)="openYoutube(movie)" class="goTo-Button">
+                            <ion-img class="button-img" src="../../assets/image/logo/youtube.png"></ion-img>
                         </ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
-
-            <!--<ion-img src="../../assets/image/logo/imdb_logo.png" (click)="openImdb(movie)"></ion-img>-->
-            <!--</ion-col>-->
-            <!--<ion-col>-->
-            <!--<ion-img src="../../assets/image/logo/amazon_logo.png" (click)="openAmazonVideo(movie)"></ion-img>-->
-            <!--</ion-col>-->
-            <!--&lt;!&ndash;<ion-col>&ndash;&gt;-->
-            <!--&lt;!&ndash;<ion-img src="../../assets/image/logo/werstreamtes_logo.png"></ion-img>&ndash;&gt;-->
-            <!--&lt;!&ndash;</ion-col>&ndash;&gt;-->
-            <!--</ion-row>-->
-            <!--</ion-grid>-->
         </ion-card-content>
+        <ion-button *ngIf="movie_rec_rating_map[movie.id]" expand="block" class="rate-button goTo-Button" (click)="displayRecommendationRating(movie)">How satisfied are you<br>with the recommended movie?</ion-button>
+        <ion-grid *ngIf="!movie_rec_rating_map[movie.id]" class="rate-grid">
+            <ion-row align-items-center class="rate-row">
+                <ion-col [id]="'recrating1' + movie.id" class="rate-thumps" (click)="setRecommendationRating(1, movie)">
+                    <img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji">
+                </ion-col>
+                <ion-col [id]="'recrating2' + movie.id" class="rate-thumps" (click)="setRecommendationRating(2, movie)">
+                    <img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji">
+                </ion-col>
+                <ion-col [id]="'recrating3' + movie.id" class="rate-thumps" (click)="setRecommendationRating(3, movie)">
+                    <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji">
+                </ion-col>
+                <ion-col [id]="'recrating4' + movie.id" class="rate-thumps"(click)="setRecommendationRating(4, movie)">
+                    <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji">
+                </ion-col>
+                <ion-col [id]="'recrating5' + movie.id" class="rate-thumps" (click)="setRecommendationRating(5, movie)">
+                    <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji">
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
     </ion-card>
 </ion-content>
