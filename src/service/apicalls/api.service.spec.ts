@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ApicallsService } from './apicalls.service';
+import { ApicallsService } from './api.service';
 
 describe('ApicallsService', () => {
   beforeEach(() => {

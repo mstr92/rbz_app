@@ -1,12 +1,23 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Checkbox, ModalController, NavController, NavParams, Platform} from '@ionic/angular';
 import {Searchbar, Item} from '@ionic/angular';
-import {PartialMovieSearchRequest, Movie, Actor, Year, Genre, Keyword} from '../../interfaces/movieInterface';
-// import { HTTP } from '@ionic-native/http/ngx';
-import {Http} from '@angular/http';
-import { ToastController } from '@ionic/angular';
+import {PartialMovieSearchRequest, Movie, Actor, Genre, Keyword} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
-import {ApicallsService} from '../../service/apicalls/apicalls.service';
+import {ApiService} from '../../service/apicalls/api.service';
+
+interface SearchData {
+    search_genre: Array<[Genre, boolean]>;
+    selected_genre: Array<Genre>;
+    search_movie: Array<[Movie, boolean]>;
+    selected_movie: Array<Movie>;
+    search_actor: Array<[Actor, boolean]>;
+    selected_actor: Array<Actor>;
+}
+interface ApiRequest {
+    genre: Promise<any>;
+    movie: Promise<any>;
+    actor: Promise<any>;
+}
 
 @Component({
     selector: 'app-movie-search',
@@ -20,35 +31,33 @@ export class MovieSearchPage implements OnInit {
     current_selected_search: PartialMovieSearchRequest;
     selected_search_data: PartialMovieSearchRequest = {};
     keywords: Array<Keyword> = [];
-    search_genres: Array<[Genre, boolean]> = [];
-    selected_genres: Array<Genre> = [];
-    search_movies: Array<[Movie, boolean]> = [];
-    selected_movies: Array<Movie> = [];
-    search_actors: Array<[Actor, boolean]> = [];
-    selected_actors: Array<Actor> = [];
+    searchdata: SearchData;
+    requests: ApiRequest;
+
     @ViewChild('searchbar') searchbar: Searchbar;
     @ViewChild('keywordItem') keywordItem: Item;
     @ViewChild('keywordCheckbox') keywordCheckbox: Checkbox;
-    genre_request;
-    movie_request;
-    actor_request;
 
     constructor(navCtrl: NavController,
                 params: NavParams,
                 public modalCtrl: ModalController,
-                public http: Http,
                 public platform: Platform,
                 public helperService: HelperService,
-                public apicallService: ApicallsService
+                public apiService: ApiService
     ) {
         // Disable Hardware Back Button in Modal
         this.platform.backButton.subscribe(() => {
         });
-
+        this.searchdata = {
+            'search_genre': [], 'selected_genre': [],
+            'search_movie': [], 'selected_movie': [],
+            'search_actor': [], 'selected_actor': []
+        };
+        this.requests = {movie : null, actor : null, genre: null};
         this.current_selected_search = params.get('data');
-        this.selected_genres = this.current_selected_search.genres;
-        this.selected_actors = this.current_selected_search.actors;
-        this.selected_movies = this.current_selected_search.movies;
+        this.searchdata.selected_genre = this.current_selected_search.genres;
+        this.searchdata.selected_actor = this.current_selected_search.actors;
+        this.searchdata.selected_movie = this.current_selected_search.movies;
     }
 
     ngOnInit() {
@@ -60,156 +69,80 @@ export class MovieSearchPage implements OnInit {
 
     addSearchEntries() {
         this.selected_search_data.keywords = this.keywords;
-        this.selected_search_data.genres = this.selected_genres;
-        this.selected_search_data.movies = this.selected_movies;
-        this.selected_search_data.actors = this.selected_actors;
+        this.selected_search_data.genres = this.searchdata.selected_genre;
+        this.selected_search_data.movies = this.searchdata.selected_movie;
+        this.selected_search_data.actors = this.searchdata.selected_actor;
         this.modalCtrl.dismiss(this.selected_search_data);
     }
 
+    static createGenreArray(element, alignment, selected) {
+        return [<Genre>{
+            id: element.id, name: element.genrename, alignment: alignment
+        }, selected];
+    }
+
+    static createMovieArray(element, alignment, selected) {
+        return [<Movie>{
+            id: element.id, imdb_id: element.ttid, title: element.title,
+            image: element.imglink, year: element.year, alignment: alignment
+        }, selected];
+    }
+
+    static createActorArray(element, alignment, selected) {
+        return [<Actor>{
+            id: element.id, firstname: element.first_name, lastname: element.last_name, alignment: alignment
+        }, selected];
+    }
+
+    setData(entity) {
+        this.requests[entity] = this.apiService.getDataBySearchTerm(entity, this.searchTerm).subscribe(data => {
+            this.searchdata['search_' + entity] = [];
+            const dataJson = JSON.parse(JSON.stringify(data));
+            dataJson.data.forEach(element => {
+                const isSelected = this.searchdata['selected_' + entity].find(item => item.id === element.id);
+                const isCurrentlySelected = this.current_selected_search[entity + 's'].find(item => item.id === element.id);
+                if (isSelected !== undefined) {
+                    if (entity == 'genre') this.searchdata['search_' + 'genre'].push(MovieSearchPage.createGenreArray(element, isSelected.alignment, true));
+                    if (entity == 'movie') this.searchdata['search_' + 'movie'].push(MovieSearchPage.createMovieArray(element, isSelected.alignment, true));
+                    if (entity == 'actor') this.searchdata['search_' + 'actor'].push(MovieSearchPage.createActorArray(element, isSelected.alignment, true));
+                } else if (isCurrentlySelected !== undefined) {
+                    if (entity == 'genre') this.searchdata['search_' + 'genre'].push(MovieSearchPage.createGenreArray(element, isCurrentlySelected.alignment, true));
+                    if (entity == 'movie') this.searchdata['search_' + 'movie'].push(MovieSearchPage.createMovieArray(element, isCurrentlySelected.alignment, true));
+                    if (entity == 'actor') this.searchdata['search_' + 'actor'].push(MovieSearchPage.createActorArray(element, isCurrentlySelected.alignment, true));
+                } else {
+                    if (entity == 'genre') this.searchdata['search_' + 'genre'].push(MovieSearchPage.createGenreArray(element, '', false));
+                    if (entity == 'movie') this.searchdata['search_' + 'movie'].push(MovieSearchPage.createMovieArray(element, '', false));
+                    if (entity == 'actor') this.searchdata['search_' + 'actor'].push(MovieSearchPage.createActorArray(element, '', false));
+                }
+            });
+        });
+    }
+
     setFilteredData() {
-        if (this.genre_request !== undefined) {
-            this.genre_request.unsubscribe();
-        }
-        if (this.movie_request !== undefined) {
-            this.movie_request.unsubscribe();
-        }
-        if (this.actor_request !== undefined) {
-            this.actor_request.unsubscribe();
-        }
-        if (this.searchTerm.length > 0) {
-            // ------- Genre -------------
-            this.genre_request = this.http.get('http://127.0.0.1:5000/genre/' + this.searchTerm).subscribe(data => {
-                this.search_genres = [];
-                const dataJson = data.json();
-                dataJson.data.forEach(element => {
-                    const isSelected = this.selected_genres.find(item => item.id === element.id);
-                    const isCurrentlySelected = this.current_selected_search.genres.find(item => item.id === element.id);
-                    if (isSelected !== undefined) {
-                        this.search_genres.push([<Genre>{id: element.id, name: element.genrename, alignment: isSelected.alignment}, true]);
-                    } else if (isCurrentlySelected !== undefined) {
-                        this.search_genres.push([<Genre>{
-                            id: element.id,
-                            name: element.genrename,
-                            alignment: isCurrentlySelected.alignment
-                        }, true]);
-                    } else {
-                        this.search_genres.push([<Genre>{id: element.id, name: element.genrename, alignment: ''}, false]);
-                    }
-                });
-             });
-            // ------- Movies -------------
-            this.movie_request = this.http.get('http://127.0.0.1:5000/movie/' + this.searchTerm).subscribe(data => {
-                    this.search_movies = [];
-                    const dataJson = data.json();
-                    dataJson.data.forEach(element => {
-                        const isSelected = this.selected_movies.find(item => item.id === element.id);
-                        const isCurrentlySelected = this.current_selected_search.movies.find(item => item.id === element.id);
-                        if (isSelected !== undefined) {
-                            this.search_movies.push([<Movie>{
-                                id: element.id,
-                                imdb_id: element.ttid,
-                                title: element.title,
-                                image: element.imglink,
-                                year: element.year,
-                                alignment: isSelected.alignment
-                            }, true]);
-                        } else if (isCurrentlySelected !== undefined) {
-                            this.search_movies.push([<Movie>{
-                                id: element.id,
-                                imdb_id: element.ttid,
-                                title: element.title,
-                                image: element.imglink,
-                                year: element.year,
-                                alignment: isCurrentlySelected.alignment
-                            }, true]);
-                        } else {
-                            this.search_movies.push([<Movie>{
-                                id: element.id,
-                                imdb_id: element.ttid,
-                                title: element.title,
-                                image: element.imglink,
-                                year: element.year,
-                                alignment: ''
-                            }, false]);
-                        }
-                    });
-                });
-            // ------- Actor  -------------
-            this.actor_request = this.http.get('http://127.0.0.1:5000/person/' + this.searchTerm).subscribe(data => {
-                    this.search_actors = [];
-                    const dataJson = data.json();
-                    dataJson.data.forEach(element => {
-                        const isSelected = this.selected_actors.find(item => item.id === element.id);
-                        const isCurrentlySelected = this.current_selected_search.actors.find(item => item.id === element.id);
-                        if (isSelected !== undefined) {
-                            this.search_actors.push([<Actor>{
-                                id: element.id,
-                                firstname: element.first_name,
-                                lastname: element.last_name,
-                                alignment: isSelected.alignment
-                            }, true]);
-                        } else if (isCurrentlySelected !== undefined) {
-                            this.search_actors.push([<Actor>{
-                                id: element.id,
-                                firstname: element.first_name,
-                                lastname: element.last_name,
-                                alignment: isCurrentlySelected.alignment
-                            }, true]);
-                        } else {
-                            this.search_actors.push([<Actor>{
-                                id: element.id,
-                                firstname: element.first_name,
-                                lastname: element.last_name,
-                                alignment: ''
-                            }, false]);
-                        }
-                    });
-                },
-                error => {
-                    console.log('no connection to DB ' + error);
-                });
-        } else {
-            this.search_genres = [];
-            this.search_movies = [];
-            this.search_actors = [];
-        }
+        const entities = ["movie", "genre", "actor"];
+        entities.forEach(entity => {
+            if (this.requests[entity] !== null) {
+                this.requests[entity].unsubscribe();
+            }
+            if (this.searchTerm.length > 0) {
+                this.setData(entity);
+            } else {
+                this.searchdata["search_" + entity] = [];
+            }
+        });
     }
 
-    addToGenreList(id) {
-        const genre = this.search_genres.find(item => item[0].id === id);
-        if (genre[1] === true) {
-            genre[1] = false;
-            this.selected_genres = this.helperService.arrayRemoveById(this.selected_genres, genre[0]);
+    addToList(entity, id) {
+        const elem = this.searchdata["search_" + entity].find(item => item[0].id === id);
+        if (elem[1] === true) {
+            elem[1] = false;
+            this.searchdata["selected_" + entity] = this.helperService.arrayRemoveById(this.searchdata["selected_" + entity], elem[0]);
         } else {
-            genre[0].alignment = this.isNegativeAlignment ? 'negative' : 'positive';
-            genre[1] = true;
-            this.selected_genres.push(genre[0]);
+            elem[0].alignment = this.isNegativeAlignment ? 'negative' : 'positive';
+            elem[1] = true;
+            this.searchdata["selected_" + entity].push(elem[0]);
         }
     }
-    addToMovieList(id) {
-        const movie = this.search_movies.find(item => item[0].id === id);
-        if (movie[1] === true) {
-            movie[1] = false;
-            this.selected_movies = this.helperService.arrayRemoveById(this.selected_movies, movie[0]);
-        } else {
-            movie[0].alignment = this.isNegativeAlignment ? 'negative' : 'positive';
-            movie[1] = true;
-            this.selected_movies.push(movie[0]);
-        }
-    }
-
-    addToActorList(id) {
-        const actor = this.search_actors.find(item => item[0].id === id);
-        if (actor[1] === true) {
-            actor[1] = false;
-            this.selected_actors = this.helperService.arrayRemoveById(this.selected_actors, actor[0]);
-        } else {
-            actor[0].alignment = this.isNegativeAlignment ? 'negative' : 'positive';
-            actor[1] = true;
-            this.selected_actors.push(actor[0]);
-        }
-    }
-
 
     addToKeywordList(keyword) {
         this.keywords.push(<Keyword>{name: keyword, alignment: this.isNegativeAlignment ? 'negative' : 'positive'});
