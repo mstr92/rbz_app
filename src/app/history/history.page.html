@@ -9,9 +9,9 @@
     </ion-toolbar>
 </ion-header>
 <ion-content padding>
-    <ion-card class="outer-class">
+    <ion-card *ngFor="let element of movieHistory" class="outer-class">
         <ion-card-header>
-            <ion-card-title>Tuesday 05/01/2018
+            <ion-card-title>{{element.timestamp}}
                 <ion-icon name="ios-arrow-down"></ion-icon>
             </ion-card-title>
         </ion-card-header>
@@ -19,9 +19,10 @@
             <div class="small-header">Request</div>
             <ion-grid>
                 <ion-row>
+                <!--<ion-row *ngIf="element.request.data.movies.length > 0">-->
                     <ion-col size="4" class="col-header">Movie:</ion-col>
                     <ion-col size="8">
-                        <a class="positive">The Dark Night Rises</a>, The Dark Night Rises, The Dark Night Rises The Dark Night Rises, The Dark Night Rises, The Dark Night Rises
+                       <a *ngFor="let movie of element.request.data.movies" class="{{movie.alignment}}">{{movie.title}}</a>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -37,6 +38,7 @@
                 <ion-row>
                     <ion-col size="4" class="col-header">Keyword:</ion-col>
                     <ion-col size="8">
+                        <a *ngFor="let keyword of element.request.data.keywords" class="{{keyword.alignment}}">{{keyword.name}}</a>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -44,23 +46,29 @@
                     <ion-col size="8">
                     </ion-col>
                 </ion-row>
+                <ion-row>
+                    <ion-col size="4" class="col-header">Length</ion-col>
+                    <ion-col size="8">
+                        {{element.request.length}}
+                    </ion-col>
+                </ion-row>
             </ion-grid>
         </ion-card-content>
         <ion-card-content *ngIf="true">
             <div class="small-header">Recommendation</div>
             <ion-slides id="slides" pager="false" [options]="slideOpts">
-                <ion-slide>
+                <ion-slide *ngFor="let elem of element.result.result">
                     <ion-card class="inner-card">
                         <ion-card-content>
                             <ion-grid>
                                 <ion-row>
                                     <ion-col size="3">
                                         <ion-avatar>
-                                            <img src="../../assets/image/img2.jpg">
+                                            <img src="{{elem.image}}">
                                         </ion-avatar>
                                     </ion-col>
                                     <ion-col size="9">
-                                        The Dark Night Rises
+                                        {{elem.title}}
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>

@@ -1,54 +1,40 @@
-import {Component, ElementRef, HostBinding, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ModalController, NavController} from '@ionic/angular';
 import {MovieSearchPage} from '../movie-search/movie-search.page';
-import {CompleteMovieSearchRequest, PartialMovieSearchRequest, Movie, Actor, Year, Genre, Keyword} from '../../interfaces/movieInterface';
-import { LoadingController } from '@ionic/angular';
-import {QuerybuilderService} from '../../service/querybuilder/querybuilder.service';
+import {CompleteMovieSearchRequest, PartialMovieSearchRequest, Movie} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
+import {Constants} from '../../service/constants';
 
 @Component({
-  selector: 'app-movie-query',
-  templateUrl: './movie-query.page.html',
-  styleUrls: ['./movie-query.page.scss'],
+    selector: 'app-movie-query',
+    templateUrl: './movie-query.page.html',
+    styleUrls: ['./movie-query.page.scss'],
 })
 export class MovieQueryPage implements OnInit {
 
-    icon_maxmin_visible: any;
-    search_data: CompleteMovieSearchRequest;
-    movie_year_enabled: any = {
-        positive: false,
-        negative: false
-    };
-    year_pos: any = {
-        upper: 2020,
-        lower: 1960
-    };
-    year_neg: any = {
-        upper: 2020,
-        lower: 1960
-    };
+    icon_maxmin_visible = {movie: true, year: true, actor: true, genre: true, keyword: true};
+    movie_year_enabled = {positive: false, negative: false};
+    year_pos = {upper: Constants.MAX_YEAR, lower: Constants.MIN_YEAR};
+    year_neg = {upper: Constants.MAX_YEAR, lower: Constants.MIN_YEAR};
     number_results = 10;
+    entities = ['movies', 'actors', 'genres', 'keywords'];
+    search_data: CompleteMovieSearchRequest = {
+        entity: 'Movie',
+        data: <PartialMovieSearchRequest>{movies: [], actors: [], genres: [], keywords: []},
+        length: 0
+    };
+
     @ViewChild('slidingList') slidingList;
 
     constructor(public modalCtrl: ModalController,
-                public loadingController: LoadingController,
                 public navCtrl: NavController,
-                public queryBuilder: QuerybuilderService,
                 public helperService: HelperService) {
-        this.icon_maxmin_visible = {movie: true, year: true, actor: true, genre: true, keyword: true};
+        if(this.helperService.movie_request_refine) {
+            this.search_data = this.helperService.movie_request_to_pass;
+        }
     }
 
     ngOnInit() {
-        this.search_data = {
-            entity: 'Movie',
-            data: <PartialMovieSearchRequest>{
-                movies: [],
-                actors: [],
-                genres: [],
-                keywords: []
-            },
-            length: 0
-        };
     }
 
     openDetailSearch() {
@@ -65,6 +51,7 @@ export class MovieQueryPage implements OnInit {
         });
         return await modal.present();
     }
+
     setSearchedData(data) {
         if (data.data != null) {
             for (const keyword of data.data.keywords) {
@@ -76,10 +63,9 @@ export class MovieQueryPage implements OnInit {
             this.search_data.data.movies = data.data.movies;
             this.search_data.data.actors = data.data.actors;
 
-            this.search_data.data['genres'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
-            this.search_data.data['movies'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
-            this.search_data.data['keywords'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
-            this.search_data.data['actors'].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
+            this.entities.forEach(entity => {
+                this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
+            });
         }
     }
 
@@ -89,7 +75,7 @@ export class MovieQueryPage implements OnInit {
     }
 
     async changeAlignment(entry, entity) {
-        entry.alignment = entry.alignment === 'positive' ? 'negative' : 'positive';
+        entry.alignment = entry.alignment === Constants.POSITIVE ? Constants.NEGATIVE : Constants.POSITIVE;
         this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));
         await this.slidingList.closeSlidingItems();
     }
@@ -103,18 +89,9 @@ export class MovieQueryPage implements OnInit {
         this.movie_year_enabled[value] = !this.movie_year_enabled[value];
         slidingItem.close();
     }
-
-    async presentLoadingWithOptions() {
-        const loading = await this.loadingController.create({
-            spinner: 'crescent',
-            duration: 2000,
-            message: 'Calculating Result! \nPlease wait...',
-            translucent: true,
-            keyboardClose: true
-        });
-        // TODO: send query to server, check if a response is send back, go after some time or loaded data to result page
-        this.queryBuilder.buildMovieQuery(this.search_data);
+    goToResultPage() {
+        this.helperService.movie_request_to_pass = this.search_data;
+        this.helperService.movie_request_refine = false;
         this.navCtrl.navigateForward('/movie-result');
-        return await loading.present();
     }
 }

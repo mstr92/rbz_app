@@ -9,12 +9,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <!--<ion-button (click)="favService.clearMovieHistory()">Init</ion-button>-->
+  <!--<ion-button (click)="storageService.clearMovieHistory()">Init</ion-button>-->
   <ion-list #slidingList>
     <ion-item-sliding *ngFor="let movie of fav_movies">
       <ion-item lines="inset">
         <ion-avatar slot="start">
-          <img src="assets/image/alphabet/{{movie.title.charAt(0).toUpperCase()}}.ico">
+          <img src="{{movie.image}}">
         </ion-avatar>
         <ion-label>
           <h2>{{movie.title}}</h2>

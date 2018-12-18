@@ -8,6 +8,9 @@
       </ion-header>
       <ion-content>
         <ion-list>
+          <div style=" border-bottom: 2px solid var(--ion-color-dark); width: 100%">
+            <img src="../assets/icon/icon.png" style="height: 5.5em;">
+          </div>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>

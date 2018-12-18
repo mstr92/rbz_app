@@ -1,6 +1,6 @@
 export interface Movie {
     id: number;
-    imdb_id: number;
+    imdb_id: string;
     title: string;
     image: string;
     year?: number;
@@ -44,4 +44,13 @@ export interface CompleteMovieSearchRequest {
 
 export interface MovieResult {
     result: Array<Movie>
+}
+export interface Poster {
+    imdb_id: string;
+    poster: string;
+}
+export interface MovieHistory {
+    timestamp: string;
+    request: CompleteMovieSearchRequest;
+    result: MovieResult;
 }

@@ -1,5 +1,7 @@
 ion-content {
-  background: linear-gradient(-120deg, var(--ion-background-color-light), var(--ion-background-color-dark));
+  background-image: url("../../assets/image/background.png");
+  background-size: cover;
+
 }
 ion-toolbar {
   background-color: var(--ion-color-dark);
@@ -104,8 +106,4 @@ ion-button {
   margin:0;
   padding:0;
   --background: var(--ion-color-dark);
-}
-.test-toast {
-  z-index: 99999;
-  position: absolute;
 }

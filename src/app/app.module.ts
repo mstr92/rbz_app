@@ -15,12 +15,15 @@ import {NetworkServiceService} from '../service/network/network-service.service'
 import {Network} from '@ionic-native/network/ngx';
 import {MovieSearchPageModule} from './movie-search/movie-search.module';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
-import {FavouritesService} from '../service/favourites/favourites.service';
+import {StorageService} from '../service/storage/storage.service';
 import {HTTP} from '@ionic-native/http/ngx';
 import {NetworkStatusAngularModule} from 'network-status-angular';
 import {SocialSharing } from '@ionic-native/social-sharing/ngx'
 import {HttpClientModule } from '@angular/common/http';
 import {ApiService} from '../service/apicalls/api.service';
+import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
+import {Device} from '@ionic-native/device/ngx';
+import {Base64} from '@ionic-native/base64/ngx';
 
 @NgModule({
     declarations: [AppComponent],
@@ -38,13 +41,16 @@ import {ApiService} from '../service/apicalls/api.service';
         StatusBar,
         SplashScreen,
         NetworkServiceService,
-        FavouritesService,
+        StorageService,
         Keyboard,
         Network,
         HTTP,
         NativeStorage,
         SocialSharing,
         ApiService,
+        UniqueDeviceID,
+        Device,
+        Base64,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

@@ -1,5 +1,7 @@
 ion-content {
-  background: linear-gradient(-120deg, var(--ion-background-color-light), var(--ion-background-color-dark));
+ // background: linear-gradient(-120deg, var(--ion-background-color-light), var(--ion-background-color-dark));
+  background-image: url("../../assets/image/background.png");
+  background-size: cover;
 }
 .negative-entity-year {
   background: linear-gradient(to right, var(--ion-color-negative) 2% ,var(--ion-color-primary-contrast) 2%);
