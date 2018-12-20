@@ -2,7 +2,7 @@ export interface Movie {
     id: number;
     imdb_id: string;
     title: string;
-    image: string;
+    image?: string;
     year?: number;
     actors?: string;
     alignment?: string;

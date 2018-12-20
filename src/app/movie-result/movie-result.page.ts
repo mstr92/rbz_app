@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
-import {MovieHistory, MovieResult} from '../../interfaces/movieInterface';
+import {MovieHistory, MovieResult, Poster} from '../../interfaces/movieInterface';
 import {Result} from '../../assets/data_test';
 import {ResultparserService} from '../../service/resultparser/resultparser.service';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {HelperService} from '../../service/helper/helper.service';
 import {LoadingController, NavController} from '@ionic/angular';
 import {QuerybuilderService} from '../../service/querybuilder/querybuilder.service';
+import {ApiService} from '../../service/apicalls/api.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class MovieResultPage implements OnInit {
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public loadingController: LoadingController, public queryBuilder: QuerybuilderService,
-                public navCtrl: NavController) {
+                public navCtrl: NavController, public apiService:ApiService) {
         this.movies = {result: []};
         this.current_timestamp = new Date().toISOString();
     }
@@ -37,7 +38,7 @@ export class MovieResultPage implements OnInit {
     }
 
     addToFavourite(fav) {
-        const movie = fav;
+        let movie = fav;
         if (fav.favourite) {
             this.storageService.deleteMovie(movie);
         } else {
@@ -134,6 +135,7 @@ export class MovieResultPage implements OnInit {
             });
             this.helperService.movie_request_to_pass.length += 5;
             this.checkIfInFavourites();
+            this.loadImages();
 
         }
         this.show_more = !this.show_more;
@@ -156,11 +158,36 @@ export class MovieResultPage implements OnInit {
     setData() {
         this.movies.result = this.parser.parseMovieResult(Result.res_short,this.current_timestamp);
         this.checkIfInFavourites();
+        this.loadImages();
         this.movies.result.forEach(movie => {
             this.movie_rec_rating_map[movie.id] = true;
         });
     }
 
+    loadImages() {
+        this.movies.result.forEach(movie => {
+            this.storageService.isInPosterStorage(movie.imdb_id).then(is_in_storage => {
+                // If img in storage:
+                if (is_in_storage) {
+                    this.storageService.getMoviePosterByID(movie.imdb_id).then(data => movie.image = data.poster);
+                }
+                else {
+                    //TODO: change to rbz.io API call
+                    // else: get image from url and store in storage
+                    this.apiService.getDetailedMovieInfo1(movie.imdb_id).then(data => {
+                        let dataObj: any = JSON.parse(data.data);
+                        const url = 'https://image.tmdb.org/t/p/w300/'; //statt w185 -> original
+                        const poster = dataObj.movie_results[0].poster_path;
+                        this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
+                            .then(base64Img => {
+                                movie.image = base64Img.toString();
+                                this.storageService.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: base64Img.toString()});
+                            });
+                    });
+                }
+            });
+        })
+    }
     async presentLoadingWithOptions() {
         const loading = await this.loadingController.create({
             spinner: 'crescent',
@@ -177,4 +204,5 @@ export class MovieResultPage implements OnInit {
     openFullPoster(event) {
         event.srcElement.className= event.srcElement.className === "poster small" ? "poster full" : "poster small";
     }
+
 }

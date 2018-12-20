@@ -17,17 +17,26 @@ export class AboutPage implements OnInit {
 
     test() {
         this.storageService.initMoviePosters();
-        // const id = 'tt1345836';
-        // this.http.get('http://127.0.0.1:5000/movie/details1/' + id).subscribe(data => {
-        //     const response = JSON.parse(data.text());
-        //     console.log(response);
-        // });
+
     }
     test1() {
         this.storageService.getAllMoviePosterByID().then(data => console.log(data));
     }
     test2() {
         this.storageService.initMovieHistory();
+    }
+    test3() {
+        this.http.get('http://129.27.153.16:8008/api/rbz/movies/test').subscribe(data => {
+            const response = JSON.parse(data.text());
+            console.log(response);
+        },
+            error => {console.log(error)}
+            )
+    }
+    test4() {
+
+        let a = document.getElementById("img") as HTMLImageElement;
+        this.storageService.getMoviePosterByID("tt1345836").then(b => a.src = b);
     }
 
 

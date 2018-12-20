@@ -86,7 +86,8 @@ export class MovieSearchPage implements OnInit {
     static createMovieArray(element, alignment, selected) {
         return [<Movie>{
             id: element.id, imdb_id: element.ttid, title: element.title,
-            image: element.imglink, year: element.year, alignment: alignment
+            // image: element.imglink,
+            year: element.year, alignment: alignment
         }, selected];
     }
 
@@ -133,9 +134,6 @@ export class MovieSearchPage implements OnInit {
 
     setFilteredData() {
         this.entities.forEach(entity => {
-            if (this.requests[entity] !== null) {
-                this.requests[entity].unsubscribe();
-            }
             if (this.searchTerm.length > 0) {
                 this.setData(entity);
             } else {

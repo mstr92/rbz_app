@@ -16,7 +16,8 @@ const routes: Routes = [
   { path: 'movie-query', loadChildren: './movie-query/movie-query.module#MovieQueryPageModule' },
   { path: 'favourites', loadChildren: './favourites/favourites.module#FavouritesPageModule' },
   { path: 'about', loadChildren: './about/about.module#AboutPageModule' },
-  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' }
+  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },  { path: 'Splash', loadChildren: './splash/splash.module#SplashPageModule' }
+
 
 
 

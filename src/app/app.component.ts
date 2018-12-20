@@ -6,7 +6,9 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Network} from '@ionic-native/network/ngx';
 import {NetworkServiceService} from '../service/network/network-service.service';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
-import { Device } from '@ionic-native/device/ngx';
+import {Device} from '@ionic-native/device/ngx';
+import {StorageService} from '../service/storage/storage.service';
+import {Constants} from '../service/constants';
 
 
 @Component({
@@ -51,6 +53,7 @@ export class AppComponent {
         public networkService: NetworkServiceService,
         private uniqueDeviceID: UniqueDeviceID,
         private device: Device,
+        private storageService: StorageService
     ) {
         this.initializeApp();
     }
@@ -62,8 +65,21 @@ export class AppComponent {
                 .then((uuid: any) => console.log(uuid))
                 .catch((error: any) => console.log(error));
             console.log('Serial: ' + this.device.serial);
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
+
+            this.storageService.getTest().then(keys => {
+                if (!keys.includes(Constants.MOVIE_FAVOURITE)) {
+                    this.storageService.initMovieFavourites();
+                }
+                if (!keys.includes(Constants.MOVIE_HISTORY)) {
+                    this.storageService.initMovieHistory();
+                }
+                if (!keys.includes(Constants.MOVIE_POSTER)) {
+                    this.storageService.initMoviePosters();
+                }
+            });
+
         });
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
     }
 }

@@ -24,18 +24,21 @@ import {ApiService} from '../service/apicalls/api.service';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Device} from '@ionic-native/device/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SplashPage} from '../app/splash/splash.page'
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, SplashPage],
     entryComponents: [],
     imports: [
         BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         IonicModule.forRoot(),
         AppRoutingModule,
         HttpClientModule,
         MovieSearchPageModule,
-        NetworkStatusAngularModule.forRoot(),
+        NetworkStatusAngularModule.forRoot()
     ],
     providers: [
         StatusBar,
@@ -53,7 +56,7 @@ import {Base64} from '@ionic-native/base64/ngx';
         Base64,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class AppModule {
 }

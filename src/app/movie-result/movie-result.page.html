@@ -29,7 +29,7 @@
 </ion-header>
 <ion-content padding>
     <ion-card *ngFor="let movie of movies.result">
-        <img class="poster small" (click)="openFullPoster($event)" src={{movie.image}}>
+        <img class="poster small" (click)="openFullPoster($event)" src="{{movie.image}}">
         <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
             <ion-fab-button>
                 <ion-icon name="star"
