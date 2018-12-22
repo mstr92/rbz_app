@@ -9,26 +9,26 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <ion-list>
-    <ion-item-sliding>
-      <ion-item lines="inset">
-        <ion-avatar slot="start">
-          <img src="../../assets/image/theraid.jpg">
-        </ion-avatar>
-        <ion-label>
-          <h2>The Raid 2</h2>
-          <h3>2017</h3>
-        </ion-label>
-        <ion-reorder slot="end"></ion-reorder>
-      </ion-item>
-      <ion-item-options>
-        <button ion-button color="danger">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+  <!--<ion-list>-->
+    <!--<ion-item-sliding>-->
+      <!--<ion-item lines="inset">-->
+        <!--<ion-avatar slot="start">-->
+          <!--<img src="../../assets/image/theraid.jpg">-->
+        <!--</ion-avatar>-->
+        <!--<ion-label>-->
+          <!--<h2>The Raid 2</h2>-->
+          <!--<h3>2017</h3>-->
+        <!--</ion-label>-->
+        <!--<ion-reorder slot="end"></ion-reorder>-->
+      <!--</ion-item>-->
+      <!--<ion-item-options>-->
+        <!--<button ion-button color="danger">-->
+          <!--<ion-icon name="trash"></ion-icon>-->
+          <!--Delete-->
+        <!--</button>-->
+      <!--</ion-item-options>-->
+    <!--</ion-item-sliding>-->
+  <!--</ion-list>-->
 
   <ion-list #slidingList>
     <ion-item-sliding *ngFor="let movie of fav_movies">
@@ -40,7 +40,6 @@
           <h2>{{movie.title}}</h2>
           <h3>{{movie.year}}</h3>
         </ion-label>
-
       </ion-item>
       <ion-item-options>
         <button ion-button color="danger" (click)="deleteMovie(movie)">

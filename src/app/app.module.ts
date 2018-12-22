@@ -4,7 +4,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, RouteReuseStrategy, Routes} from '@angular/router';
 
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+// import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 
@@ -25,9 +25,9 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Device} from '@ionic-native/device/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SplashPage} from '../app/splash/splash.page'
+
 @NgModule({
-    declarations: [AppComponent, SplashPage],
+    declarations: [AppComponent],
     entryComponents: [],
     imports: [
         BrowserModule,
@@ -42,7 +42,7 @@ import {SplashPage} from '../app/splash/splash.page'
     ],
     providers: [
         StatusBar,
-        SplashScreen,
+        // SplashScreen,
         NetworkServiceService,
         StorageService,
         Keyboard,
