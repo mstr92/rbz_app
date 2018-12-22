@@ -1,0 +1,31 @@
+<p>
+  <ion-grid>
+    <ion-row>
+      <ion-col align-self-center (click)="rate(1)">
+        <ion-icon name="star" [class] = "rating >= 1? 'yellow':'gray'"></ion-icon>
+      </ion-col>
+      <ion-col align-self-center (click)="rate(2)">
+        <ion-icon name="star" [class] = "rating >= 2? 'yellow':'gray'"></ion-icon>
+      </ion-col>
+      <ion-col align-self-center (click)="rate(3)">
+        <ion-icon name="star" [class] = "rating >= 3? 'yellow':'gray'"></ion-icon>
+      </ion-col>
+      <ion-col  align-self-center (click)="rate(4)">
+        <ion-icon name="star" [class] = "rating >= 4? 'yellow':'gray'"></ion-icon>
+      </ion-col>
+      <ion-col  align-self-center (click)="rate(5)">
+        <ion-icon name="star" [class] = "rating >= 5? 'yellow':'gray'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" (click)="cancel()">Cancel</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" (click)="save()">Save</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</p>

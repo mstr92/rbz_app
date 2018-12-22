@@ -1,0 +1,17 @@
+ion-icon {
+  font-size: 3em;
+}
+.yellow {
+  color: var(--ion-color-warning);
+  visibility: visible;
+}
+.gray {
+  color: var(--ion-background-color-light);
+  visibility: visible;
+}
+ion-row {
+  padding: 0;
+}
+ion-col {
+  padding: 0 1px;
+}

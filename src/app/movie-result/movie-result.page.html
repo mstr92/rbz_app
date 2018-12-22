@@ -39,19 +39,19 @@
             <ion-fab-list side="end" class="fab-rating-list">
                 <label class="rating-label">How do you like this movie?</label>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(1, movie)">
-                    <ion-icon name="star" [id]="'rating1' + movie.id"></ion-icon>
+                    <ion-icon name="star" [id]="'rating1' + movie.id" [class] = "movie.rating >= 1? 'rating-yellow' : 'rating-light'"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(2, movie)">
-                    <ion-icon name="star" [id]="'rating2' + movie.id"></ion-icon>
+                    <ion-icon name="star" [id]="'rating2' + movie.id" [class] = "movie.rating >= 2? 'rating-yellow' : 'rating-light'"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(3, movie)">
-                    <ion-icon name="star" [id]="'rating3' + movie.id"></ion-icon>
+                    <ion-icon name="star" [id]="'rating3' + movie.id" [class] = "movie.rating >= 3? 'rating-yellow' : 'rating-light'"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(4, movie)">
-                    <ion-icon name="star" [id]="'rating4' + movie.id"></ion-icon>
+                    <ion-icon name="star" [id]="'rating4' + movie.id" [class] = "movie.rating >= 4? 'rating-yellow' : 'rating-light'"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button class="fab-rating-button" (click)="setRating(5, movie)">
-                    <ion-icon name="star" [id]="'rating5' + movie.id"></ion-icon>
+                    <ion-icon name="star" [id]="'rating5' + movie.id" [class] = "movie.rating >= 5? 'rating-yellow' : 'rating-light'"></ion-icon>
                 </ion-fab-button>
             </ion-fab-list>
         </ion-fab>
@@ -60,8 +60,6 @@
                   class="favourite-icon" (click)="addToFavourite(movie)"></ion-icon>
         <ion-card-header>
             <ion-card-title>{{movie.title}} ({{movie.year}})</ion-card-title>
-            {{movie.actors}}
-            <!--<ion-card-subtitle>Brat Pitt, Liam Hemsworth, Max Mustermann</ion-card-subtitle>-->
         </ion-card-header>
         <ion-card-content>
             <ion-grid>

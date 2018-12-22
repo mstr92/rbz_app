@@ -3,7 +3,6 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-
 @import "~@ionic/angular/css/padding.css";
 @import "~@ionic/angular/css/float-elements.css";
 @import "~@ionic/angular/css/text-alignment.css";
@@ -18,7 +17,7 @@
 //}
 
 ion-toolbar {
-  background-color: var(  --ion-toolbar-background-color);
+  background-color: var(--ion-toolbar-background-color);
   --background: var(--ion-toolbar-background-color);
   --color: var(--ion-color-primary-contrast);
 }
@@ -33,11 +32,13 @@ ion-toolbar {
   justify-content: center;
   background: url("/assets/image/background.png");
 }
+
 .logo {
   top: 9em;
   position: absolute;
   width: 65%;
 }
+
 .loader {
   position: absolute;
   //top: calc(50% - 32px);
@@ -63,7 +64,6 @@ ion-toolbar {
   animation: rotate-one 1s linear infinite;
   border-bottom: 6px solid var(--ion-color-dark);
 }
-
 .inner.two {
   right: 0%;
   top: 0%;
@@ -102,5 +102,17 @@ ion-toolbar {
   }
   100% {
     transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
+}
+//Ratings PopOver
+ion-popover{
+  ion-backdrop{
+    opacity: 0.5 !important;
+  }
+  .popover-wrapper{
+    .popover-content{
+      width:80vw;
+      max-width:500px;
+    }
   }
 }

@@ -25,10 +25,11 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Device} from '@ionic-native/device/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ChangeRatingComponent } from './change-rating/change-rating.component';
 
 @NgModule({
-    declarations: [AppComponent],
-    entryComponents: [],
+    declarations: [AppComponent, ChangeRatingComponent],
+    entryComponents: [ChangeRatingComponent],
     imports: [
         BrowserModule,
         FormsModule,

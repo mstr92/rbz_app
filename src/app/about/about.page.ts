@@ -38,6 +38,9 @@ export class AboutPage implements OnInit {
         let a = document.getElementById("img") as HTMLImageElement;
         this.storageService.getMoviePosterByID("tt1345836").then(b => a.src = b);
     }
+    test5() {
+        this.storageService.initMovieRating();
+    }
 
 
 }

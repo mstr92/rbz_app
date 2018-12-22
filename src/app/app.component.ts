@@ -28,9 +28,19 @@ export class AppComponent {
             icon: 'heart'
         },
         {
+            title: 'My Ratings',
+            url: '/ratings',
+            icon: 'star'
+        },
+        {
             title: 'History',
             url: '/history',
             icon: 'clock'
+        },
+        {
+            title: 'Settings',
+            url: '/settings',
+            icon: 'settings'
         },
         {
             title: 'Help',
@@ -79,12 +89,15 @@ export class AppComponent {
                 if (!keys.includes(Constants.MOVIE_POSTER)) {
                     this.storageService.initMoviePosters();
                 }
+                if (!keys.includes(Constants.MOVIE_RATING)) {
+                    this.storageService.initMovieRating();
+                }
             });
 
         });
         this.statusBar.styleDefault();
-
-        timer(3000).subscribe(() => this.showSplash = false) // <-- hide animation after 3s
+        this.showSplash = false;
+        //timer(3000).subscribe(() => this.showSplash = false) // <-- hide animation after 3s
     }
 
 }

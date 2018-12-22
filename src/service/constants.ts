@@ -13,4 +13,5 @@ export enum Constants {
     MOVIE_FAVOURITE = 'favouriteMovies',
     MOVIE_POSTER = 'posterMovies',
     MOVIE_HISTORY = 'movie_history',
+    MOVIE_RATING = 'ratingMovies'
 }

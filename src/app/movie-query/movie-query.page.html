@@ -52,15 +52,15 @@
             </ion-avatar>
             <ion-label>{{entry.title}}</ion-label>
           </ion-item>
-          <ion-item-options>
-            <button ion-button color="secondary" (click)="changeAlignment(entry, 'movies')">
+          <ion-item-options side="end">
+            <ion-item-option color="secondary" (click)="changeAlignment(entry,'movies')">
               <ion-icon name="md-swap"></ion-icon>
               {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
-            </button>
-            <button ion-button color="danger" (click)="deleteEntry(entry, 'movies')">
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="deleteEntry(entry, 'movies')">
               <ion-icon name="trash"></ion-icon>
               Delete
-            </button>
+            </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
@@ -104,15 +104,15 @@
             </ion-avatar>
             <ion-label>{{entry.firstname}} {{entry.lastname}}</ion-label>
           </ion-item>
-          <ion-item-options>
-            <button ion-button color="secondary" (click)="changeAlignment(entry, 'actors')">
+          <ion-item-options side="end">
+            <ion-item-option color="secondary" (click)="changeAlignment(entry,'actors')">
               <ion-icon name="md-swap"></ion-icon>
               {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
-            </button>
-            <button ion-button color="danger" (click)="deleteEntry(entry, 'actors')">
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="deleteEntry(entry, 'actors')">
               <ion-icon name="trash"></ion-icon>
               Delete
-            </button>
+            </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
@@ -156,15 +156,15 @@
             </ion-avatar>
             <ion-label>{{entry.name}}</ion-label>
           </ion-item>
-          <ion-item-options>
-            <button ion-button color="secondary" (click)="changeAlignment(entry, 'search_genres')">
+          <ion-item-options side="end">
+            <ion-item-option color="secondary" (click)="changeAlignment(entry,'search_genres')">
               <ion-icon name="md-swap"></ion-icon>
               {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
-            </button>
-            <button ion-button color="danger" (click)="deleteEntry(entry, 'search_genres')">
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="deleteEntry(entry, 'search_genres')">
               <ion-icon name="trash"></ion-icon>
               Delete
-            </button>
+            </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
@@ -208,15 +208,15 @@
             </ion-avatar>
             <ion-label>{{entry.name}}</ion-label>
           </ion-item>
-          <ion-item-options>
-            <button ion-button color="secondary" (click)="changeAlignment(entry,'keywords')">
+          <ion-item-options side="end">
+            <ion-item-option color="secondary" (click)="changeAlignment(entry,'keywords')">
               <ion-icon name="md-swap"></ion-icon>
               {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
-            </button>
-            <button ion-button color="danger" (click)="deleteEntry(entry, 'keywords')">
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="deleteEntry(entry, 'keywords')">
               <ion-icon name="trash"></ion-icon>
               Delete
-            </button>
+            </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
@@ -249,12 +249,11 @@
             </ion-row>
           </ion-grid>
         </ion-item>
-        <ion-item-options>
-          <button class="slide-button-range" ion-button color="secondary"
-                  (click)="negateValue('positive', movie_year_pos)">
+        <ion-item-options side="end">
+          <ion-item-option color="secondary" (click)="negateValue('positive', movie_year_pos)">
             <ion-icon name="md-swap"></ion-icon>
             {{movie_year_enabled.positive ? 'Deactivate' : 'Activate'}}
-          </button>
+          </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
       <ion-item-sliding #movie_year_neg>
@@ -275,12 +274,11 @@
             </ion-row>
           </ion-grid>
         </ion-item>
-        <ion-item-options>
-          <button class="slide-button-range" ion-button color="secondary"
-                  (click)="negateValue('negative', movie_year_neg)">
+        <ion-item-options side="end">
+          <ion-item-option color="secondary"  (click)="negateValue('negative', movie_year_neg)">
             <ion-icon name="md-swap"></ion-icon>
             {{movie_year_enabled.negative ? 'Deactivate' : 'Activate'}}
-          </button>
+          </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     </ion-card-content>

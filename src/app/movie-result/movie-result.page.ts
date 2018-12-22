@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnInit} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
 import {MovieHistory, MovieResult, Poster} from '../../interfaces/movieInterface';
 import {Result} from '../../assets/data_test';
@@ -25,7 +25,7 @@ export class MovieResultPage implements OnInit {
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public loadingController: LoadingController, public queryBuilder: QuerybuilderService,
-                public navCtrl: NavController, public apiService:ApiService) {
+                public navCtrl: NavController, public apiService: ApiService) {
         this.movies = {result: []};
         this.current_timestamp = new Date().toISOString();
     }
@@ -36,6 +36,7 @@ export class MovieResultPage implements OnInit {
             this.loadingController.dismiss();
         });
     }
+
 
     addToFavourite(fav) {
         let movie = fav;
@@ -82,12 +83,7 @@ export class MovieResultPage implements OnInit {
 
     setRating(rating, movie) {
         movie.rating = rating;
-        for (let i = 1; i <= 5; i++) {
-            let id = 'rating' + i.toString() + movie.id.toString();
-            const clazz = i <= rating ? 'rating-yellow' : 'rating-light';
-            document.getElementById(id).className = clazz;
-        }
-        //TODO: send rating to database
+        this.storageService.addMovieRating(movie);
     }
 
     displayRecommendationRating(movie) {
@@ -136,7 +132,7 @@ export class MovieResultPage implements OnInit {
             this.helperService.movie_request_to_pass.length += 5;
             this.checkIfInFavourites();
             this.loadImages();
-
+            this.checkIfInRatings();
         }
         this.show_more = !this.show_more;
     }
@@ -155,10 +151,25 @@ export class MovieResultPage implements OnInit {
         });
     }
 
+    checkIfInRatings() {
+        this.storageService.getMovieRatings().then(data => {
+            if (data != undefined || data != null) {
+                data.forEach(element => {
+                    this.movies.result.forEach(movie => {
+                        if (element.imdb_id == movie.imdb_id) {
+                            movie.rating = element.rating;
+                        }
+                    });
+                });
+            }
+        });
+    }
+
     setData() {
-        this.movies.result = this.parser.parseMovieResult(Result.res_short,this.current_timestamp);
+        this.movies.result = this.parser.parseMovieResult(Result.res_short, this.current_timestamp);
         this.checkIfInFavourites();
         this.loadImages();
+        this.checkIfInRatings();
         this.movies.result.forEach(movie => {
             this.movie_rec_rating_map[movie.id] = true;
         });
@@ -186,8 +197,9 @@ export class MovieResultPage implements OnInit {
                     });
                 }
             });
-        })
+        });
     }
+
     async presentLoadingWithOptions() {
         const loading = await this.loadingController.create({
             spinner: 'crescent',
@@ -202,7 +214,7 @@ export class MovieResultPage implements OnInit {
     }
 
     openFullPoster(event) {
-        event.srcElement.className= event.srcElement.className === "poster small" ? "poster full" : "poster small";
+        event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
     }
 
 }

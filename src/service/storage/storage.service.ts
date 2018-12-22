@@ -1,11 +1,8 @@
 import {Injectable} from '@angular/core';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {
-    CompleteMovieSearchRequest,
     Movie,
     MovieHistory,
-    MovieResult,
-    PartialMovieSearchRequest,
     Poster
 } from '../../interfaces/movieInterface';
 import {ToastController} from '@ionic/angular';
@@ -25,7 +22,9 @@ export class StorageService {
     initMovieFavourites() {
         this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: []});
     }
-
+    initMovieRating() {
+        this.storage.setItem(Constants.MOVIE_RATING, {data: []});
+    }
     initMoviePosters() {
         this.storage.setItem(Constants.MOVIE_POSTER, {data: []});
     }
@@ -40,15 +39,16 @@ export class StorageService {
 
     addMovie(movie: Movie) {
         this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
-            const movie_tmp = <Movie>{
-                id: movie.id,
-                imdb_id: movie.imdb_id,
-                title: movie.title,
-                favourite: movie.favourite,
-                year: movie.year
-            };
+                const movie_tmp = <Movie>{
+                    id: movie.id,
+                    imdb_id: movie.imdb_id,
+                    title: movie.title,
+                    favourite: movie.favourite,
+                    year: movie.year,
+                    rating: movie.rating
+                };
 
-            data.data.push(movie_tmp);
+                data.data.push(movie_tmp);
                 this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: data.data}).then(() => {
                         this.displayToast('"' + movie.title + '" was added to Favourite List!');
                     },
@@ -58,9 +58,41 @@ export class StorageService {
             error => console.error(error)
         );
     }
+    addMovieRating(movie: Movie) {
+        this.storage.getItem(Constants.MOVIE_RATING).then(data => {
+                const movie_tmp = <Movie>{
+                    id: movie.id,
+                    imdb_id: movie.imdb_id,
+                    title: movie.title,
+                    favourite: movie.favourite,
+                    year: movie.year,
+                    rating: movie.rating
+                };
+                let arr = data.data;
+                data.data.forEach(mov => {
+                    if(mov.id == movie.id) {
+                        console.log(mov.title + " in array");
+                        arr = this.helperService.arrayRemoveById(arr, mov);
+                    }
+                });
+                console.log(arr);
+                arr.push(movie_tmp);
+                console.log(arr);
+                this.storage.setItem(Constants.MOVIE_RATING, {data: arr});
+            },
+            error => console.error(error)
+        );
+    }
 
     getMovies() {
         return this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
+                return data.data;
+            },
+            error => console.error(error)
+        );
+    }
+    getMovieRatings() {
+        return this.storage.getItem(Constants.MOVIE_RATING).then(data => {
                 return data.data;
             },
             error => console.error(error)
@@ -76,6 +108,15 @@ export class StorageService {
                     },
                     error => console.error('Error storing item', error)
                 );
+            },
+            error => console.error(error)
+        );
+    }
+    deleteRating(movie) {
+        this.storage.getItem(Constants.MOVIE_RATING).then(data => {
+                let arr: Array<Movie> = data.data;
+                arr = this.helperService.arrayRemoveById(arr, movie);
+                this.storage.setItem(Constants.MOVIE_RATING, {data: arr});
             },
             error => console.error(error)
         );
