@@ -5,6 +5,7 @@ import {HelperService} from '../../service/helper/helper.service';
 import {ApiService} from '../../service/apicalls/api.service';
 import {PopoverController} from '@ionic/angular';
 import {ChangeRatingComponent} from '../change-rating/change-rating.component';
+import {Constants} from '../../service/constants';
 
 interface Rating {
     stars5: Array<Movie>;
@@ -24,13 +25,13 @@ export class RatingsPage implements OnInit {
     rating: Rating = {stars5: [], stars4: [],stars3: [],stars2: [],stars1: []};
     constructor(public storageService: StorageService, public helperService: HelperService, public apiService:ApiService,
                 public popoverController: PopoverController) {
-        this.storageService.getMovieRatings().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
             if (data!= undefined || data!= null) {
                 data.forEach(movie => {
                     this.rating["stars" + movie.rating.toString()].push(movie);
                 });
                 for(let i = 1; i <= 5; i++) {
-                   this.loadImages(this.rating["stars" +i.toString()]);
+                   this.storageService.loadImages(this.rating["stars" +i.toString()]);
                 }
             }
         });
@@ -51,7 +52,7 @@ export class RatingsPage implements OnInit {
                 movie.rating = data.data;
                 this.rating["stars"+star] = this.helperService.arrayRemoveById(this.rating["stars"+star], movie);
                 this.rating["stars"+data.data].push(movie);
-                this.storageService.addMovieRating(movie);
+                this.storageService.addMovieToRating(movie);
             }
         });
         await this.slidingList.closeSlidingItems();
@@ -60,31 +61,7 @@ export class RatingsPage implements OnInit {
 
     async deleteMovie(movie, rating) {
         this.rating["stars" + rating] = this.helperService.arrayRemoveById(this.rating["stars" + rating], movie);
-        this.storageService.deleteRating(movie);
+        this.storageService.deleteEntry(movie, Constants.MOVIE_RATING);
         await this.slidingList.closeSlidingItems();
-    }
-
-    loadImages(movie_arr) {
-        movie_arr.forEach(movie => {
-            this.storageService.isInPosterStorage(movie.imdb_id).then(is_in_storage => {
-                if (is_in_storage) {
-                    this.storageService.getMoviePosterByID(movie.imdb_id).then(data => movie.image = data.poster);
-                }
-                else {
-                    //TODO: change to rbz.io API call
-                    // else: get image from url and store in storage
-                    this.apiService.getDetailedMovieInfo1(movie.imdb_id).then(data => {
-                        let dataObj: any = JSON.parse(data.data);
-                        const url = 'https://image.tmdb.org/t/p/w300/'; //statt w185 -> original
-                        const poster = dataObj.movie_results[0].poster_path;
-                        this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
-                            .then(base64Img => {
-                                movie.image = base64Img.toString();
-                                this.storageService.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: base64Img.toString()});
-                            });
-                    });
-                }
-            });
-        });
     }
 }

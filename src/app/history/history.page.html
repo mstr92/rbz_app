@@ -109,11 +109,14 @@
                         </a>
                     </ion-col>
                 </ion-row>
-                <!--<ion-row *ngIf="element.request.data.timeperiod.length > 0">-->
-                <!--<ion-col size="4" class="col-header">Year:</ion-col>-->
-                <!--<ion-col size="8">-->
-                <!--</ion-col>-->
-                <!--</ion-row>-->
+                <ion-row *ngIf="element.request.data.timeperiod.length > 0">
+                <ion-col size="4" class="col-header">Year:</ion-col>
+                <ion-col size="8">
+                    <a *ngFor="let year of element.request.data.timeperiod, let i = index" class="{{year.alignment}}">{{year.from}} - {{year.to}}
+                        <a *ngIf="i !== element.request.data.timeperiod.length-1">&nbsp;|&nbsp;</a>
+                    </a>
+                </ion-col>
+                </ion-row>
                 <ion-row>
                     <ion-col size="4" class="col-header">Number of Results:</ion-col>
                     <ion-col size="6">

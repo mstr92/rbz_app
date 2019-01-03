@@ -26,6 +26,7 @@ import {Device} from '@ionic-native/device/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ChangeRatingComponent } from './change-rating/change-rating.component';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @NgModule({
     declarations: [AppComponent, ChangeRatingComponent],
@@ -55,6 +56,7 @@ import { ChangeRatingComponent } from './change-rating/change-rating.component';
         UniqueDeviceID,
         Device,
         Base64,
+        ScreenOrientation,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent],

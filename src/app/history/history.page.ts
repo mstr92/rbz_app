@@ -11,6 +11,7 @@ import {StorageService} from '../../service/storage/storage.service';
 import {ApiService} from '../../service/apicalls/api.service';
 import {HelperService} from '../../service/helper/helper.service';
 import {NavController} from '@ionic/angular';
+import {Constants} from '../../service/constants';
 
 @Component({
     selector: 'app-history',
@@ -54,7 +55,7 @@ export class HistoryPage implements OnInit {
         this.to_year = this.currentDate;
         this.to_year_select = this.currentDate.toISOString();
 
-        this.storageService.getHistory().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
             this.movieHistory = data;
            if (this.movieHistory != undefined || this.movieHistory != null) {
                this.movieHistory.sort((b, a) => (new Date(a.timestamp) > new Date(b.timestamp)) ? 1 : ((new Date(b.timestamp) > new Date(a.timestamp)) ? -1 : 0));
@@ -72,29 +73,7 @@ export class HistoryPage implements OnInit {
     openSelectedHistory(timestamp, result_movies) {
 
         if (this.close_map[timestamp]) {
-            result_movies.forEach(movie => {
-                if (movie.image == '') {
-                    this.storageService.isInPosterStorage(movie.imdb_id).then(is_in_storage => {
-                        if (is_in_storage) {
-                            this.storageService.getMoviePosterByID(movie.imdb_id).then(data => movie.image = data.poster);
-                        }
-                        else {
-                            //TODO: change to rbz.io API call
-                            // else: get image from url and store in storage
-                            this.apiService.getDetailedMovieInfo1(movie.imdb_id).then(data => {
-                                let dataObj: any = JSON.parse(data.data);
-                                const url = 'https://image.tmdb.org/t/p/w300/'; //statt w185 -> original
-                                const poster = dataObj.movie_results[0].poster_path;
-                                this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
-                                    .then(base64Img => {
-                                        movie.image = base64Img.toString();
-                                        this.storageService.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: base64Img.toString()});
-                                    });
-                            });
-                        }
-                    });
-                }
-            });
+            this.storageService.loadImages(result_movies);
         }
         this.close_map[timestamp] = !this.close_map[timestamp];
     }

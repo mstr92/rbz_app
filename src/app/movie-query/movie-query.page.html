@@ -7,6 +7,19 @@
       Movies
     </ion-title>
   </ion-toolbar>
+  <ion-fab vertical="top" horizontal="end" edge=true>
+    <ion-fab-button class="fab-main-button">
+      <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list>
+      <div>
+        <ion-label class="fab-label">Clear all entries</ion-label>
+        <ion-button (click)="clearEntries()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-fab-list>
+  </ion-fab>
 </ion-header>
 
 <ion-content padding>

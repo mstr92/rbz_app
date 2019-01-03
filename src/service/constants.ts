@@ -1,7 +1,7 @@
 export enum Constants {
     // API
-    HOST = '127.0.0.1',
-    PORT = '5000',
+    HOST = '129.27.153.16',
+    PORT = '8008',
     // Names
     GENRE = 'genre',
     MOVIE = 'movie',

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
 import {AlertController} from '@ionic/angular';
+import {Constants} from '../../service/constants';
 
 @Component({
     selector: 'app-settings',
@@ -15,19 +16,19 @@ export class SettingsPage implements OnInit {
     size_ratings = 0;
 
     constructor(public storageService: StorageService, public alertController: AlertController) {
-        this.storageService.getMovies().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(data => {
             console.log(data);
             this.size_favourites = data.length;
         });
-        this.storageService.getMovieRatings().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
             console.log(data);
             this.size_ratings = data.length;
         });
-        this.storageService.getAllMoviePosterByID().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_POSTER).then(data => {
             console.log(data);
             this.size_posters = data.length;
         });
-        this.storageService.getHistory().then(data => {
+        this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
             console.log(data);
             this.size_history = data.length;
         });
@@ -50,19 +51,19 @@ export class SettingsPage implements OnInit {
                     text: 'Delete',
                     handler: () => {
                         if (entity === 'favourites') {
-                            this.storageService.initMovieFavourites();
+                            this.storageService.initStorage(Constants.MOVIE_FAVOURITE);
                             this.size_favourites = 0;
                         }
                         if (entity === 'history') {
-                            this.storageService.initMovieHistory();
+                            this.storageService.initStorage(Constants.MOVIE_HISTORY);
                             this.size_history = 0;
                         }
                         if (entity === 'posters') {
-                            this.storageService.initMoviePosters();
+                            this.storageService.initStorage(Constants.MOVIE_POSTER);
                             this.size_posters = 0;
                         }
                         if (entity === 'ratings') {
-                            this.storageService.initMovieRating();
+                            this.storageService.initStorage(Constants.MOVIE_RATING);
                             this.size_ratings = 0;
                         }
                     }

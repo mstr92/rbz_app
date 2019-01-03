@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content padding>
     <ion-searchbar #searchbar animated class="searchbar" color="light"
-                   autofocus [(ngModel)]="searchTerm" (keyup.enter)="setFilteredData()"></ion-searchbar>
+                   autofocus [(ngModel)]="searchTerm" (keyup)="setFilteredData()"></ion-searchbar>
     <ion-row>
         <ion-col [class]="!isNegativeAlignment ? 'toggle-positive' : 'toggle-neutral'" #positive size="4">
             POSITIVE

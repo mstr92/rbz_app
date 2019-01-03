@@ -5,6 +5,7 @@ import {PartialMovieSearchRequest, Movie, Actor, Genre, Keyword, Poster} from '.
 import {HelperService} from '../../service/helper/helper.service';
 import {ApiService} from '../../service/apicalls/api.service';
 import {Constants} from '../../service/constants';
+import {StorageService} from '../../service/storage/storage.service';
 
 interface SearchData {
     search_genre: Array<[Genre, boolean]>;
@@ -45,7 +46,8 @@ export class MovieSearchPage implements OnInit {
                 public modalCtrl: ModalController,
                 public platform: Platform,
                 public helperService: HelperService,
-                public apiService: ApiService
+                public apiService: ApiService,
+                public storageService: StorageService
     ) {
         // Disable Hardware Back Button in Modal
         this.platform.backButton.subscribe(() => {
@@ -98,38 +100,32 @@ export class MovieSearchPage implements OnInit {
     }
 
     setData(entity) {
-        this.requests[entity] = this.apiService.getDataBySearchTerm(entity, this.searchTerm).then(data => {
-            this.searchdata['search_' + entity] = [];
-            const dataJson = JSON.parse(JSON.stringify(data));
-            dataJson.forEach((element,index) => {
-                const isSelected = this.searchdata['selected_' + entity].find(item => item.id === element.id);
-                const isCurrentlySelected = this.current_selected_search[entity + 's'].find(item => item.id === element.id);
-                if (isSelected !== undefined) {
-                    if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, isSelected.alignment, true));
-                    if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, isSelected.alignment, true));
-                    if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, isSelected.alignment, true));
-                } else if (isCurrentlySelected !== undefined) {
-                    if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, isCurrentlySelected.alignment, true));
-                    if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, isCurrentlySelected.alignment, true));
-                    if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, isCurrentlySelected.alignment, true));
-                } else {
-                    if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, '', false));
-                    if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, '', false));
-                    if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, '', false));
-                }
-                // TODO: Activate when API runs, replace image with the movie db image
-                // this.apiService.getDetailedMovieInfo(element.ttid).then(data => {
-                //     let dataObj: any = JSON.parse(data.data);
-                //     const url = 'https://image.tmdb.org/t/p/w185/'; //statt w185 -> original
-                //     const poster = dataObj.movie_results[0].poster_path;
-                //     this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
-                //         .then(base64Img => {
-                //             this.searchdata.search_movie[index][0].image = base64Img.toString();
-                //         });
-                //
-                // })
-            });
-        });
+       this.apiService.getDataBySearchTerm(entity, this.searchTerm).then(data => {
+           if(data != null) {
+               this.searchdata['search_' + entity] = [];
+               const dataPreprocess = JSON.parse(data);
+               const dataJson = JSON.parse(dataPreprocess);
+               dataJson.forEach((element,index) => {
+                   const isSelected = this.searchdata['selected_' + entity].find(item => item.id === element.id);
+                   const isCurrentlySelected = this.current_selected_search[entity + 's'].find(item => item.id === element.id);
+                   if (isSelected !== undefined) {
+                       if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, isSelected.alignment, true));
+                       if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, isSelected.alignment, true));
+                       if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, isSelected.alignment, true));
+                   } else if (isCurrentlySelected !== undefined) {
+                       if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, isCurrentlySelected.alignment, true));
+                       if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, isCurrentlySelected.alignment, true));
+                       if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, isCurrentlySelected.alignment, true));
+                   } else {
+                       if (entity == Constants.GENRE) this.searchdata['search_' + Constants.GENRE].push(MovieSearchPage.createGenreArray(element, '', false));
+                       if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, '', false));
+                       if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, '', false));
+                   }
+               });
+           }
+       });
+        // TODO check if its correct!
+        if (entity == Constants.MOVIE) this.storageService.loadImages(this.searchdata['search_' + Constants.MOVIE]);
     }
 
     setFilteredData() {

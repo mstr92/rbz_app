@@ -7,8 +7,8 @@ import {
 } from '../../interfaces/movieInterface';
 import {ToastController} from '@ionic/angular';
 import {HelperService} from '../helper/helper.service';
-import {Constants} from '../constants'
-
+import {Constants} from '../constants';
+import {ApiService} from '../apicalls/api.service';
 
 
 @Injectable({
@@ -16,28 +16,38 @@ import {Constants} from '../constants'
 })
 export class StorageService {
 
-    constructor(public storage: NativeStorage, public toastController: ToastController, public helperService: HelperService) {
+    constructor(public storage: NativeStorage, public toastController: ToastController, public helperService: HelperService, private apiService: ApiService) {
     }
 
-    initMovieFavourites() {
-        this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: []});
-    }
-    initMovieRating() {
-        this.storage.setItem(Constants.MOVIE_RATING, {data: []});
-    }
-    initMoviePosters() {
-        this.storage.setItem(Constants.MOVIE_POSTER, {data: []});
-    }
-
-    initMovieHistory() {
-        this.storage.setItem(Constants.MOVIE_HISTORY, {data: []});
-    }
-
-    getTest() {
+    getKeys() {
         return this.storage.keys();
     }
 
-    addMovie(movie: Movie) {
+    initStorage(storage_name) {
+        this.storage.setItem(storage_name, {data: []});
+    }
+
+    getStorageEntries(storage_name) {
+        return this.storage.getItem(storage_name).then(data => {
+                return data.data;
+            },
+            error => console.error(error)
+        );
+    }
+
+    deleteEntry(movie, storage_name) {
+        this.storage.getItem(storage_name).then(data => {
+                let arr: Array<Movie> = data.data;
+                arr = this.helperService.arrayRemoveById(arr, movie);
+                this.storage.setItem(storage_name, {data: arr});
+            },
+            error => console.error(error)
+        );
+    }
+    restructureFavourties(movie_arr) {
+        this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: movie_arr})
+    }
+    addMovieToFavourites(movie: Movie) {
         this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
                 const movie_tmp = <Movie>{
                     id: movie.id,
@@ -58,7 +68,8 @@ export class StorageService {
             error => console.error(error)
         );
     }
-    addMovieRating(movie: Movie) {
+
+    addMovieToRating(movie: Movie) {
         this.storage.getItem(Constants.MOVIE_RATING).then(data => {
                 const movie_tmp = <Movie>{
                     id: movie.id,
@@ -70,52 +81,12 @@ export class StorageService {
                 };
                 let arr = data.data;
                 data.data.forEach(mov => {
-                    if(mov.id == movie.id) {
-                        console.log(mov.title + " in array");
+                    if (mov.id == movie.id) {
+                        console.log(mov.title + ' in array');
                         arr = this.helperService.arrayRemoveById(arr, mov);
                     }
                 });
-                console.log(arr);
                 arr.push(movie_tmp);
-                console.log(arr);
-                this.storage.setItem(Constants.MOVIE_RATING, {data: arr});
-            },
-            error => console.error(error)
-        );
-    }
-
-    getMovies() {
-        return this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
-                return data.data;
-            },
-            error => console.error(error)
-        );
-    }
-    getMovieRatings() {
-        return this.storage.getItem(Constants.MOVIE_RATING).then(data => {
-                return data.data;
-            },
-            error => console.error(error)
-        );
-    }
-
-    deleteMovie(movie) {
-        this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
-                let arr: Array<Movie> = data.data;
-                arr = this.helperService.arrayRemoveById(arr, movie);
-                this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: arr}).then(() => {
-                        console.log(movie.title + ' deleted!');
-                    },
-                    error => console.error('Error storing item', error)
-                );
-            },
-            error => console.error(error)
-        );
-    }
-    deleteRating(movie) {
-        this.storage.getItem(Constants.MOVIE_RATING).then(data => {
-                let arr: Array<Movie> = data.data;
-                arr = this.helperService.arrayRemoveById(arr, movie);
                 this.storage.setItem(Constants.MOVIE_RATING, {data: arr});
             },
             error => console.error(error)
@@ -128,7 +99,7 @@ export class StorageService {
                 let arr: Array<Poster> = data.data;
                 let exists = false;
                 arr.forEach(poster => {
-                    if(imdb_id === poster.imdb_id) {
+                    if (imdb_id === poster.imdb_id) {
                         exists = true;
                         return;
                     }
@@ -150,19 +121,11 @@ export class StorageService {
         );
     }
 
-    getAllMoviePosterByID() {
-        return this.storage.getItem(Constants.MOVIE_POSTER).then(data => {
-                return data.data;
-            },
-            error => console.error(error)
-        );
-    }
-
     addMoviePoster(poster: Poster) {
         this.storage.getItem(Constants.MOVIE_POSTER).then(data => {
-            console.log(data);
-            data.data.push(poster);
-                this.storage.setItem(Constants.MOVIE_POSTER, {data: data.data});
+                let arr = data.data;
+                arr.push(poster);
+                this.storage.setItem(Constants.MOVIE_POSTER, {data: arr});
             },
             error => console.error(error)
         );
@@ -187,36 +150,52 @@ export class StorageService {
         );
     }
 
-    getHistory() {
-        return this.storage.getItem(Constants.MOVIE_HISTORY).then(data => {
-                return data.data;
-            },
-            error => console.error(error)
-        );
-    }
-
     getHistoryByDate(from, to) {
         return this.storage.getItem(Constants.MOVIE_HISTORY).then(data => {
                 let arr: Array<MovieHistory> = [];
                 data.data.forEach(his => {
-                    let timestamp= new Date(his.timestamp);
+                    let timestamp = new Date(his.timestamp);
                     let from_date = new Date(from);
-                    let to_date = new Date (to);
+                    let to_date = new Date(to);
                     from_date.setHours(0, 0, 0, 0);
                     to_date.setHours(0, 0, 0, 0);
                     timestamp.setHours(0, 0, 0, 0);
 
-                    if(to_date <= timestamp && timestamp <= from_date) {
+                    if (to_date <= timestamp && timestamp <= from_date) {
                         arr.push(his);
                     }
                 });
-                if(arr.length >= 0)
+                if (arr.length >= 0)
                     return arr;
                 else
                     return data.data;
             },
             error => console.error(error)
         );
+    }
+
+    loadImages(array) {
+        array.forEach(movie => {
+            this.isInPosterStorage(movie.imdb_id).then(is_in_storage => {
+                if (is_in_storage) {
+                    this.getMoviePosterByID(movie.imdb_id).then(data => movie.image = data.poster);
+                }
+                else {
+                    //TODO: change to rbz.io API call
+                    // else: get image from url and store in storage
+                    this.apiService.getDetailedMovieInfo1(movie.imdb_id).then(data => {
+                        let dataObj: any = JSON.parse(data.data);
+                        const url = 'https://image.tmdb.org/t/p/w300/'; //statt w185 -> original
+                        const poster = dataObj.movie_results[0].poster_path;
+                        this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
+                            .then(base64Img => {
+                                movie.image = base64Img.toString();
+                                this.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: base64Img.toString()});
+                            });
+                    });
+                }
+            });
+        });
     }
 
     async displayToast(msg) {

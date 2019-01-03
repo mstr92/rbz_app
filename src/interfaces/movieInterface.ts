@@ -8,6 +8,7 @@ export interface Movie {
     alignment?: string;
     favourite?: boolean;
     rating?: number;
+    vote?:number;
 }
 export interface Actor {
     id: number;

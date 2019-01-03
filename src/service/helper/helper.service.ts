@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CompleteMovieSearchRequest} from '../../interfaces/movieInterface';
+import {CompleteMovieSearchRequest, Movie, Poster} from '../../interfaces/movieInterface';
 import { Base64 } from '@ionic-native/base64/ngx';
 
 @Injectable({
@@ -59,14 +59,4 @@ export class HelperService {
             img.src = url;
         });
     }
-
-
-
-//     this.getBase64ImageFromUrl('https://image.tmdb.org/t/p/original/fVVU9hG6i6jeMv4HddeeTCAVzpF.jpg')
-// .then(result => {
-//     console.log(result);
-//     let img= document.getElementById("img")  as HTMLImageElement;
-//     img.src = result;
-// })
-// .catch(err => console.error(err));
 }

@@ -162,17 +162,33 @@ ion-chip {
 .search-button {
   --background: var(--ion-color-primary-contrast)
 }
-.test {
-  animation: moveWithTransform 5s linear;
+ion-fab {
+  top: 0em;
 }
-@keyframes moveWithTransform {
-  0% {
-    transform: translate3d(0,0,0);
-  }
-  50% {
-    transform: translate3d(20px,0,0);
-  }
-  100% {
-    transform: translate3d(40px,0,0);
-  }
+
+ion-fab-list > div > ion-button {
+  --background: var(--ion-color-dark);
+  border-radius: 23px !important;
+}
+ion-fab-list > ion-fab-button {
+  --background: var(--ion-color-primary);
+}
+ion-fab-button > ion-icon {
+  color: var(--ion-color-primary-contrast);
+}
+.fab-main-button{
+  --box-shadow: none;
+  --background: rgba(0,0,0,0);
+  font-size: 3em;
+}
+
+.fab-label {
+  position: absolute;
+  right: 3.5em;
+  margin-top: 0.5em;
+  margin-right: 0.6em;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  padding: 0.4em;
+  border-radius: 10px;
 }

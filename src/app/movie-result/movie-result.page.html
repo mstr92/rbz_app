@@ -61,7 +61,7 @@
         <ion-card-header>
             <ion-card-title>{{movie.title}} ({{movie.year}})</ion-card-title>
         </ion-card-header>
-        <ion-card-content>
+        <ion-card-content class="link-button">
             <ion-grid>
                 <ion-row>
                     <ion-col>
@@ -82,28 +82,16 @@
                 </ion-row>
             </ion-grid>
         </ion-card-content>
-        <ion-button *ngIf="movie_rec_rating_map[movie.id]" expand="block" class="rate-button goTo-Button"
+        <ion-button expand="block" class="rate-button goTo-Button" [ngStyle]="{'z-index': movie_rec_rating_map[movie.id] ? 9 : 0 }"
                     (click)="displayRecommendationRating(movie)">How satisfied are you<br>with the recommended movie?
         </ion-button>
-        <ion-grid *ngIf="!movie_rec_rating_map[movie.id]" class="rate-grid">
-            <ion-row align-items-center class="rate-row">
-                <ion-col [id]="'recrating1' + movie.id" class="rate-thumps" (click)="setRecommendationRating(1, movie)">
-                    <img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji">
-                </ion-col>
-                <ion-col [id]="'recrating2' + movie.id" class="rate-thumps" (click)="setRecommendationRating(2, movie)">
-                    <img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji">
-                </ion-col>
-                <ion-col [id]="'recrating3' + movie.id" class="rate-thumps" (click)="setRecommendationRating(3, movie)">
-                    <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji">
-                </ion-col>
-                <ion-col [id]="'recrating4' + movie.id" class="rate-thumps" (click)="setRecommendationRating(4, movie)">
-                    <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji">
-                </ion-col>
-                <ion-col [id]="'recrating5' + movie.id" class="rate-thumps" (click)="setRecommendationRating(5, movie)">
-                    <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji">
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+        <div class="vote-line">
+            <img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji pos-1" (click)="setRecommendationRating(1, movie)">
+            <img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji pos-2" (click)="setRecommendationRating(2, movie)">
+            <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji pos-3" (click)="setRecommendationRating(3, movie)">
+            <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji pos-4" (click)="setRecommendationRating(4, movie)">
+            <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji pos-5" (click)="setRecommendationRating(5, movie)">
+        </div>
     </ion-card>
     <ion-card class="show-more-btn">
         <ion-button *ngIf="show_more && !no_more_results" expand="full" (click)="showMore()" class="show-more-btn">Show More...</ion-button>
