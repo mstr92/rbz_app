@@ -23,6 +23,7 @@ export class MovieResultPage implements OnInit {
     show_more = true;
     no_more_results = false;
     current_timestamp = null;
+    rec_text = ["GREAT", "GOOD", "OKEY", "BAD", "HORRIBLE"];
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public loadingController: LoadingController, public queryBuilder: QuerybuilderService,
@@ -106,13 +107,32 @@ export class MovieResultPage implements OnInit {
                 img.className +=" animate-" + i.toString();
             }
             else {
-                img.className +=" invisible";
+                img.className ="emoji invisible pos-" + i.toString();
             }
         }
-        this.movie_rec_rating_map[movie.id] = true;
+        let vote_text = document.getElementById("vote_res"+ movie.id) as HTMLDivElement;
+        let text = "The recommendation was " + this.rec_text[rating - 1] + "!";
+        vote_text.innerText = text;
+        vote_text.className = "vote-text visible";
+
+        let vote_change = document.getElementById("vote_change"+ movie.id) as HTMLDivElement;
+        vote_change.className = "vote-change visible";
+
         movie.vote = rating;
     }
-
+    changeVote(movie) {
+        this.movie_rec_rating_map[movie.id] = false;
+        for (let i = 1; i <= 5; i++) {
+            let img_id = 'recrating' + i.toString() + 'img' + movie.id.toString();
+            let img = document.getElementById(img_id) as HTMLImageElement;
+            img.src = i == movie.vote ? '../../assets/image/rating/' + i.toString() + '_full.svg' : '../../assets/image/rating/' + i.toString() + '_line.svg';
+            img.className =" emoji visible pos-" + i.toString();
+        }
+        let vote_text = document.getElementById("vote_res"+ movie.id) as HTMLDivElement;
+        vote_text.className = "vote-text invisible";
+        let vote_change = document.getElementById("vote_change"+ movie.id) as HTMLDivElement;
+        vote_change.className = "vote-change invisible";
+    }
     disableFavourite(movie) {
         if (this.movie_tmp.includes(movie)) {
             this.movie_tmp = this.helperService.arrayRemoveById(this.movie_tmp, movie);

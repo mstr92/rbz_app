@@ -82,7 +82,7 @@
                 </ion-row>
             </ion-grid>
         </ion-card-content>
-        <ion-button expand="block" class="rate-button goTo-Button" [ngStyle]="{'z-index': movie_rec_rating_map[movie.id] ? 9 : 0 }"
+        <ion-button *ngIf="movie_rec_rating_map[movie.id]" expand="block" class="rate-button goTo-Button"
                     (click)="displayRecommendationRating(movie)">How satisfied are you<br>with the recommended movie?
         </ion-button>
         <div class="vote-line">
@@ -91,6 +91,8 @@
             <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji pos-3" (click)="setRecommendationRating(3, movie)">
             <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji pos-4" (click)="setRecommendationRating(4, movie)">
             <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji pos-5" (click)="setRecommendationRating(5, movie)">
+            <div [id]="'vote_res' + movie.id" class="vote-text invisible"></div>
+            <div [id]="'vote_change' + movie.id" class="vote-change invisible" (click)="changeVote(movie)">Change Decision</div>
         </div>
     </ion-card>
     <ion-card class="show-more-btn">

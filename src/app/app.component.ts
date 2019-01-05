@@ -1,16 +1,16 @@
 import {Component} from '@angular/core';
 
-import {Platform, Events, ModalController} from '@ionic/angular';
-// import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {Events, Platform} from '@ionic/angular';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Network} from '@ionic-native/network/ngx';
 import {NetworkServiceService} from '../service/network/network-service.service';
-import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Device} from '@ionic-native/device/ngx';
 import {StorageService} from '../service/storage/storage.service';
 import {Constants} from '../service/constants';
-import { timer } from 'rxjs/observable/timer';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import {timer} from 'rxjs/observable/timer';
+import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
+import {HelperService} from '../service/helper/helper.service';
+import {ApiService} from '../service/apicalls/api.service';
 
 @Component({
     selector: 'app-root',
@@ -59,28 +59,25 @@ export class AppComponent {
 
     constructor(
         private platform: Platform,
-        // private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         public events: Events,
         public network: Network,
         public networkService: NetworkServiceService,
-        private uniqueDeviceID: UniqueDeviceID,
         private device: Device,
         private storageService: StorageService,
-        private screenOrientation: ScreenOrientation
+        private screenOrientation: ScreenOrientation,
+        public helperService: HelperService,
+        public apiService: ApiService
     ) {
         this.initializeApp();
     }
 
     initializeApp() {
         this.platform.ready().then(() => {
-            //this.splashScreen.hide();
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
-            this.uniqueDeviceID.get()
-                .then((uuid: any) => console.log(uuid))
-                .catch((error: any) => console.log(error));
-            console.log('Serial: ' + this.device.serial);
+            this.showSplash = false;
+            timer(3000).subscribe(() => this.showSplash = false); // <-- hide animation after 3s
 
             this.storageService.getKeys().then(keys => {
                 if (!keys.includes(Constants.MOVIE_FAVOURITE)) {
@@ -95,12 +92,29 @@ export class AppComponent {
                 if (!keys.includes(Constants.MOVIE_RATING)) {
                     this.storageService.initStorage(Constants.MOVIE_RATING);
                 }
+                if (!keys.includes(Constants.USER)) {
+                    this.storageService.initUser();
+                }
+                if (!keys.includes(Constants.BACKUP_SNYC)) {
+                    this.storageService.initBackup();
+                }
             });
+            this.storageService.getUser().then(data => {
+                if (data != null) {
+                    this.helperService.username = data.username;
+                    this.helperService.isUserLoggedIn = true;
+                }
+                else {
+                    this.helperService.username = '';
+                    this.helperService.isUserLoggedIn = false;
+                }
+            });
+            this.apiService.setUUID(this.device.uuid).then(data => {
 
+            })
         });
         this.statusBar.styleDefault();
-        this.showSplash = false;
-        timer(3000).subscribe(() => this.showSplash = false) // <-- hide animation after 3s
+
     }
 
 }

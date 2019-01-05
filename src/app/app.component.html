@@ -31,6 +31,7 @@
           </ion-menu-toggle>
         </ion-list>
       </ion-content>
+      <div *ngIf="helperService.isUserLoggedIn" class="logged-in-text">Logged in as: <a>{{helperService.username}}</a></div>
     </ion-menu>
     <ion-router-outlet main></ion-router-outlet>
   </ion-split-pane>

@@ -27,6 +27,7 @@ export class RatingsPage implements OnInit {
                 public popoverController: PopoverController) {
         this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
             if (data!= undefined || data!= null) {
+                console.log(data)
                 data.forEach(movie => {
                     this.rating["stars" + movie.rating.toString()].push(movie);
                 });

@@ -9,6 +9,8 @@ export class HelperService {
 
     movie_request_to_pass: CompleteMovieSearchRequest;
     movie_request_refine = false;
+    isUserLoggedIn;
+    username;
 
     constructor(private base64: Base64) {
         this.movie_request_to_pass = {

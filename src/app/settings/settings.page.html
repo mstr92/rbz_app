@@ -1,59 +1,242 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Settings
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Settings
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Storage</ion-card-title>
-      <ion-card-subtitle>Delete storage entries</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label>
-          <ion-icon name="heart"></ion-icon>
-          <div>Favourites ({{size_favourites}})</div>
-        </ion-label>
-        <ion-button class="delete" (click)="presentConfirm('favourites')">
-          <ion-icon name="trash"></ion-icon>
-          Delete</ion-button>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <ion-icon name="clock"></ion-icon>
-          <div>History ({{size_history}})</div>
-        </ion-label>
-        <ion-button class="delete" (click)="presentConfirm('history')">
-          <ion-icon name="trash"></ion-icon>
-          Delete</ion-button>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <ion-icon name="star"></ion-icon>
-          <div>Ratings ({{size_ratings}})</div>
-        </ion-label>
-        <ion-button class="delete" (click)="presentConfirm('ratings')">
-          <ion-icon name="trash"></ion-icon>
-          Delete</ion-button>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <ion-icon name="albums"></ion-icon>
-          <div>Posters ({{size_posters}})</div>
-        </ion-label>
-        <ion-button class="delete" (click)="presentConfirm('posters')">
-          <ion-icon name="trash"></ion-icon>
-          Delete</ion-button>
-      </ion-item>
-    </ion-card-content>
-  </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Account</ion-card-title>
+            <ion-card-subtitle>
+                Log In to backup or restore your data.
+            </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item *ngIf="view_control.buttons">
+                <ion-button class="account-button" expand="full" (click)="open('login')">Login</ion-button>
+                <ion-button class="account-button" expand="full" (click)="open('register')">Register</ion-button>
+            </ion-item>
+            <ion-item *ngIf="view_control.login">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="person"></ion-icon>
+                        </ion-col>
+                        <ion-col >
+                            <ion-input placeholder="Username" [(ngModel)]="login.username"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="key"></ion-icon>
+                        </ion-col>
+                        <ion-col >
+                            <ion-input type="password" placeholder="Password" [(ngModel)]="login.password"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <div #login_error_msg class="error-msg"></div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <ion-button class="login-reg-btns" expand="full" (click)="open('login')">Cancel</ion-button>
+                        </ion-col>
+                        <ion-col>
+                            <ion-button class="login-reg-btns" expand="full" (click)="checkLogin()">Login</ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
 
+            <ion-item *ngIf="view_control.register">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="person"></ion-icon>
+                        </ion-col>
+                        <ion-col size="10">
+                            <ion-input required placeholder="Username" [(ngModel)]="account.username"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="mail"></ion-icon>
+                        </ion-col>
+                        <ion-col >
+                            <ion-input required placeholder="Email" type="email"
+                                       [(ngModel)]="account.email"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="key"></ion-icon>
+                        </ion-col>
+                        <ion-col >
+                            <ion-input type="password" placeholder="Password"
+                                       [(ngModel)]="account.password"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-icon class="account-icon" name="key"></ion-icon>
+                        </ion-col>
+                        <ion-col >
+                            <ion-input type="password" placeholder="Confirm password"
+                                       [(ngModel)]="account.password1"></ion-input>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <div #register_error_msg class="error-msg"></div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <ion-button class="login-reg-btns" expand="full" (click)="open('register')">Cancel</ion-button>
+                        </ion-col>
+                        <ion-col>
+                            <ion-button class="login-reg-btns" expand="full" (click)="sendRegistration()">Register</ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
+            <div *ngIf="view_control.loggedIn">
+                <ion-item>
+                    <div>Logged in as: <a style="font-weight: bold">{{helperService.username}}</a></div>
+                </ion-item>
+                <ion-card class="account-option">
+                    <ion-card-header class="account-option-header">
+                        <ion-card-subtitle>
+                            Upload to Database
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-item>
+                            <ion-label>
+                                <h2>History</h2>
+                                <h3>Last Upload: {{backup_upload.history | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button class="data-btn" (click)="uploadData('history')">
+                                <ion-icon name="cloud-upload"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>
+                                <h2>My Favourites</h2>
+                                <h3>Last Upload: {{backup_upload.favourite | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button class="data-btn" (click)="uploadData('favourite')">
+                                <ion-icon name="cloud-upload"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>
+                                <h2>My Ratings</h2>
+                                <h3>Last Upload: {{backup_upload.rating | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button class="data-btn" (click)="uploadData('rating')">
+                                <ion-icon name="cloud-upload"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+                <ion-card class="account-option">
+                    <ion-card-header class="account-option-header">
+                        <ion-card-subtitle>
+                            Synchronize from Database
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-item>
+                            <ion-label>
+                                <h2>History</h2>
+                                <h3>Last Sync: {{backup_sync.history | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button [disabled]="backup_upload.history == ''" class="data-btn" (click)="confirmSync('history')">
+                                <ion-icon name="cloud-download"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>
+                                <h2>My Favourites</h2>
+                                <h3>Last Sync: {{backup_sync.favourite | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button [disabled]="backup_upload.favourite == ''"class="data-btn" (click)="confirmSync('favourite')">
+                                <ion-icon name="cloud-download"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>
+                                <h2>My Ratings</h2>
+                                <h3>Last Sync: {{backup_sync.rating | date:'dd/MM/yy HH:mm'}}</h3>
+                            </ion-label>
+                            <ion-button [disabled]="backup_upload.rating == ''" class="data-btn" (click)="confirmSync('rating')">
+                                <ion-icon name="cloud-download"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+                <ion-item>
+                    <ion-button expand="full" class="logout-btn" (click)="confirmLogout()">Log Out!</ion-button>
+                </ion-item>
+            </div>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Storage</ion-card-title>
+            <ion-card-subtitle>Delete storage entries</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label>
+                    <ion-icon name="heart"></ion-icon>
+                    <div>Favourites ({{size_favourites}})</div>
+                </ion-label>
+                <ion-button class="delete" (click)="presentConfirm('favourites')">
+                    <ion-icon name="trash"></ion-icon>
+                    Delete
+                </ion-button>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <ion-icon name="clock"></ion-icon>
+                    <div>History ({{size_history}})</div>
+                </ion-label>
+                <ion-button class="delete" (click)="presentConfirm('history')">
+                    <ion-icon name="trash"></ion-icon>
+                    Delete
+                </ion-button>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <ion-icon name="star"></ion-icon>
+                    <div>Ratings ({{size_ratings}})</div>
+                </ion-label>
+                <ion-button class="delete" (click)="presentConfirm('ratings')">
+                    <ion-icon name="trash"></ion-icon>
+                    Delete
+                </ion-button>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <ion-icon name="albums"></ion-icon>
+                    <div>Posters ({{size_posters}})</div>
+                </ion-label>
+                <ion-button class="delete" (click)="presentConfirm('posters')">
+                    <ion-icon name="trash"></ion-icon>
+                    Delete
+                </ion-button>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
 </ion-content>

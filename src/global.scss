@@ -116,3 +116,11 @@ ion-popover{
     }
   }
 }
+.logged-in-text {
+  width: 100%;
+  margin-left: 4%;
+  margin-bottom: 3%;
+}
+.logged-in-text > a {
+  font-weight: bold;
+}

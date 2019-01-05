@@ -6,7 +6,9 @@ import {HTTP} from '@ionic-native/http/ngx';
 @Injectable()
 export class ApiService {
 
-    constructor(public httpClient: HTTP) {
+
+    constructor(public http: HTTP) {
+
     }
 
     static createAPIUrl(entity) {
@@ -15,9 +17,9 @@ export class ApiService {
 
     getDataBySearchTerm(entity, searchTerm) {
         if (entity == Constants.ACTOR) entity = 'person';
-        return this.httpClient.get(ApiService.createAPIUrl(entity) + searchTerm, {}, {Accept: 'application/json'})
+        return this.http.get(ApiService.createAPIUrl(entity) + searchTerm, {}, {Accept: 'application/json'})
             .then(data => {
-                if(data.status == 201) {
+                if (data.status == 201) {
                     return data.data;
                 }
             })
@@ -27,12 +29,51 @@ export class ApiService {
     }
 
     getDetailedMovieInfo(imdb_id) {
-        return this.httpClient.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {});
+        return this.http.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {});
     }
 
-    getDetailedMovieInfo1(imdb_id) {
-        return this.httpClient.get('https://api.themoviedb.org/3/find/' + imdb_id + '?api_key=4011e631409cb9aad814f2e2a03df031&external_source=imdb_id', {}, {});
+    setUser(account) {
+        this.http.setDataSerializer('json');
+        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user',
+            {
+                'username': account.username,
+                'email': account.email,
+                'password': account.password
+            }, {},);
     }
 
+    getUser(username) {
+        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/' + username, {}, {})
+            .then(data => {
+                if (data.status == 201) {
+                    return data.data;
+                }
+            })
+            .catch(error => {
+                return null;
+            });
+    }
+    getUserPassword(username, password) {
+        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/password/' + username + '/' + password, {}, {});
+    }
 
+    setBackup(history, rating, favourite, user_id) {
+        this.http.setDataSerializer('json');
+        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup',
+            {
+                'favourite': favourite,
+                'rating': rating,
+                'user_id': user_id,
+                'history': history
+            }, {});
+    }
+    getBackup(user_id, entity) {
+      return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/' + entity + '/' + user_id, {},{});
+    }
+    getBackupLastDate(user_id){
+        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/dates/' + user_id, {},{});
+    }
+    setUUID(uuid) {
+        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {},{})
+    }
 }

@@ -21,7 +21,6 @@ import {NetworkStatusAngularModule} from 'network-status-angular';
 import {SocialSharing } from '@ionic-native/social-sharing/ngx'
 import {HttpClientModule } from '@angular/common/http';
 import {ApiService} from '../service/apicalls/api.service';
-import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Device} from '@ionic-native/device/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -40,20 +39,18 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
         AppRoutingModule,
         HttpClientModule,
         MovieSearchPageModule,
-        NetworkStatusAngularModule.forRoot()
+        NetworkStatusAngularModule.forRoot(),
     ],
     providers: [
         StatusBar,
-        // SplashScreen,
         NetworkServiceService,
         StorageService,
         Keyboard,
         Network,
-        HTTP,
         NativeStorage,
         SocialSharing,
         ApiService,
-        UniqueDeviceID,
+        HTTP,
         Device,
         Base64,
         ScreenOrientation,

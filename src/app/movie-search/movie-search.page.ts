@@ -84,11 +84,11 @@ export class MovieSearchPage implements OnInit {
             id: element.id, name: element.genrename, alignment: alignment
         }, selected];
     }
-    //TODO: set image: "", when API runs
     static createMovieArray(element, alignment, selected) {
         return [<Movie>{
-            id: element.id, imdb_id: element.ttid, title: element.title,
-            // image: element.imglink,
+            id: element.id, imdb_id: element.ttid,
+            title: element.title.substring(0, element.title.length - 7),
+            image: "",
             year: element.year, alignment: alignment
         }, selected];
     }
@@ -122,10 +122,11 @@ export class MovieSearchPage implements OnInit {
                        if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, '', false));
                    }
                });
+               console.log(this.searchdata['search_' + Constants.MOVIE]);
+               if (entity == Constants.MOVIE) this.storageService.loadImages_search(this.searchdata['search_' + Constants.MOVIE]);
            }
        });
-        // TODO check if its correct!
-        if (entity == Constants.MOVIE) this.storageService.loadImages(this.searchdata['search_' + Constants.MOVIE]);
+
     }
 
     setFilteredData() {
