@@ -15,7 +15,9 @@ export enum Constants {
     MOVIE_HISTORY = 'movie_history',
     MOVIE_RATING = 'ratingMovies',
     USER = 'user',
+    UUID = "uuid",
     BACKUP_SNYC = "backupSync",
+
     //Verschlüsselung
     AES_SECUREKEY = "74e977035b27c7ce22fde5b21205ac59",
     AES_SECUREIV = "0cfa57d192d00fe8"

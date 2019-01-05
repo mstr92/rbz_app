@@ -55,7 +55,9 @@ export class AboutPage implements OnInit {
     }
 
     test6() {
-        this.storageService.initBackup();
+        this.storageService.getUUID().then(is_set => {
+            console.log(is_set.data)
+        });
     }
 
 

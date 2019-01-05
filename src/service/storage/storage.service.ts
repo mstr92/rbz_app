@@ -33,6 +33,15 @@ export class StorageService {
     initBackup() {
         this.storage.setItem(Constants.BACKUP_SNYC, {data: null});
     }
+    initUUID() {
+        this.storage.setItem(Constants.UUID, {data: false})
+    }
+    setUUID() {
+        return this.storage.setItem(Constants.UUID, {data: true});
+    }
+    getUUID() {
+        return this.storage.getItem(Constants.UUID);
+    }
     setFullData(storage_name, data) {
         return this.storage.setItem(storage_name, {data: data});
     }

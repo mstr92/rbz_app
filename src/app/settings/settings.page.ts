@@ -174,23 +174,30 @@ export class SettingsPage implements OnInit {
         this.apiService.getUserPassword(this.login.username, this.login.password).then(check => {
             if (check.status == 201) {
                 this.apiService.getUser(this.login.username).then(user => {
-                const dataPreprocess = JSON.parse(user);
-                const dataJson = JSON.parse(dataPreprocess);
-                this.storageService.addUser(<User>{id: dataJson[0].id, email: dataJson[0].email, username: dataJson[0].username});
-                this.helperService.isUserLoggedIn = true;
-                this.helperService.username = dataJson[0].username;
-                this.view_control.login = !this.view_control.login;
-                this.view_control.loggedIn = !this.view_control.loggedIn;
-                this.setLastDates();
-                })
+                    const dataPreprocess = JSON.parse(user);
+                    const dataJson = JSON.parse(dataPreprocess);
+                    this.storageService.addUser(<User>{id: dataJson[0].id, email: dataJson[0].email, username: dataJson[0].username});
+                    this.helperService.isUserLoggedIn = true;
+                    this.helperService.username = dataJson[0].username;
+                    this.view_control.login = !this.view_control.login;
+                    this.view_control.loggedIn = !this.view_control.loggedIn;
+                    this.setLastDates();
+                    this.apiService.setUserUUID(this.login.username).then(data => {
+                        console.log(data)
+                        console.log("testst")
+                    }, error => {
+                        console.log(error)
+                        console.log("testst")
+                    })
+                });
             }
         }, (check) => {
-            if(check.status == 410) {
+            if (check.status == 410) {
                 this.login_error_msg.nativeElement.innerText = '- Wrong Password';
-            } else if(check.status == 411){
+            } else if (check.status == 411) {
                 this.login_error_msg.nativeElement.innerText = '- Username does not exist';
             } else {
-            this.login_error_msg.nativeElement.innerText = '- Wrong Username or Password';
+                this.login_error_msg.nativeElement.innerText = '- Wrong Username or Password';
             }
         });
     }

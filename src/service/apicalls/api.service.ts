@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Constants} from '../constants';
 import {HTTP} from '@ionic-native/http/ngx';
+import {Device} from '@ionic-native/device/ngx';
 
 
 @Injectable()
 export class ApiService {
 
 
-    constructor(public http: HTTP) {
+    constructor(public http: HTTP, private device: Device) {
 
     }
 
@@ -41,6 +42,15 @@ export class ApiService {
                 'password': account.password
             }, {},);
     }
+    setUserUUID(username) {
+        this.http.setDataSerializer('json');
+        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/deviceId',
+            {
+                'username': username,
+                'deviceId': this.device.uuid,
+            }, {},);
+    }
+
 
     getUser(username) {
         return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/' + username, {}, {})
@@ -74,6 +84,6 @@ export class ApiService {
         return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/dates/' + user_id, {},{});
     }
     setUUID(uuid) {
-        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {},{})
+        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {},{})
     }
 }

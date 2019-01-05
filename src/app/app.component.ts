@@ -98,6 +98,9 @@ export class AppComponent {
                 if (!keys.includes(Constants.BACKUP_SNYC)) {
                     this.storageService.initBackup();
                 }
+                if (!keys.includes(Constants.UUID)) {
+                    this.storageService.initUUID();
+                }
             });
             this.storageService.getUser().then(data => {
                 if (data != null) {
@@ -109,8 +112,14 @@ export class AppComponent {
                     this.helperService.isUserLoggedIn = false;
                 }
             });
-            this.apiService.setUUID(this.device.uuid).then(data => {
-
+            this.storageService.getUUID().then(is_set => {
+                if(!is_set.data) {
+                    this.apiService.setUUID(this.device.uuid).then(data => {
+                        if(data.status = 201) {
+                            this.storageService.setUUID();
+                        }
+                    });
+                }
             })
         });
         this.statusBar.styleDefault();
