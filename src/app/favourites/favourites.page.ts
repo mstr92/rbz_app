@@ -16,10 +16,9 @@ export class FavouritesPage implements OnInit {
     @ViewChild('slidingList') slidingList;
 
     constructor(public storageService: StorageService, public helperService: HelperService) {
-
         this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(value => {
-            this.fav_movies = value;
-            if (this.fav_movies != undefined || this.fav_movies != null) {
+            if (value != undefined || value != null) {
+                this.fav_movies = value;
                 this.storageService.loadImages(this.fav_movies);
             }
         });
@@ -48,8 +47,8 @@ export class FavouritesPage implements OnInit {
 
     cancelSortedList() {
         this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(value => {
-            this.fav_movies = value;
-            if (this.fav_movies != undefined || this.fav_movies != null) {
+            if (value != undefined || value != null) {
+                this.fav_movies = value;
                 this.storageService.loadImages(this.fav_movies);
             }
         });

@@ -2,6 +2,9 @@ export enum Constants {
     // API
     HOST = '129.27.153.16',
     PORT = '8008',
+    PROTOCOL = 'https://',
+    CHECK_SSL = "nocheck",
+    API_KEY = 'ABCD1234',
     // Names
     GENRE = 'genre',
     MOVIE = 'movie',

@@ -11,7 +11,7 @@
 
 <ion-content padding>
 <ion-list #slidingList>
-  <div *ngFor="let index of indexlist" >
+  <div *ngFor="let index of indexlist" class="div-group" >
   <ion-item-group *ngIf="rating['stars' + index.toString()].length > 0">
     <ion-item-divider >
       <ion-label>
@@ -23,7 +23,7 @@
       </ion-label>
     </ion-item-divider>
     <ion-item-sliding *ngFor="let movie of rating['stars'+index.toString()]">
-      <ion-item>
+      <ion-item lines="inset">
         <ion-avatar slot="start">
           <img src="{{movie.image}}">
         </ion-avatar>
@@ -45,110 +45,4 @@
   </ion-item-group>
   </div>
 </ion-list>
-
-
-
-  <!--<ion-item-group *ngIf="rating.stars4.length > 0">-->
-    <!--<ion-item-divider>-->
-      <!--<ion-label>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-      <!--</ion-label>-->
-    <!--</ion-item-divider>-->
-    <!--<ion-item-sliding  *ngFor="let movie of rating.stars4">-->
-      <!--<ion-item>-->
-        <!--<ion-avatar slot="start">-->
-          <!--<img src="{{movie.image}}">-->
-        <!--</ion-avatar>-->
-        <!--<ion-label>-->
-          <!--<h2>{{movie.title}}</h2>-->
-          <!--<h3>{{movie.year}}</h3>-->
-        <!--</ion-label>-->
-      <!--</ion-item>-->
-      <!--<ion-item-options side="end">-->
-        <!--<ion-item-option color="secondary" (click)="changeRating($event, 4, movie)">-->
-          <!--Rate Again!-->
-        <!--</ion-item-option>-->
-        <!--<ion-item-option color="danger" (click)="deleteMovie(movie, '4')">-->
-          <!--<ion-icon name="trash"></ion-icon>-->
-          <!--Delete-->
-        <!--</ion-item-option>-->
-      <!--</ion-item-options>-->
-    <!--</ion-item-sliding>-->
-  <!--</ion-item-group>-->
-  <!--<ion-item-group *ngIf="rating.stars3.length > 0">-->
-    <!--<ion-item-divider>-->
-      <!--<ion-label>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-      <!--</ion-label>-->
-    <!--</ion-item-divider>-->
-    <!--<ion-item-sliding  *ngFor="let movie of rating.stars3">-->
-      <!--<ion-item>-->
-        <!--<ion-avatar slot="start">-->
-          <!--<img src="{{movie.image}}">-->
-        <!--</ion-avatar>-->
-        <!--<ion-label>-->
-          <!--<h2>{{movie.title}}</h2>-->
-          <!--<h3>{{movie.year}}</h3>-->
-        <!--</ion-label>-->
-      <!--</ion-item>-->
-      <!--<ion-item-options side="end">-->
-        <!--<ion-item-option color="danger" (click)="deleteMovie(movie, '3')">-->
-          <!--<ion-icon slot="icon-only" name="trash"></ion-icon>-->
-        <!--</ion-item-option>-->
-      <!--</ion-item-options>-->
-    <!--</ion-item-sliding>-->
-  <!--</ion-item-group>-->
-  <!--<ion-item-group *ngIf="rating.stars2.length > 0">-->
-    <!--<ion-item-divider>-->
-      <!--<ion-label>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-      <!--</ion-label>-->
-    <!--</ion-item-divider>-->
-    <!--<ion-item-sliding  *ngFor="let movie of rating.stars2">-->
-      <!--<ion-item>-->
-        <!--<ion-avatar slot="start">-->
-          <!--<img src="{{movie.image}}">-->
-        <!--</ion-avatar>-->
-        <!--<ion-label>-->
-          <!--<h2>{{movie.title}}</h2>-->
-          <!--<h3>{{movie.year}}</h3>-->
-        <!--</ion-label>-->
-      <!--</ion-item>-->
-      <!--<ion-item-options side="end">-->
-        <!--<ion-item-option color="danger" (click)="deleteMovie(movie, '2')">-->
-          <!--<ion-icon slot="icon-only" name="trash"></ion-icon>-->
-        <!--</ion-item-option>-->
-      <!--</ion-item-options>-->
-    <!--</ion-item-sliding>-->
-  <!--</ion-item-group>-->
-  <!--<ion-item-group *ngIf="rating.stars1.length > 0">-->
-    <!--<ion-item-divider>-->
-      <!--<ion-label>-->
-        <!--<ion-icon name="star"></ion-icon>-->
-      <!--</ion-label>-->
-    <!--</ion-item-divider>-->
-    <!--<ion-item-sliding  *ngFor="let movie of rating.stars1">-->
-      <!--<ion-item>-->
-        <!--<ion-avatar slot="start">-->
-          <!--<img src="{{movie.image}}">-->
-        <!--</ion-avatar>-->
-        <!--<ion-label>-->
-          <!--<h2>{{movie.title}}</h2>-->
-          <!--<h3>{{movie.year}}</h3>-->
-        <!--</ion-label>-->
-      <!--</ion-item>-->
-      <!--<ion-item-options side="end">-->
-        <!--<ion-item-option color="danger" (click)="deleteMovie(movie, '1')">-->
-          <!--<ion-icon slot="icon-only" name="trash"></ion-icon>-->
-        <!--</ion-item-option>-->
-      <!--</ion-item-options>-->
-    <!--</ion-item-sliding>-->
-  <!--</ion-item-group>-->
-<!--</ion-list>-->
 </ion-content>

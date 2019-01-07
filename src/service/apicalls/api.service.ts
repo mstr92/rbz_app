@@ -9,51 +9,58 @@ export class ApiService {
 
 
     constructor(public http: HTTP, private device: Device) {
-
     }
 
     static createAPIUrl(entity) {
-        return 'http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + entity + '/';
+        return Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + entity + '/';
     }
 
     getDataBySearchTerm(entity, searchTerm) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
         if (entity == Constants.ACTOR) entity = 'person';
-        return this.http.get(ApiService.createAPIUrl(entity) + searchTerm, {}, {Accept: 'application/json'})
+        return this.http.get(ApiService.createAPIUrl(entity) + searchTerm, {}, {'key': Constants.API_KEY})
             .then(data => {
+                console.log(data);
                 if (data.status == 201) {
                     return data.data;
                 }
             })
             .catch(error => {
+                console.log(error);
                 return null;
             });
     }
 
     getDetailedMovieInfo(imdb_id) {
-        return this.http.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {});
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {'key': Constants.API_KEY});
     }
 
     setUser(account) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
         this.http.setDataSerializer('json');
-        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user',
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user',
             {
                 'username': account.username,
                 'email': account.email,
                 'password': account.password
-            }, {},);
+            }, {'key': Constants.API_KEY},);
     }
+
     setUserUUID(username) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
         this.http.setDataSerializer('json');
-        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/deviceId',
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/deviceId',
             {
                 'username': username,
                 'deviceId': this.device.uuid,
-            }, {},);
+            }, {'key': Constants.API_KEY},);
     }
 
 
     getUser(username) {
-        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/' + username, {}, {})
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/' + username, {}, {'key': Constants.API_KEY})
             .then(data => {
                 if (data.status == 201) {
                     return data.data;
@@ -63,13 +70,16 @@ export class ApiService {
                 return null;
             });
     }
+
     getUserPassword(username, password) {
-        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/password/' + username + '/' + password, {}, {});
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/password/' + username + '/' + password, {}, {'key': Constants.API_KEY});
     }
 
     setBackup(history, rating, favourite, user_id) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
         this.http.setDataSerializer('json');
-        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup',
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup',
             {
                 'favourite': favourite,
                 'rating': rating,
@@ -77,13 +87,19 @@ export class ApiService {
                 'history': history
             }, {});
     }
+
     getBackup(user_id, entity) {
-      return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/' + entity + '/' + user_id, {},{});
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/' + entity + '/' + user_id, {}, {'key': Constants.API_KEY});
     }
-    getBackupLastDate(user_id){
-        return this.http.get('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/dates/' + user_id, {},{});
+
+    getBackupLastDate(user_id) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/dates/' + user_id, {}, {'key': Constants.API_KEY});
     }
+
     setUUID(uuid) {
-        return this.http.post('http://' + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {},{})
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {}, {'key': Constants.API_KEY});
     }
 }

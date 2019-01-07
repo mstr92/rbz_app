@@ -23,11 +23,11 @@ interface Rating {
 export class RatingsPage implements OnInit {
     indexlist = [5,4,3,2,1];
     rating: Rating = {stars5: [], stars4: [],stars3: [],stars2: [],stars1: []};
-    constructor(public storageService: StorageService, public helperService: HelperService, public apiService:ApiService,
+
+    constructor(public storageService: StorageService, public helperService: HelperService,
                 public popoverController: PopoverController) {
         this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
             if (data!= undefined || data!= null) {
-                console.log(data)
                 data.forEach(movie => {
                     this.rating["stars" + movie.rating.toString()].push(movie);
                 });

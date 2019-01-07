@@ -250,7 +250,6 @@ export class StorageService {
                     this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
                         .then(base64Img => {
                             movie[0].image = base64Img.toString();
-                            this.addMoviePoster(<Poster>{imdb_id: movie[0].imdb_id, poster: base64Img.toString()});
                         });
                 });
             });

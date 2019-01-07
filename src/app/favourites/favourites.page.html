@@ -1,37 +1,44 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      My Favourites
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            My Favourites
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <ion-list #slidingList>
-    <ion-reorder-group (ionItemReorder)="reorderItems($event)" disabled="false">
-    <ion-item-sliding *ngFor="let movie of fav_movies">
-      <ion-item lines="inset">
-        <ion-avatar slot="start">
-          <img src="{{movie.image}}">
-        </ion-avatar>
-        <ion-label>
-          <h2>{{movie.title}}</h2>
-          <h3>{{movie.year}}</h3>
-        </ion-label>
-        <ion-reorder></ion-reorder>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteMovie(movie)">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-    </ion-reorder-group>
-  </ion-list>
+    <ion-list #slidingList>
+        <ion-list-header>
+            <ion-icon name="podium"></ion-icon>
+        </ion-list-header>
+        <ion-reorder-group (ionItemReorder)="reorderItems($event)" disabled="false">
+            <ion-item-sliding *ngFor="let movie of fav_movies; index as i">
+                <ion-item lines="inset">
+                    <ion-avatar slot="start">
+                        <img src="{{movie.image}}">
+                    </ion-avatar>
+                    <ion-label>
+                        <h2>{{movie.title}}</h2>
+                        <h3>{{movie.year}}</h3>
+                    </ion-label>
+                    <ion-reorder>
+                        <ion-icon *ngIf="i<3" name="medal" [class]='"pos" + i'></ion-icon>
+                    </ion-reorder>
+                </ion-item>
+                <ion-item-options side="end" [class]="i == 2? 'divider-option':''">
+                    <ion-item-option color="danger" (click)="deleteMovie(movie)">
+                        <ion-icon name="trash"></ion-icon>
+                        Delete
+                    </ion-item-option>
+                </ion-item-options>
+                <div class="divider" *ngIf="i == 2"></div>
+            </ion-item-sliding>
+        </ion-reorder-group>
+    </ion-list>
 </ion-content>
 
-<ion-button *ngIf="isSorted" expand="full" class="button-bottom cancel" (click)="cancelSortedList()">Cancel </ion-button>
-<ion-button *ngIf="isSorted" expand="full" class="button-bottom save" (click)="saveSortedList()">Save Sorted List</ion-button>
+<ion-button *ngIf="isSorted" expand="full" class="button-bottom cancel" (click)="cancelSortedList()">Cancel</ion-button>
+<ion-button *ngIf="isSorted" expand="full" class="button-bottom save" (click)="saveSortedList()">Save Sorted List
+</ion-button>
