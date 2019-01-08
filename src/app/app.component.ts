@@ -11,6 +11,7 @@ import {timer} from 'rxjs/observable/timer';
 import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
 import {HelperService} from '../service/helper/helper.service';
 import {ApiService} from '../service/apicalls/api.service';
+import {NotificationService} from '../service/push/notification.service';
 
 @Component({
     selector: 'app-root',
@@ -67,7 +68,8 @@ export class AppComponent {
         private storageService: StorageService,
         private screenOrientation: ScreenOrientation,
         public helperService: HelperService,
-        public apiService: ApiService
+        public apiService: ApiService,
+        public notificationService: NotificationService
     ) {
         this.initializeApp();
     }
@@ -76,9 +78,10 @@ export class AppComponent {
         this.platform.ready().then(() => {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
+            this.notificationService.initPushOneSignal();
             this.showSplash = false;
             timer(3000).subscribe(() => this.showSplash = false); // <-- hide animation after 3s
-
+            // Initialize storage
             this.storageService.getKeys().then(keys => {
                 if (!keys.includes(Constants.MOVIE_FAVOURITE)) {
                     this.storageService.initStorage(Constants.MOVIE_FAVOURITE);
@@ -102,6 +105,7 @@ export class AppComponent {
                     this.storageService.initUUID();
                 }
             });
+            // Check if a user is logged in
             this.storageService.getUser().then(data => {
                 if (data != null) {
                     this.helperService.username = data.username;
@@ -112,6 +116,7 @@ export class AppComponent {
                     this.helperService.isUserLoggedIn = false;
                 }
             });
+            // Check if device is already registered. If not, register in database
             this.storageService.getUUID().then(is_set => {
                 if(!is_set.data) {
                     this.apiService.setUUID(this.device.uuid).then(data => {

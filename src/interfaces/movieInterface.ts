@@ -44,6 +44,7 @@ export interface CompleteMovieSearchRequest {
 }
 
 export interface MovieResult {
+    id?: number,
     result: Array<Movie>
 }
 export interface Poster {

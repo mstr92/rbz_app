@@ -6,8 +6,9 @@
     <ion-title>
       Movies
     </ion-title>
+    <ion-buttons slot="end" *ngIf="show_from_history"> <ion-back-button defaultHref="home" text=""></ion-back-button> </ion-buttons>
   </ion-toolbar>
-  <ion-fab vertical="top" horizontal="end" edge=true>
+  <ion-fab vertical="top" horizontal="end" edge=true  *ngIf="!show_from_history">
     <ion-fab-button class="fab-main-button">
       <ion-icon name="settings"></ion-icon>
     </ion-fab-button>

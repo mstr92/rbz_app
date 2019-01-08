@@ -9,6 +9,7 @@ import {LoadingController, NavController} from '@ionic/angular';
 import {QuerybuilderService} from '../../service/querybuilder/querybuilder.service';
 import {ApiService} from '../../service/apicalls/api.service';
 import {Constants} from '../../service/constants';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -24,12 +25,16 @@ export class MovieResultPage implements OnInit {
     no_more_results = false;
     current_timestamp = null;
     rec_text = ["GREAT", "GOOD", "OKEY", "BAD", "HORRIBLE"];
+    show_result_from_history = false;
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public loadingController: LoadingController, public queryBuilder: QuerybuilderService,
-                public navCtrl: NavController) {
+                public navCtrl: NavController, public activatedRoute: ActivatedRoute) {
         this.movies = {result: []};
         this.current_timestamp = new Date().toISOString();
+        //Get param from nav controller
+        console.log(this.activatedRoute.snapshot.paramMap.get('id'));
+
     }
 
     ngOnInit() {
@@ -38,7 +43,6 @@ export class MovieResultPage implements OnInit {
             this.loadingController.dismiss();
         });
     }
-
 
     addToFavourite(fav) {
         let movie = fav;
@@ -120,6 +124,7 @@ export class MovieResultPage implements OnInit {
 
         movie.vote = rating;
     }
+
     changeVote(movie) {
         this.movie_rec_rating_map[movie.id] = false;
         for (let i = 1; i <= 5; i++) {
@@ -133,6 +138,7 @@ export class MovieResultPage implements OnInit {
         let vote_change = document.getElementById("vote_change"+ movie.id) as HTMLDivElement;
         vote_change.className = "vote-change invisible";
     }
+
     disableFavourite(movie) {
         if (this.movie_tmp.includes(movie)) {
             this.movie_tmp = this.helperService.arrayRemoveById(this.movie_tmp, movie);
@@ -198,7 +204,14 @@ export class MovieResultPage implements OnInit {
     }
 
     setData() {
-        this.movies.result = this.parser.parseMovieResult(Result.res_short, this.current_timestamp);
+        if(this.helperService.movie_from_history) {
+            this.movies.result = this.helperService.movie_result_to_display.result;
+            this.helperService.movie_from_history = false;
+            this.show_result_from_history = true;
+        }
+        else {
+            this.movies.result = this.parser.parseMovieResult(Result.res_short, this.current_timestamp);
+        }
         this.checkIfInFavourites();
         this.storageService.loadImages(this.movies.result);
         this.checkIfInRatings();

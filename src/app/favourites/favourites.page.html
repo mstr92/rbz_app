@@ -9,7 +9,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content padding>
-    <ion-list #slidingList>
+    <ion-list #slidingList *ngIf="fav_movies.length > 0">
         <ion-list-header>
             <ion-icon name="podium"></ion-icon>
         </ion-list-header>

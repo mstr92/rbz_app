@@ -24,8 +24,9 @@
                 FROM:
             </ion-col>
             <ion-col size="8" align-self-center>
-                <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max" [value]="to_year_select"
-                              [(ngModel)] = "to_year_select"></ion-datetime>
+                <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max"
+                              [value]="to_year_select"
+                              [(ngModel)]="to_year_select"></ion-datetime>
             </ion-col>
         </ion-row>
         <ion-row class="filter-row">
@@ -33,116 +34,125 @@
                 TO:
             </ion-col>
             <ion-col size="8" align-self-center>
-                <ion-datetime id="test" displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max" [value]="from_year"
-                              [(ngModel)] = "from_year"></ion-datetime>
+                <ion-datetime id="test" displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max"
+                              [value]="from_year"
+                              [(ngModel)]="from_year"></ion-datetime>
             </ion-col>
         </ion-row>
         <ion-row>
             <ion-col class="filter-select-button">
-                <ion-button expand="full" (click)="setDate('selected')" size="small" >Filter!</ion-button>
+                <ion-button expand="full" (click)="setDate('selected')" size="small">Filter!</ion-button>
             </ion-col>
         </ion-row>
     </ion-grid>
 </div>
 <ion-content padding (click)="filter_enabled? openFilter():''">
-    <!--<ion-card class="outer-class">-->
-        <!--<ion-card-header>-->
-            <!--<ion-card-title>-->
-                <!--<div class="date"><ion-icon name="calendar"></ion-icon>-->
-                    <!--{{currentDate| date:'dd. MMMM yyyy'}}</div>-->
-                <!--<div class="time">-->
-                    <!--<ion-icon name="time"></ion-icon>-->
-                    <!--&nbsp;{{currentDate| date:'HH:mm:ss'}}</div>-->
-                <!--<ion-icon name="ios-arrow-down"></ion-icon>-->
-            <!--</ion-card-title>-->
-        <!--</ion-card-header>-->
-    <!--</ion-card>-->
     <div [class]="!filter_enabled? 'light': 'dark'">
-    <ion-card *ngFor="let element of movieHistory" class="outer-class">
-        <ion-card-header>
-            <ion-card-title (click)="!filter_enabled?openSelectedHistory(element.timestamp, element.result.result):''">
-                <div class="date">
-                    <ion-icon name="calendar"></ion-icon>
-                    {{element.timestamp| date:'dd. MMMM yyyy'}}</div>
-                <div class="time">
-                    <ion-icon name="time"></ion-icon>
-                    &nbsp;{{element.timestamp| date:'HH:mm:ss'}}</div>
-                <ion-icon [name]="close_map[element.timestamp] ? 'ios-arrow-down' : 'ios-arrow-up'"></ion-icon>
-            </ion-card-title>
-        </ion-card-header>
-        <ion-card-content *ngIf="!close_map[element.timestamp]">
-            <div class="small-header">Request</div>
-            <ion-grid>
-                <ion-row *ngIf="element.request.data.movies.length > 0">
-                    <ion-col size="4" class="col-header">Movie:</ion-col>
-                    <ion-col size="8">
-                        <a *ngFor="let movie of element.request.data.movies, let i = index"
-                           class="{{movie.alignment}}">{{movie.title}}
-                            <a *ngIf="i !== element.request.data.movies.length-1">&nbsp;|&nbsp;</a>
-                        </a>
-                    </ion-col>
-                </ion-row>
-                <ion-row *ngIf="element.request.data.actors.length > 0">
-                    <ion-col size="4" class="col-header">Actor:</ion-col>
-                    <ion-col size="8">
-                        <a *ngFor="let actor of element.request.data.actors, let i = index"
-                           class="{{actor.alignment}}">{{actor.firstname}}&nbsp;{{actor.lastname}}
-                            <a *ngIf="i !== element.request.data.actors.length-1">&nbsp;|&nbsp;</a>
-                        </a>
-                    </ion-col>
-                </ion-row>
-                <ion-row *ngIf="element.request.data.genres.length > 0">
-                    <ion-col size="4" class="col-header">Genre:</ion-col>
-                    <ion-col size="8">
-                        <a *ngFor="let genre of element.request.data.genres, let i = index"
-                           class="{{genre.alignment}}">{{genre.name}}
-                            <a *ngIf="i !== element.request.data.genres.length-1">&nbsp;|&nbsp;</a>
-                        </a>
-                    </ion-col>
-                </ion-row>
-                <ion-row *ngIf="element.request.data.keywords.length > 0">
-                    <ion-col size="4" class="col-header">Keyword:</ion-col>
-                    <ion-col size="8">
-                        <a *ngFor="let keyword of element.request.data.keywords, let i = index"
-                           class="{{keyword.alignment}}">{{keyword.name}}
-                            <a *ngIf="i !== element.request.data.keywords.length-1">&nbsp;|&nbsp;</a>
-                        </a>
-                    </ion-col>
-                </ion-row>
-                <ion-row *ngIf="element.request.data.timeperiod.length > 0">
-                <ion-col size="4" class="col-header">Year:</ion-col>
-                <ion-col size="8">
-                    <a *ngFor="let year of element.request.data.timeperiod, let i = index" class="{{year.alignment}}">{{year.from}} - {{year.to}}
-                        <a *ngIf="i !== element.request.data.timeperiod.length-1">&nbsp;|&nbsp;</a>
-                    </a>
-                </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="4" class="col-header">Number of Results:</ion-col>
-                    <ion-col size="6">
-                        {{element.request.length}}
-                    </ion-col>
-                    <ion-col size="2">
-                        <ion-button shape="round" size="small" class="repeat-request" (click)="repeatRequest(element.request)"><ion-icon name="repeat"></ion-icon></ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-card-content>
-        <ion-card-content class="result-content" *ngIf="!close_map[element.timestamp]">
-            <div class="small-header">Recommendation</div>
-            <ion-slides id="slides" pager="false" [options]="slideOpts">
-                <ion-slide *ngFor="let elem of element.result.result">
-                    <ion-card class="inner-card">
-                        <ion-card-content>
-                            <ion-avatar>
-                                <img src="{{elem.image}}">
-                            </ion-avatar>
-                            <div class="title">{{elem.title}} ({{elem.year}})</div>
-                        </ion-card-content>
-                    </ion-card>
-                </ion-slide>
-            </ion-slides>
-        </ion-card-content>
-    </ion-card>
+        <ion-card *ngFor="let element of movieHistory" class="outer-class">
+            <ion-list #slidingList>
+                <ion-item-sliding>
+                    <ion-item>
+                        <ion-card-header>
+                            <ion-card-title
+                                    (click)="!filter_enabled?openSelectedHistory(element.timestamp, element.result.result):''">
+                                <div class="date">
+                                    <ion-icon name="calendar"></ion-icon>
+                                    {{element.timestamp| date:'dd. MMMM yyyy'}}
+                                </div>
+                                <div class="time">
+                                    <ion-icon name="time"></ion-icon>
+                                    &nbsp;{{element.timestamp| date:'HH:mm:ss'}}
+                                </div>
+                                <ion-icon
+                                        [name]="close_map[element.timestamp] ? 'ios-arrow-down' : 'ios-arrow-up'"></ion-icon>
+                            </ion-card-title>
+                        </ion-card-header>
+                    </ion-item>
+                    <ion-item-options>
+                        <ion-item-option color="danger" (click)="deleteHistoryEntry(element)">
+                            <ion-icon name="trash"></ion-icon>
+                            Delete
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-list>
+            <ion-card-content *ngIf="!close_map[element.timestamp]">
+                <div class="small-header">Request</div>
+                <ion-grid>
+                    <ion-row *ngIf="element.request.data.movies.length > 0">
+                        <ion-col size="4" class="col-header">Movie:</ion-col>
+                        <ion-col size="8">
+                            <a *ngFor="let movie of element.request.data.movies, let i = index"
+                               class="{{movie.alignment}}">{{movie.title}}
+                                <a *ngIf="i !== element.request.data.movies.length-1">&nbsp;|&nbsp;</a>
+                            </a>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="element.request.data.actors.length > 0">
+                        <ion-col size="4" class="col-header">Actor:</ion-col>
+                        <ion-col size="8">
+                            <a *ngFor="let actor of element.request.data.actors, let i = index"
+                               class="{{actor.alignment}}">{{actor.firstname}}&nbsp;{{actor.lastname}}
+                                <a *ngIf="i !== element.request.data.actors.length-1">&nbsp;|&nbsp;</a>
+                            </a>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="element.request.data.genres.length > 0">
+                        <ion-col size="4" class="col-header">Genre:</ion-col>
+                        <ion-col size="8">
+                            <a *ngFor="let genre of element.request.data.genres, let i = index"
+                               class="{{genre.alignment}}">{{genre.name}}
+                                <a *ngIf="i !== element.request.data.genres.length-1">&nbsp;|&nbsp;</a>
+                            </a>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="element.request.data.keywords.length > 0">
+                        <ion-col size="4" class="col-header">Keyword:</ion-col>
+                        <ion-col size="8">
+                            <a *ngFor="let keyword of element.request.data.keywords, let i = index"
+                               class="{{keyword.alignment}}">{{keyword.name}}
+                                <a *ngIf="i !== element.request.data.keywords.length-1">&nbsp;|&nbsp;</a>
+                            </a>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="element.request.data.timeperiod.length > 0">
+                        <ion-col size="4" class="col-header">Year:</ion-col>
+                        <ion-col size="8">
+                            <a *ngFor="let year of element.request.data.timeperiod, let i = index"
+                               class="{{year.alignment}}">{{year.from}} - {{year.to}}
+                                <a *ngIf="i !== element.request.data.timeperiod.length-1">&nbsp;|&nbsp;</a>
+                            </a>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="4" class="col-header">Number of Results:</ion-col>
+                        <ion-col size="6">
+                            {{element.request.length}}
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card-content>
+            <ion-card-content class="result-content" *ngIf="!close_map[element.timestamp]">
+                <div class="small-header">Recommendation</div>
+                <ion-slides id="slides" pager="false" [options]="slideOpts">
+                    <ion-slide *ngFor="let elem of element.result.result">
+                        <ion-card class="inner-card">
+                            <ion-card-content>
+                                <ion-avatar>
+                                    <img src="{{elem.image}}">
+                                </ion-avatar>
+                                <div class="title">{{elem.title}} ({{elem.year}})</div>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-slide>
+                </ion-slides>
+            </ion-card-content>
+            <ion-card-content *ngIf="!close_map[element.timestamp]">
+                <div>
+                <ion-button expand="full" class="show-btn left"  (click)="repeatRequest(element.request)">Show <br> Request</ion-button>
+                <ion-button expand="full" class="show-btn right" (click)="showRecommendation(element.result)">Show <br> Recommendation</ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
     </div>
 </ion-content>

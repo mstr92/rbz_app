@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CompleteMovieSearchRequest, Movie, Poster} from '../../interfaces/movieInterface';
-import { Base64 } from '@ionic-native/base64/ngx';
+import {CompleteMovieSearchRequest, Movie, MovieResult, Poster} from '../../interfaces/movieInterface';
 
 @Injectable({
     providedIn: 'root'
@@ -11,13 +10,12 @@ export class HelperService {
     movie_request_refine = false;
     isUserLoggedIn;
     username;
+    movie_result_to_display: MovieResult;
+    movie_from_history = false;
 
-    constructor(private base64: Base64) {
-        this.movie_request_to_pass = {
-            entity: '',
-            data: {},
-            length: 0
-        };
+    constructor() {
+        this.movie_request_to_pass = {entity: '', data: {}, length: 0};
+        this.movie_result_to_display = {id: 0, result: []}
     }
 
     arrayRemove(arr, value) {
@@ -31,16 +29,12 @@ export class HelperService {
             return ele.id !== value.id;
         });
     }
-
-    // https://staxmanade.com/2017/02/how-to-download-and-convert-an-image-to-base64-data-url/
-    async getBase64ImageFromUrl(imageUrl) {
-        let filePath: string = imageUrl;
-        this.base64.encodeFile(filePath).then((base64File: string) => {
-            console.log(base64File);
-        }, (err) => {
-            console.log(err);
-        })
+    arrayRemoveByTimestamp(arr, value) {
+        return arr.filter(function (ele) {
+            return ele.timestamp !== value.timestamp;
+        });
     }
+
     // https://forum.ionicframework.com/t/need-to-convert-image-url-to-base64-string/74449/2
     convertToDataURLviaCanvas(url, outputFormat){
         return new Promise( (resolve, reject) => {

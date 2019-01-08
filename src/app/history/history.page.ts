@@ -47,17 +47,33 @@ export class HistoryPage implements OnInit {
         },
         result: <MovieResult> {result: []}
     }];
-
-    constructor(public storageService: StorageService, public apiService: ApiService, public helperService: HelperService,
+    @ViewChild('slidingList') slidingList;
+    constructor(public storageService: StorageService, public helperService: HelperService,
                 public navController: NavController) {
+
         this.currentDate = new Date();
         this.from_year = this.currentDate.toISOString();
         this.to_year = this.currentDate;
         this.to_year_select = this.currentDate.toISOString();
 
+        // this.movieHistory.push(<MovieHistory>{
+        //     timestamp: this.currentDate,
+        //     request: <CompleteMovieSearchRequest> {
+        //         length: 0,
+        //         data: <PartialMovieSearchRequest> {
+        //             movies: [],
+        //             keywords: [],
+        //             actors: [],
+        //             genres: [],
+        //             timeperiod: []
+        //         },
+        //         entity: ''
+        //     },
+        //     result: <MovieResult> {result: []}
+        // });
         this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
-            this.movieHistory = data;
-           if (this.movieHistory != undefined || this.movieHistory != null) {
+           if (data != undefined || data != null) {
+               this.movieHistory = data;
                this.movieHistory.sort((b, a) => (new Date(a.timestamp) > new Date(b.timestamp)) ? 1 : ((new Date(b.timestamp) > new Date(a.timestamp)) ? -1 : 0));
                this.movieHistory.forEach(data => {
                     this.close_map[data.timestamp] = true;
@@ -80,8 +96,15 @@ export class HistoryPage implements OnInit {
     repeatRequest(request) {
         this.helperService.movie_request_to_pass = request;
         this.helperService.movie_request_refine = true;
-        this.navController.navigateRoot('movie-query');
+        this.helperService.movie_from_history = true;
+        this.navController.navigateForward('movie-query');
     }
+    showRecommendation(result) {
+        this.helperService.movie_from_history = true;
+        this.helperService.movie_result_to_display = result;
+        this.navController.navigateForward('movie-result');
+    }
+
     setFilterData() {
         this.storageService.getHistoryByDate(this.from_year, this.to_year).then(data => {
             this.movieHistory = data;
@@ -116,5 +139,10 @@ export class HistoryPage implements OnInit {
         }
         this.filter_enabled = false;
         this.setFilterData();
+    }
+    async deleteHistoryEntry(history) {
+        this.movieHistory = this.helperService.arrayRemoveByTimestamp(this.movieHistory, history);
+        this.storageService.deleteEntry(history, Constants.MOVIE_HISTORY, true);
+        await this.slidingList.closeSlidingItems();
     }
 }

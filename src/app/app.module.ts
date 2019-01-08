@@ -26,6 +26,8 @@ import {Base64} from '@ionic-native/base64/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ChangeRatingComponent } from './change-rating/change-rating.component';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { OneSignal } from '@ionic-native/onesignal/ngx';
 
 @NgModule({
     declarations: [AppComponent, ChangeRatingComponent],
@@ -52,7 +54,9 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
         ApiService,
         HTTP,
         Device,
+        LocalNotifications,
         Base64,
+        OneSignal,
         ScreenOrientation,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],

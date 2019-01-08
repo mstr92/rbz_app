@@ -23,12 +23,17 @@ export class MovieQueryPage implements OnInit {
         data: <PartialMovieSearchRequest>{movies: [], actors: [], genres: [], keywords: [], timeperiod: []},
         length: 0
     };
+    show_from_history = false;
 
     @ViewChild('slidingList') slidingList;
 
     constructor(public modalCtrl: ModalController,
                 public navCtrl: NavController,
                 public helperService: HelperService) {
+        if(this.helperService.movie_from_history) {
+            this.show_from_history = true;
+            this.helperService.movie_from_history = false;
+        }
         if(this.helperService.movie_request_refine) {
             this.search_data = this.helperService.movie_request_to_pass;
             this.number_results = this.search_data.length;

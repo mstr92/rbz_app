@@ -53,10 +53,11 @@ export class StorageService {
         );
     }
 
-    deleteEntry(movie, storage_name) {
+    deleteEntry(movie, storage_name, isHistory=false) {
         this.storage.getItem(storage_name).then(data => {
-                let arr: Array<Movie> = data.data;
-                arr = this.helperService.arrayRemoveById(arr, movie);
+                let arr = data.data;
+                if(isHistory)  arr = this.helperService.arrayRemoveByTimestamp(arr, movie);
+                else arr = this.helperService.arrayRemoveById(arr, movie);
                 this.storage.setItem(storage_name, {data: arr});
             },
             error => console.error(error)

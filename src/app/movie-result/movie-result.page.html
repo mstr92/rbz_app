@@ -6,8 +6,10 @@
         <ion-title>
             Recommendation
         </ion-title>
+        <ion-buttons slot="end" *ngIf="show_result_from_history"> <ion-back-button defaultHref="home" text=""></ion-back-button> </ion-buttons>
     </ion-toolbar>
-    <ion-fab vertical="top" horizontal="end" edge=true>
+
+    <ion-fab vertical="top" horizontal="end" edge=true *ngIf="!show_result_from_history">
         <ion-fab-button class="fab-main-button">
             <ion-icon name="settings"></ion-icon>
         </ion-fab-button>
@@ -95,7 +97,7 @@
             <div [id]="'vote_change' + movie.id" class="vote-change invisible" (click)="changeVote(movie)">Change Decision</div>
         </div>
     </ion-card>
-    <ion-card class="show-more-btn">
+    <ion-card class="show-more-btn" *ngIf="!show_result_from_history">
         <ion-button *ngIf="show_more && !no_more_results" expand="full" (click)="showMore()" class="show-more-btn">Show More...</ion-button>
         <ion-card-content *ngIf="!show_more && !no_more_results" class="show-more-loading">
             <div class="loading-text">Loading...</div>
