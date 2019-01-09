@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {Constants} from '../constants';
 import {HTTP} from '@ionic-native/http/ngx';
 import {Device} from '@ionic-native/device/ngx';
+//import {ResultparserService} from '../resultparser/resultparser.service';
 
 
 @Injectable()
 export class ApiService {
 
 
-    constructor(public http: HTTP, private device: Device) {
+    constructor(public http: HTTP, private device: Device) { //, private parser:ResultparserService) {
     }
 
     static createAPIUrl(entity) {
@@ -20,7 +21,6 @@ export class ApiService {
         if (entity == Constants.ACTOR) entity = 'person';
         return this.http.get(ApiService.createAPIUrl(entity) + searchTerm, {}, {'key': Constants.API_KEY})
             .then(data => {
-                console.log(data);
                 if (data.status == 201) {
                     return data.data;
                 }
@@ -101,5 +101,14 @@ export class ApiService {
     setUUID(uuid) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
         return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {}, {'key': Constants.API_KEY});
+    }
+    setEngineRequest(request_body, oneSignal_id) {
+        this.http.setDataSerializer('json');
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + oneSignal_id, request_body, {'key': Constants.API_KEY});
+    }
+    getEngineResponse(id) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + id, {}, {'key': Constants.API_KEY});
     }
 }

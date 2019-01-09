@@ -4,6 +4,8 @@ import {MovieSearchPage} from '../movie-search/movie-search.page';
 import {CompleteMovieSearchRequest, PartialMovieSearchRequest, Movie, Year} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
 import {Constants} from '../../service/constants';
+import {ApiService} from '../../service/apicalls/api.service';
+import {ResultparserService} from '../../service/resultparser/resultparser.service';
 
 @Component({
     selector: 'app-movie-query',
@@ -29,7 +31,9 @@ export class MovieQueryPage implements OnInit {
 
     constructor(public modalCtrl: ModalController,
                 public navCtrl: NavController,
-                public helperService: HelperService) {
+                public helperService: HelperService,
+                public apiService: ApiService,
+                public parser: ResultparserService) {
         if(this.helperService.movie_from_history) {
             this.show_from_history = true;
             this.helperService.movie_from_history = false;
@@ -124,6 +128,8 @@ export class MovieQueryPage implements OnInit {
         this.search_data.length = this.number_results;
         this.helperService.movie_request_to_pass = this.search_data;
         this.helperService.movie_request_refine = false;
+        this.helperService.waiting_for_movie_result = true;
+        this.parser.buildRequestBody(this.search_data);
         this.navCtrl.navigateForward('/movie-result');
     }
     clearEntries() {

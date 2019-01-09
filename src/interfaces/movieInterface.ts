@@ -44,7 +44,7 @@ export interface CompleteMovieSearchRequest {
 }
 
 export interface MovieResult {
-    id?: number,
+    id: number,
     result: Array<Movie>
 }
 export interface Poster {
@@ -55,4 +55,19 @@ export interface MovieHistory {
     timestamp: string;
     request: CompleteMovieSearchRequest;
     result: MovieResult;
+}
+export interface EngineRequest {
+    'length'?: Number
+    'neg_year_from'?: Array<Number>,
+    'pos_year_from'?: Array<Number>,
+    'neg_year_to'?: Array<Number>,
+    'pos_year_to'?: Array<Number>,
+    'neg_movie'?: Array<String>,
+    'pos_movie'?: Array<String>,
+    'neg_actor'?: Array<String>,
+    'pos_actor'?: Array<String>,
+    'neg_genre'?: Array<String>,
+    'pos_genre'?: Array<String>,
+    'neg_keyword'?: Array<String>,
+    'pos_keyword'?: Array<String>
 }

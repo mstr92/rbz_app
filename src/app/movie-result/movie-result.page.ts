@@ -1,47 +1,46 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit} from '@angular/core';
+import {
+    Component,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
-import {MovieHistory, MovieResult, Poster} from '../../interfaces/movieInterface';
-import {Result} from '../../assets/data_test';
+import {MovieResult} from '../../interfaces/movieInterface';
 import {ResultparserService} from '../../service/resultparser/resultparser.service';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {HelperService} from '../../service/helper/helper.service';
-import {LoadingController, NavController} from '@ionic/angular';
-import {QuerybuilderService} from '../../service/querybuilder/querybuilder.service';
-import {ApiService} from '../../service/apicalls/api.service';
+import {NavController} from '@ionic/angular';
 import {Constants} from '../../service/constants';
-import {ActivatedRoute} from '@angular/router';
-
 
 @Component({
     selector: 'app-movie-result',
     templateUrl: './movie-result.page.html',
     styleUrls: ['./movie-result.page.scss'],
 })
-export class MovieResultPage implements OnInit {
+export class MovieResultPage implements OnInit, OnDestroy {
     movies: MovieResult;
     movie_tmp = [];
     movie_rec_rating_map: Map<string, boolean> = new Map<string, boolean>();
     show_more = true;
     no_more_results = false;
     current_timestamp = null;
-    rec_text = ["GREAT", "GOOD", "OKEY", "BAD", "HORRIBLE"];
-    show_result_from_history = false;
+    rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
+    is_result_set = false;
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
-                public helperService: HelperService, public loadingController: LoadingController, public queryBuilder: QuerybuilderService,
-                public navCtrl: NavController, public activatedRoute: ActivatedRoute) {
-        this.movies = {result: []};
+                public helperService: HelperService, public navCtrl: NavController) {
+        this.movies = {id: 0, result: []};
         this.current_timestamp = new Date().toISOString();
-        //Get param from nav controller
-        console.log(this.activatedRoute.snapshot.paramMap.get('id'));
+        this.helperService.setResultOnMoviePage.subscribe(() => this.setData());
 
     }
 
+    ngOnDestroy() {
+        console.log('destroy page');
+        this.helperService.movie_from_history = false;
+        this.helperService.result_calculation_failed = false;
+    }
+
     ngOnInit() {
-        this.presentLoadingWithOptions().then((data) => {
-            this.setData();
-            this.loadingController.dismiss();
-        });
     }
 
     addToFavourite(fav) {
@@ -98,7 +97,7 @@ export class MovieResultPage implements OnInit {
             let img_id = 'recrating' + i.toString() + 'img' + movie.id.toString();
             let img = document.getElementById(img_id) as HTMLImageElement;
             img.src = i == movie.vote ? '../../assets/image/rating/' + i.toString() + '_full.svg' : '../../assets/image/rating/' + i.toString() + '_line.svg';
-            img.className =" emoji visible pos-" + i.toString();
+            img.className = ' emoji visible pos-' + i.toString();
         }
     }
 
@@ -107,20 +106,20 @@ export class MovieResultPage implements OnInit {
             let img_id = 'recrating' + i.toString() + 'img' + movie.id.toString();
             let img = document.getElementById(img_id) as HTMLImageElement;
             img.src = i == rating ? '../../assets/image/rating/' + i.toString() + '_full.svg' : '../../assets/image/rating/' + i.toString() + '_line.svg';
-            if(i == rating) {
-                img.className +=" animate-" + i.toString();
+            if (i == rating) {
+                img.className += ' animate-' + i.toString();
             }
             else {
-                img.className ="emoji invisible pos-" + i.toString();
+                img.className = 'emoji invisible pos-' + i.toString();
             }
         }
-        let vote_text = document.getElementById("vote_res"+ movie.id) as HTMLDivElement;
-        let text = "The recommendation was " + this.rec_text[rating - 1] + "!";
+        let vote_text = document.getElementById('vote_res' + movie.id) as HTMLDivElement;
+        let text = 'The recommendation was ' + this.rec_text[rating - 1] + '!';
         vote_text.innerText = text;
-        vote_text.className = "vote-text visible";
+        vote_text.className = 'vote-text visible';
 
-        let vote_change = document.getElementById("vote_change"+ movie.id) as HTMLDivElement;
-        vote_change.className = "vote-change visible";
+        let vote_change = document.getElementById('vote_change' + movie.id) as HTMLDivElement;
+        vote_change.className = 'vote-change visible';
 
         movie.vote = rating;
     }
@@ -131,12 +130,12 @@ export class MovieResultPage implements OnInit {
             let img_id = 'recrating' + i.toString() + 'img' + movie.id.toString();
             let img = document.getElementById(img_id) as HTMLImageElement;
             img.src = i == movie.vote ? '../../assets/image/rating/' + i.toString() + '_full.svg' : '../../assets/image/rating/' + i.toString() + '_line.svg';
-            img.className =" emoji visible pos-" + i.toString();
+            img.className = ' emoji visible pos-' + i.toString();
         }
-        let vote_text = document.getElementById("vote_res"+ movie.id) as HTMLDivElement;
-        vote_text.className = "vote-text invisible";
-        let vote_change = document.getElementById("vote_change"+ movie.id) as HTMLDivElement;
-        vote_change.className = "vote-change invisible";
+        let vote_text = document.getElementById('vote_res' + movie.id) as HTMLDivElement;
+        vote_text.className = 'vote-text invisible';
+        let vote_change = document.getElementById('vote_change' + movie.id) as HTMLDivElement;
+        vote_change.className = 'vote-change invisible';
     }
 
     disableFavourite(movie) {
@@ -152,27 +151,28 @@ export class MovieResultPage implements OnInit {
     }
 
     showMore() {
-        this.show_more = !this.show_more;
-        let more_movies = this.parser.parseMovieResult(Result.res, this.current_timestamp);
-        if (more_movies.length <= this.movies.result.length) {
-            this.no_more_results = true;
-        } else {
-            more_movies.forEach(mmovie => {
-                let in_arr = false;
-                this.movies.result.forEach((cmovie, index) => {
-                    if (mmovie.id === cmovie.id) in_arr = true;
-                    if (index === this.movies.result.length - 1 && !in_arr) {
-                        this.movies.result.push(mmovie);
-                        this.movie_rec_rating_map[mmovie.id] = true;
-                    }
-                });
-            });
-            this.helperService.movie_request_to_pass.length += 5;
-            this.checkIfInFavourites();
-            this.storageService.loadImages(this.movies.result);
-            this.checkIfInRatings();
-        }
-        this.show_more = !this.show_more;
+        // this.show_more = !this.show_more;
+        // this.helperService.movie_request_to_pass.length += 5;
+        // this.parser.buildRequestBody(this.helperService.movie_request_to_pass);
+        // if (more_movies.length <= this.movies.result.length) {
+        //     this.no_more_results = true;
+        // } else {
+        //     more_movies.forEach(mmovie => {
+        //         let in_arr = false;
+        //         this.movies.result.forEach((cmovie, index) => {
+        //             if (mmovie.id === cmovie.id) in_arr = true;
+        //             if (index === this.movies.result.length - 1 && !in_arr) {
+        //                 this.movies.result.push(mmovie);
+        //                 this.movie_rec_rating_map[mmovie.id] = true;
+        //             }
+        //         });
+        //     });
+        //     this.helperService.movie_request_to_pass.length += 5;
+        //     this.checkIfInFavourites();
+        //     this.storageService.loadImages(this.movies.result);
+        //     this.checkIfInRatings();
+        // }
+        // this.show_more = !this.show_more;
     }
 
     checkIfInFavourites() {
@@ -204,37 +204,22 @@ export class MovieResultPage implements OnInit {
     }
 
     setData() {
-        if(this.helperService.movie_from_history) {
+        if (!this.is_result_set) {
+            console.log('set data!!');
             this.movies.result = this.helperService.movie_result_to_display.result;
-            this.helperService.movie_from_history = false;
-            this.show_result_from_history = true;
+            this.helperService.waiting_for_movie_result = false;
+            console.log(this.helperService.waiting_for_movie_result);
+            this.checkIfInFavourites();
+            this.storageService.loadImages(this.movies.result);
+            this.checkIfInRatings();
+            this.movies.result.forEach(movie => {
+                this.movie_rec_rating_map[movie.id] = true;
+            });
+            this.is_result_set = true;
         }
-        else {
-            this.movies.result = this.parser.parseMovieResult(Result.res_short, this.current_timestamp);
-        }
-        this.checkIfInFavourites();
-        this.storageService.loadImages(this.movies.result);
-        this.checkIfInRatings();
-        this.movies.result.forEach(movie => {
-            this.movie_rec_rating_map[movie.id] = true;
-        });
-    }
-
-    async presentLoadingWithOptions() {
-        const loading = await this.loadingController.create({
-            spinner: 'crescent',
-            // duration: 2000,
-            message: 'Calculating Result! \nPlease wait...',
-            translucent: true,
-            keyboardClose: true
-        });
-        // TODO: send query to server, check if a response is send back, go after some time or loaded data to result page
-        this.queryBuilder.buildMovieQuery(this.helperService.movie_request_to_pass);
-        return await loading.present();
     }
 
     openFullPoster(event) {
         event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
     }
-
 }

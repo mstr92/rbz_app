@@ -20,8 +20,10 @@ export class NetworkServiceService {
             if (!status) { // disconnected
                 this.presentAlertConfirm();
             } else {
-                this.alert.dismiss();
-                this.alertPresent = false;
+                if (this.alert != undefined) {
+                    this.alert.dismiss();
+                    this.alertPresent = false;
+                }
             }
         });
     }
