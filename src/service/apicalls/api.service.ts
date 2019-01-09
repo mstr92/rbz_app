@@ -33,7 +33,7 @@ export class ApiService {
 
     getDetailedMovieInfo(imdb_id) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
-        return this.http.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {'key': Constants.API_KEY});
+         return this.http.get(ApiService.createAPIUrl('movie') + 'details/' + imdb_id, {}, {'key': Constants.API_KEY});
     }
 
     setUser(account) {

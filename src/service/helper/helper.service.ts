@@ -28,7 +28,6 @@ export class HelperService {
     constructor() {
         this.movie_request_to_pass = {entity: '', data: {}, length: 0};
         this.movie_result_to_display = {id: 0, result: []};
-        this.setResultOnMoviePage.subscribe(() => {});
     }
 
     arrayRemove(arr, value) {

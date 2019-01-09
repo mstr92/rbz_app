@@ -1,7 +1,9 @@
 import {
+    AfterContentInit,
+    AfterViewInit,
     Component,
     OnDestroy,
-    OnInit
+    OnInit,
 } from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
 import {MovieResult} from '../../interfaces/movieInterface';
@@ -11,12 +13,13 @@ import {HelperService} from '../../service/helper/helper.service';
 import {NavController} from '@ionic/angular';
 import {Constants} from '../../service/constants';
 
+
 @Component({
     selector: 'app-movie-result',
     templateUrl: './movie-result.page.html',
     styleUrls: ['./movie-result.page.scss'],
 })
-export class MovieResultPage implements OnInit, OnDestroy {
+export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
     movies: MovieResult;
     movie_tmp = [];
     movie_rec_rating_map: Map<string, boolean> = new Map<string, boolean>();
@@ -25,13 +28,14 @@ export class MovieResultPage implements OnInit, OnDestroy {
     current_timestamp = null;
     rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
     is_result_set = false;
+    is_waiting_for_result = true;
+
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public navCtrl: NavController) {
         this.movies = {id: 0, result: []};
         this.current_timestamp = new Date().toISOString();
         this.helperService.setResultOnMoviePage.subscribe(() => this.setData());
-
     }
 
     ngOnDestroy() {
@@ -41,8 +45,14 @@ export class MovieResultPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        setTimeout(() => this.parser.buildRequestBody(this.helperService.movie_request_to_pass), 500);
     }
-
+    ngAfterViewInit() {
+        console.log("afterViewInit")
+    }
+    ngAfterContentInit() {
+        console.log("aftercontentInit")
+    }
     addToFavourite(fav) {
         let movie = fav;
         if (fav.favourite) {
@@ -203,12 +213,11 @@ export class MovieResultPage implements OnInit, OnDestroy {
         });
     }
 
-    setData() {
+    async setData() {
         if (!this.is_result_set) {
-            console.log('set data!!');
             this.movies.result = this.helperService.movie_result_to_display.result;
             this.helperService.waiting_for_movie_result = false;
-            console.log(this.helperService.waiting_for_movie_result);
+            this.is_waiting_for_result = false;
             this.checkIfInFavourites();
             this.storageService.loadImages(this.movies.result);
             this.checkIfInRatings();
@@ -222,4 +231,5 @@ export class MovieResultPage implements OnInit, OnDestroy {
     openFullPoster(event) {
         event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
     }
+
 }

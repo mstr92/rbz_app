@@ -52,7 +52,6 @@ export class NotificationService {
                         this.helperService.result_calculation_finished = true;
                         this.helperService.setResultOnMoviePage.next();
                     }
-                    //this.navCtrl.navigateForward('movie-result');
                 });
             }
         });

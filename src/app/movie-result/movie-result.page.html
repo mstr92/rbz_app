@@ -11,7 +11,7 @@
         </ion-buttons>
     </ion-toolbar>
 
-    <ion-fab vertical="top" horizontal="end" edge=true *ngIf="!helperService.movie_from_history && !helperService.waiting_for_movie_result">
+    <ion-fab vertical="top" horizontal="end" edge=true *ngIf="!helperService.movie_from_history && !is_waiting_for_result">
         <ion-fab-button class="fab-main-button">
             <ion-icon name="settings"></ion-icon>
         </ion-fab-button>
@@ -38,7 +38,7 @@
             <ion-label class="waiting-text-line">Please try again!</ion-label>
         </div>
     </div>
-    <div *ngIf="helperService.waiting_for_movie_result">
+    <div *ngIf="is_waiting_for_result && !helperService.movie_from_history">
         <div class="loader waiting">
             <div class="inner one"></div>
             <div class="inner two"></div>
@@ -48,10 +48,10 @@
         <ion-label class="waiting-text-line">Result is currently being calculated...</ion-label>
         <ion-label class="waiting-text-line">Please be patient.</ion-label>
         <ion-label class="waiting-text-line">This could take a few seconds.</ion-label>
-        <ion-label class="waiting-text-line">We will notify you after completion!</ion-label>
+        <ion-label class="waiting-text-line">We will notify you after completion, if it is taking longer then 10 seconds!</ion-label>
         </div>
     </div>
-    <div *ngIf="(!helperService.waiting_for_movie_result && !helperService.result_calculation_failed) || helperService.movie_from_history">
+    <div *ngIf="(!is_waiting_for_result && !helperService.result_calculation_failed) || helperService.movie_from_history">
         <ion-card *ngFor="let movie of movies.result">
             <img class="poster small" (click)="openFullPoster($event)" src="{{movie.image}}">
             <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">

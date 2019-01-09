@@ -24,7 +24,7 @@ export class ResultparserService {
                 let movie: Movie = {
                     id: element.id,
                     imdb_id: element.ttid,
-                    title: element.title.substring(0, element.title.length - 8),
+                    title: element.title.substring(0, element.title.length - 7),
                     year: element.year,
                     favourite: false,
                 };
@@ -125,6 +125,7 @@ export class ResultparserService {
                         id: dataObject.id,
                         result: this.parseMovieResult(dataObject.response, new Date().toISOString(), dataObject.id)
                     };
+                    this.helperService.result_calculation_finished = true;
                     this.helperService.setResultOnMoviePage.next();
                 }
             }
