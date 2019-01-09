@@ -118,14 +118,20 @@ export class AppComponent {
             });
             // Check if device is already registered. If not, register in database
             this.storageService.getUUID().then(is_set => {
-                if(!is_set.data) {
+                if (!is_set.data) {
                     this.apiService.setUUID(this.device.uuid).then(data => {
-                        if(data.status = 201) {
+                        if (data.status = 201) {
                             this.storageService.setUUID();
                         }
                     });
                 }
-            })
+            });
+            this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(data => {
+                this.helperService.favourites = data;
+            });
+            this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
+                this.helperService.ratings = data;
+            });
         });
         this.statusBar.styleDefault();
 

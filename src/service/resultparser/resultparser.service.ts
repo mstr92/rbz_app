@@ -14,19 +14,42 @@ export class ResultparserService {
                 public storageService: StorageService, private apiService: ApiService) {
     }
 
+    checkIfInFavourites(imdb_id) {
+        let retVal = false;
+        this.helperService.favourites.forEach(element => {
+            if (element.imdb_id == imdb_id) {
+               retVal = true;
+               return;
+            }
+        });
+        return retVal;
+    }
+    checkIfInRating(imdb_id) {
+        let retVal = undefined;
+        this.helperService.ratings.forEach(element => {
+            if (element.imdb_id == imdb_id) {
+                retVal= element.rating;
+                return;
+            }
+        });
+        return retVal;
+    }
+
     parseMovieResult(result, timestamp, result_id) {
         let parsedObject = JSON.parse(result);
-        if(parsedObject.recommendation_list == undefined)
+        if (parsedObject.recommendation_list == undefined)
             parsedObject = JSON.parse(parsedObject);
         let movies: Array<Movie> = [];
         if (parsedObject != undefined) {
             parsedObject.recommendation_list.forEach((element) => {
+
                 let movie: Movie = {
                     id: element.id,
                     imdb_id: element.ttid,
                     title: element.title.substring(0, element.title.length - 7),
                     year: element.year,
-                    favourite: false,
+                    favourite: this.checkIfInFavourites(element.ttid),
+                    rating: this.checkIfInRating(element.ttid)
                 };
                 movies.push(movie);
             });
@@ -74,8 +97,8 @@ export class ResultparserService {
                 }
             });
         }
-        if (search_data.data.genre != undefined) {
-            search_data.data.genre.forEach(entry => {
+        if (search_data.data.genres != undefined) {
+            search_data.data.genres.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_genre == undefined) body.neg_genre = [];
                     body.neg_genre.push(entry.name);
@@ -86,8 +109,8 @@ export class ResultparserService {
                 }
             });
         }
-        if (search_data.data.actor != undefined) {
-            search_data.data.actor.forEach(entry => {
+        if (search_data.data.actors != undefined) {
+            search_data.data.actors.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_actor == undefined) body.neg_actor = [];
                     body.neg_actor.push(entry.firstname + ' ' + entry.lastname);
@@ -114,23 +137,21 @@ export class ResultparserService {
                 }
             });
         }
+        console.log('Send Request to Engine..');
         this.apiService.setEngineRequest(body, this.helperService.oneSignalUserId).then(data => {
             if (data.status == 201) {
                 let dataObject = JSON.parse(data.data);
                 if (dataObject.response.includes('ERROR CALCULATING RECOMMENDATIONS!')) {
                     this.helperService.result_calculation_failed = true;
-                    this.helperService.waiting_for_movie_result = false;
                 } else {
                     this.helperService.movie_result_to_display = <MovieResult>{
                         id: dataObject.id,
                         result: this.parseMovieResult(dataObject.response, new Date().toISOString(), dataObject.id)
                     };
                     this.helperService.result_calculation_finished = true;
-                    this.helperService.setResultOnMoviePage.next();
                 }
-            }
-            else if (data.status == 202) {
-                this.helperService.waiting_for_movie_result = true;
+                this.helperService.waiting_for_movie_result = false;
+                this.helperService.setResultOnMoviePage.next();
             }
         });
     }

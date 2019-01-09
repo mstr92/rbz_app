@@ -18,21 +18,9 @@ export class HomePage {
 
     goToMovies() {
         if (this.helperService.waiting_for_movie_result) {
-            if (this.helperService.result_calculation_finished) {
-                this.helperService.result_calculation_finished = false;
-                this.apiService.getEngineResponse(this.helperService.movie_result_id).then(res => {
-                    this.helperService.movie_result_to_display = <MovieResult>{
-                        id: this.helperService.movie_result_id,
-                        result: this.parser.parseMovieResult(res.data.substring(1, res.data.length - 2),
-                            new Date().toISOString(), this.helperService.movie_result_id)
-                    };
-                    this.helperService.waiting_for_movie_result = false;
-                    this.navCtrl.navigateForward('movie-result');
-                });
-            }
-            else {
-                this.navCtrl.navigateForward('movie-result');
-            }
+            this.navCtrl.navigateForward('movie-result-waiting');
+        } else if (this.helperService.result_calculation_finished) {
+            this.navCtrl.navigateForward('movie-result');
         } else {
             this.navCtrl.navigateForward('movie-query');
         }

@@ -36,6 +36,8 @@ export class StorageService {
     initUUID() {
         this.storage.setItem(Constants.UUID, {data: false})
     }
+
+
     setUUID() {
         return this.storage.setItem(Constants.UUID, {data: true});
     }
@@ -58,6 +60,9 @@ export class StorageService {
                 let arr = data.data;
                 if(isHistory)  arr = this.helperService.arrayRemoveByTimestamp(arr, movie);
                 else arr = this.helperService.arrayRemoveById(arr, movie);
+
+                if(storage_name == Constants.MOVIE_RATING)  this.helperService.ratings = arr;
+                if(storage_name == Constants.MOVIE_FAVOURITE)  this.helperService.favourites = arr;
                 this.storage.setItem(storage_name, {data: arr});
             },
             error => console.error(error)
@@ -80,6 +85,7 @@ export class StorageService {
                 };
 
                 data.data.push(movie_tmp);
+                this.helperService.favourites = data.data;
                 this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: data.data}).then(() => {
                         this.displayToast('"' + movie.title + '" was added to Favourite List!');
                     },
@@ -89,7 +95,6 @@ export class StorageService {
             error => console.error(error)
         );
     }
-
     addMovieToRating(movie: Movie) {
         this.storage.getItem(Constants.MOVIE_RATING).then(data => {
                 const movie_tmp = <Movie>{
@@ -108,6 +113,7 @@ export class StorageService {
                     }
                 });
                 arr.push(movie_tmp);
+                this.helperService.ratings = arr;
                 this.storage.setItem(Constants.MOVIE_RATING, {data: arr});
             },
             error => console.error(error)

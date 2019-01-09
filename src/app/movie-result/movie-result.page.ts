@@ -19,23 +19,18 @@ import {Constants} from '../../service/constants';
     templateUrl: './movie-result.page.html',
     styleUrls: ['./movie-result.page.scss'],
 })
-export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
+export class MovieResultPage implements OnInit, OnDestroy {
     movies: MovieResult;
     movie_tmp = [];
     movie_rec_rating_map: Map<string, boolean> = new Map<string, boolean>();
     show_more = true;
     no_more_results = false;
-    current_timestamp = null;
     rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
-    is_result_set = false;
-    is_waiting_for_result = true;
 
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public navCtrl: NavController) {
         this.movies = {id: 0, result: []};
-        this.current_timestamp = new Date().toISOString();
-        this.helperService.setResultOnMoviePage.subscribe(() => this.setData());
     }
 
     ngOnDestroy() {
@@ -45,14 +40,9 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit, AfterC
     }
 
     ngOnInit() {
-        setTimeout(() => this.parser.buildRequestBody(this.helperService.movie_request_to_pass), 500);
+        this.setData();
     }
-    ngAfterViewInit() {
-        console.log("afterViewInit")
-    }
-    ngAfterContentInit() {
-        console.log("aftercontentInit")
-    }
+
     addToFavourite(fav) {
         let movie = fav;
         if (fav.favourite) {
@@ -82,23 +72,12 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit, AfterC
         this.socialSharing.share(msg, null, null);
     }
 
-    openImdb(movie) {
-        window.open('https://www.imdb.com/title/' + movie.imdb_id, '_system');
-    }
 
-    openAmazonVideo(movie) {
-        window.open('https://www.amazon.de/s/?url=search-alias%3Dinstant-video&field-keywords=' + movie.title, '_system');
-
-    }
-
-    openYoutube(movie) {
-        window.open('  https://www.youtube.com/results?search_query=' + movie.title + '+' + movie.year + '+trailer', '_system');
-
-    }
 
     setRating(rating, movie) {
         movie.rating = rating;
         this.storageService.addMovieToRating(movie);
+        this.helperService.ratings.push(movie)
     }
 
     displayRecommendationRating(movie) {
@@ -184,52 +163,26 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit, AfterC
         // }
         // this.show_more = !this.show_more;
     }
-
-    checkIfInFavourites() {
-        this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(data => {
-            if (data != undefined || data != null) {
-                data.forEach(element => {
-                    this.movies.result.forEach(movie => {
-                        if (element.imdb_id == movie.imdb_id) {
-                            movie.favourite = true;
-                        }
-                    });
-                });
-            }
+    setData() {
+        this.movies.result = this.helperService.movie_result_to_display.result;
+        this.helperService.result_calculation_finished = false;
+        this.storageService.loadImages(this.movies.result);
+        this.movies.result.forEach(movie => {
+            this.movie_rec_rating_map[movie.id] = true;
         });
-    }
-
-    checkIfInRatings() {
-        this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
-            if (data != undefined || data != null) {
-                data.forEach(element => {
-                    this.movies.result.forEach(movie => {
-                        if (element.imdb_id == movie.imdb_id) {
-                            movie.rating = element.rating;
-                        }
-                    });
-                });
-            }
-        });
-    }
-
-    async setData() {
-        if (!this.is_result_set) {
-            this.movies.result = this.helperService.movie_result_to_display.result;
-            this.helperService.waiting_for_movie_result = false;
-            this.is_waiting_for_result = false;
-            this.checkIfInFavourites();
-            this.storageService.loadImages(this.movies.result);
-            this.checkIfInRatings();
-            this.movies.result.forEach(movie => {
-                this.movie_rec_rating_map[movie.id] = true;
-            });
-            this.is_result_set = true;
-        }
     }
 
     openFullPoster(event) {
         event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
+    }
+    openImdb(movie) {
+        window.open('https://www.imdb.com/title/' + movie.imdb_id, '_system');
+    }
+    openAmazonVideo(movie) {
+        window.open('https://www.amazon.de/s/?url=search-alias%3Dinstant-video&field-keywords=' + movie.title, '_system');
+    }
+    openYoutube(movie) {
+        window.open('  https://www.youtube.com/results?search_query=' + movie.title + '+' + movie.year + '+trailer', '_system');
     }
 
 }

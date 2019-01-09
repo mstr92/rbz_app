@@ -1,11 +1,15 @@
 import {Injectable} from '@angular/core';
 import {CompleteMovieSearchRequest, Movie, MovieResult, Poster} from '../../interfaces/movieInterface';
 import {Subject} from 'rxjs';
+import {Constants} from '../constants';
+import {StorageService} from '../storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelperService {
+    favourites: Array<Movie>;
+    ratings: Array<Movie>;
     // Current movie reuquest object for refining oder history
     movie_request_to_pass: CompleteMovieSearchRequest;
     movie_request_refine = false;
@@ -28,7 +32,9 @@ export class HelperService {
     constructor() {
         this.movie_request_to_pass = {entity: '', data: {}, length: 0};
         this.movie_result_to_display = {id: 0, result: []};
+        this.setResultOnMoviePage.subscribe(() => {});
     }
+
 
     arrayRemove(arr, value) {
         return arr.filter(function (ele) {
@@ -41,6 +47,7 @@ export class HelperService {
             return ele.id !== value.id;
         });
     }
+
     arrayRemoveByTimestamp(arr, value) {
         return arr.filter(function (ele) {
             return ele.timestamp !== value.timestamp;
@@ -48,11 +55,11 @@ export class HelperService {
     }
 
     // https://forum.ionicframework.com/t/need-to-convert-image-url-to-base64-string/74449/2
-    convertToDataURLviaCanvas(url, outputFormat){
-        return new Promise( (resolve, reject) => {
+    convertToDataURLviaCanvas(url, outputFormat) {
+        return new Promise((resolve, reject) => {
             let img = new Image();
             img.crossOrigin = 'Anonymous';
-            img.onload = function(){
+            img.onload = function () {
                 let canvas = <HTMLCanvasElement> document.createElement('CANVAS'),
                     ctx = canvas.getContext('2d'),
                     dataURL;
