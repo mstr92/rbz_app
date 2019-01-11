@@ -6,17 +6,18 @@
     </ion-toolbar>
 </ion-header>
 <ion-content padding>
-    <ion-searchbar #searchbar animated class="searchbar" color="light"
-                   autofocus [(ngModel)]="searchTerm" (keyup)="setFilteredData()"></ion-searchbar>
+    <ion-searchbar #searchbar class="searchbar" color="light" debounce="400" [animated]="true"
+                   [(ngModel)]="searchTerm" (keyup)="setFilteredData()"></ion-searchbar>
+    <input id="unfocus" type="search" class="unfocus">
     <ion-row>
-        <ion-col [class]="!isNegativeAlignment ? 'toggle-positive' : 'toggle-neutral'" #positive size="4">
-            POSITIVE
+        <ion-col size="4" [class]="!isNegativeAlignment ? 'toggle-positive' : 'toggle-neutral'" #positive>
+            LIKE
         </ion-col>
-        <ion-col size="3">
+        <ion-col size="4">
             <ion-toggle [(ngModel)]="isNegativeAlignment"></ion-toggle>
         </ion-col>
-        <ion-col [class]="!isNegativeAlignment ? 'toggle-neutral' : 'toggle-negative'" size="4">
-            NEGATIVE
+        <ion-col size="4" [class]="!isNegativeAlignment ? 'toggle-neutral' : 'toggle-negative'">
+            DISLIKE
         </ion-col>
     </ion-row>
     <ion-card *ngIf="searchTerm.length == 0" class="chat-item">
@@ -27,21 +28,29 @@
             </ion-item>
         </ion-card-content>
     </ion-card>
+
     <ion-card *ngIf="searchdata.search_movie.length > 0" class="chat-item">
         <ion-card-header class="movie-header">
             <ion-card-title>Movies</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of searchdata.search_movie" (click)="addToList('movie', entry[0].id)">
-                    <ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"
-                                  checked="true"
-                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
-                    </ion-checkbox>
-                    <ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"
-                                  checked="false"
-                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
-                    </ion-checkbox>
+                <ion-item lines="inset" *ngFor="let entry of searchdata.search_movie; trackBy: trackByMovie"
+                          (click)="addToList('movie', entry[0].id)">
+                    <!--<ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"-->
+                    <!--checked="true"-->
+                    <!--[style.backgroundImage]="'url('+ entry[0].image +')'">-->
+                    <!--</ion-checkbox>-->
+                    <!--<ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"-->
+                    <!--checked="false"-->
+                    <!--[style.backgroundImage]="'url('+ entry[0].image +')'">-->
+                    <!--</ion-checkbox>-->
+                    <!--<ion-label>-->
+                    <!--<h2>{{entry[0].title}}</h2>-->
+                    <!--<h3>{{entry[0].year}}</h3>-->
+                    <!--</ion-label>-->
+                    <ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>
+                    <ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>
                     <ion-label>
                         <h2>{{entry[0].title}}</h2>
                         <h3>{{entry[0].year}}</h3>
@@ -56,11 +65,12 @@
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of searchdata.search_actor" (click)="addToList('actor', entry[0].id)">
+                <ion-item lines="inset" *ngFor="let entry of searchdata.search_actor; trackBy: trackByActor"
+                          (click)="addToList('actor', entry[0].id)">
                     <ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>
                     <ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>
                     <ion-label>
-                       {{entry[0].firstname}} {{entry[0].lastname}}
+                        {{entry[0].firstname}} {{entry[0].lastname}}
                     </ion-label>
                 </ion-item>
             </ion-list>
@@ -73,7 +83,8 @@
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let genre of searchdata.search_genre" (click)="addToList('genre', genre[0].id)">
+                <ion-item lines="inset" *ngFor="let genre of searchdata.search_genre; trackBy: trackByGenre"
+                          (click)="addToList('genre', genre[0].id)">
                     <ion-checkbox *ngIf="genre[1]" [class]="genre[0].alignment" checked="true"></ion-checkbox>
                     <ion-checkbox *ngIf="!genre[1]" [class]="genre[0].alignment" checked="false"></ion-checkbox>
                     <ion-label>{{genre[0].name}}</ion-label>
@@ -88,19 +99,19 @@
         <ion-card-content>
             <ion-list>
                 <ion-item #keywordItem *ngIf="keyWordNotInList() && searchTerm.length > 0">
-                    <ion-checkbox  #keywordCheckbox (click)="addToKeywordList(searchTerm)" ></ion-checkbox>
+                    <ion-checkbox #keywordCheckbox (click)="addToKeywordList(searchTerm)"></ion-checkbox>
                     {{searchTerm}}
                 </ion-item>
                 <ion-item *ngFor="let keyword of keywords">
-                    <ion-checkbox [class]="keyword.alignment" checked="true" (click)="deleteKeywordFromList(keyword)"></ion-checkbox>
+                    <ion-checkbox [class]="keyword.alignment" checked="true"
+                                  (click)="deleteKeywordFromList(keyword)"></ion-checkbox>
                     {{keyword.name}}
                 </ion-item>
             </ion-list>
         </ion-card-content>
     </ion-card>
-
 </ion-content>
-    <ion-toolbar position="bottom" class="bottom-toolbar">
-        <ion-button slot="start" expand="block" (click)="cancelSearch()">Cancel</ion-button>
-        <ion-button slot="end" expand="block" (click)="addSearchEntries()">Add</ion-button>
-    </ion-toolbar>
+<ion-footer>
+    <ion-button slot="start" expand="full" (click)="cancelSearch()" class="btns">Cancel</ion-button>
+    <ion-button slot="end" expand="full" (click)="addSearchEntries()" class="btns">Add</ion-button>
+</ion-footer>

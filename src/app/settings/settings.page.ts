@@ -25,23 +25,21 @@ export class SettingsPage implements OnInit {
     backup_sync = <BackupDate>{history: '', rating: '', favourite: ''};
     @ViewChild('register_error_msg') register_error_msg;
     @ViewChild('login_error_msg') login_error_msg;
-    private secureKey: Constants.AES_SECUREKEY;
-    private secureIV: Constants.AES_SECUREIV;
 
     constructor(public storageService: StorageService, public alertController: AlertController, public apiService: ApiService,
                 public toastController: ToastController, public helperService: HelperService) {
 
         this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(data => {
-            this.size_favourites = data.length;
+            this.size_favourites = Object.keys(data).length;
         });
         this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
-            this.size_ratings = data.length;
+            this.size_ratings = Object.keys(data).length;
         });
         this.storageService.getStorageEntries(Constants.MOVIE_POSTER).then(data => {
-            this.size_posters = data.length;
+            this.size_posters = Object.keys(data).length;
         });
         this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
-            this.size_history = data.length;
+            this.size_history = Object.keys(data).length;
         });
 
         if (this.helperService.isUserLoggedIn) {
@@ -57,7 +55,7 @@ export class SettingsPage implements OnInit {
     async presentConfirm(entity) {
         const alert = await this.alertController.create({
             header: 'Delete ' + entity,
-            message: 'Are you sure to delete <strong>all</strong> entries?',
+            message: 'Are you sure to delete <strong>all</strong> entries? You can not undo this anymore',
             buttons: [
                 {
                     text: 'Cancel',
@@ -66,20 +64,26 @@ export class SettingsPage implements OnInit {
                     text: 'Delete',
                     handler: () => {
                         if (entity === 'favourites') {
-                            this.storageService.initStorage(Constants.MOVIE_FAVOURITE);
+                            this.storageService.initFavourites();
+                            this.helperService.favourites = new Map<string, Movie>();
                             this.size_favourites = 0;
                         }
                         if (entity === 'history') {
-                            this.storageService.initStorage(Constants.MOVIE_HISTORY);
+                            this.storageService.initHistory();
                             this.size_history = 0;
                         }
                         if (entity === 'posters') {
-                            this.storageService.initStorage(Constants.MOVIE_POSTER);
+                            this.storageService.initPoster();
                             this.size_posters = 0;
                         }
                         if (entity === 'ratings') {
-                            this.storageService.initStorage(Constants.MOVIE_RATING);
+                            this.storageService.initRating();
+                            this.helperService.ratings = new Map<string, Movie>();
                             this.size_ratings = 0;
+                        }
+                        if (entity === 'full') {
+                            this.storageService.clearFull();
+                            document.location.href = 'index.html';
                         }
                     }
                 }
@@ -183,12 +187,12 @@ export class SettingsPage implements OnInit {
                     this.view_control.loggedIn = !this.view_control.loggedIn;
                     this.setLastDates();
                     this.apiService.setUserUUID(this.login.username).then(data => {
-                        console.log(data)
-                        console.log("testst")
+                        console.log(data);
+                        console.log('testst');
                     }, error => {
-                        console.log(error)
-                        console.log("testst")
-                    })
+                        console.log(error);
+                        console.log('testst');
+                    });
                 });
             }
         }, (check) => {
@@ -249,8 +253,7 @@ export class SettingsPage implements OnInit {
     }
 
     syncData(entity) {
-        this.backup_sync[entity] = new Date().toISOString();
-        this.storageService.addBackupSync(this.backup_sync);
+
         let storage = '';
         if (entity == 'rating') storage = Constants.MOVIE_RATING;
         if (entity == 'favourite') storage = Constants.MOVIE_FAVOURITE;
@@ -259,14 +262,14 @@ export class SettingsPage implements OnInit {
         this.storageService.getUser().then(user => {
             this.apiService.getBackup(user.id, entity).then(data => {
                 if (data != undefined || data != null) {
-                    const storeData = Array<Movie>();
                     const parseData1 = JSON.parse(data.data);
                     const parseData2 = JSON.parse(parseData1);
-                    parseData2.forEach(item => {
-                        storeData.push(item);
-                    });
-                    this.storageService.setFullData(storage, storeData).then(() => {
+                    if (entity == 'rating') this.helperService.ratings = new Map(Object.entries(parseData2));
+                    if (entity == 'favourite') this.helperService.favourites = new Map(Object.entries(parseData2));
+                    this.storageService.setFullData(storage, parseData2).then(() => {
                             this.displayToast('SUCCESS: Data synchronized from Database');
+                            this.backup_sync[entity] = new Date().toISOString();
+                            this.storageService.addBackupSync(this.backup_sync);
                         }, () => {
                             this.displayToast('ERROR: Data not synchronized. Please try again');
                         }
@@ -284,16 +287,14 @@ export class SettingsPage implements OnInit {
             storage = Constants.MOVIE_RATING;
             entry_index = 0;
         }
-
-        if (entity == 'favourite') {
-            storage = Constants.MOVIE_FAVOURITE;
-            entry_index = 2;
-        }
         if (entity == 'history') {
             storage = Constants.MOVIE_HISTORY;
             entry_index = 1;
         }
-
+        if (entity == 'favourite') {
+            storage = Constants.MOVIE_FAVOURITE;
+            entry_index = 2;
+        }
         this.storageService.getUser().then(user => {
             this.storageService.getStorageEntries(storage).then(data => {
                 if (data != undefined || data != null) {

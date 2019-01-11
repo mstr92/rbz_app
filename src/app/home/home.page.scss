@@ -39,7 +39,7 @@
   border-right: 6.5em solid transparent;
   z-index: 999;
 }
-.coming-soon-text {
+.info-text {
   text-transform: uppercase;
   font-weight: bold;
   color: var(--ion-color-primary-contrast);
@@ -47,6 +47,18 @@
   position: absolute;
   z-index: 9999;
   transform: rotate(-45deg);
+}
+.coming-soon-text {
   top: 9%;
   left: 1%;
+}
+.result-info-finish {
+  top: 10%;
+  left: -2%;
+  font-size: 0.9em;
+}
+.result-info-waiting{
+  font-size: 0.9em;
+  top: 10%;
+  left: -2%;
 }

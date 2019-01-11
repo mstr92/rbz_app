@@ -20,59 +20,59 @@ button > ion-icon {
   top: 20%;
   right: 1.5em;
 }
-.button-bottom {
-  padding: 0;
-  background-color: var(--ion-color-dark);
-  --background: var(--ion-color-dark);
-  --box-shadow: 0;
-  width: 50%;
-  position: absolute;
-  bottom: 0;
-}
-.cancel {
-  left: 0;
-  border-right: 1px solid var(--ion-background-color-dark);
-}
-.save {
- right: 0;
-}
-ion-list-header {
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 3em;
-  height: 1em;
-  background-color: var(--ion-color-primary);
-  margin-bottom:0;
-  border-bottom: 1px solid var(--ion-color-dark);
-  border-radius: 10px 10px 0 0;
-}
-ion-list-header > ion-icon {
-  color: var(--ion-color-primary-contrast)
-}
-.divider{
-  height:15px;
-  background-color:rgba(0,0,0,0);
-}
-.divider-option {
-  height: calc(100% - 15px);
-}
+//.button-bottom {
+//  padding: 0;
+//  background-color: var(--ion-color-dark);
+//  --background: var(--ion-color-dark);
+//  --box-shadow: 0;
+//  width: 50%;
+//  position: absolute;
+//  bottom: 0;
+//}
+//.cancel {
+//  left: 0;
+//  border-right: 1px solid var(--ion-background-color-dark);
+//}
+//.save {
+// right: 0;
+//}
+//ion-list-header {
+//  display: inline-block;
+//  text-align: center;
+//  vertical-align: middle;
+//  font-size: 3em;
+//  height: 1em;
+//  background-color: var(--ion-color-primary);
+//  margin-bottom:0;
+//  border-bottom: 1px solid var(--ion-color-dark);
+//  border-radius: 10px 10px 0 0;
+//}
+//ion-list-header > ion-icon {
+//  color: var(--ion-color-primary-contrast)
+//}
+//.divider{
+//  height:15px;
+//  background-color:rgba(0,0,0,0);
+//}
+//.divider-option {
+//  height: calc(100% - 15px);
+//}
 ion-item{
   background-color: var(--ion-color-primary-contrast-test)
 }
-ion-reorder > ion-icon {
-  font-size:1.4em;
-  background-color:var(--ion-color-dark);
-  padding: 0.2em;
-  visibility: visible;
-}
-.pos0 {
-  color: gold;
-}
-.pos1 {
-  color: silver;
-}
-.pos2 {
-  color: #CD7F32;
-}
+//ion-reorder > ion-icon {
+//  font-size:1.4em;
+//  background-color:var(--ion-color-dark);
+//  padding: 0.2em;
+//  visibility: visible;
+//}
+//.pos0 {
+//  color: gold;
+//}
+//.pos1 {
+//  color: silver;
+//}
+//.pos2 {
+//  color: #CD7F32;
+//}
 

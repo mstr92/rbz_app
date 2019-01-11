@@ -14,27 +14,6 @@ export class ResultparserService {
                 public storageService: StorageService, private apiService: ApiService) {
     }
 
-    checkIfInFavourites(imdb_id) {
-        let retVal = false;
-        this.helperService.favourites.forEach(element => {
-            if (element.imdb_id == imdb_id) {
-               retVal = true;
-               return;
-            }
-        });
-        return retVal;
-    }
-    checkIfInRating(imdb_id) {
-        let retVal = undefined;
-        this.helperService.ratings.forEach(element => {
-            if (element.imdb_id == imdb_id) {
-                retVal= element.rating;
-                return;
-            }
-        });
-        return retVal;
-    }
-
     parseMovieResult(result, timestamp, result_id) {
         let parsedObject = JSON.parse(result);
         if (parsedObject.recommendation_list == undefined)
@@ -48,8 +27,8 @@ export class ResultparserService {
                     imdb_id: element.ttid,
                     title: element.title.substring(0, element.title.length - 7),
                     year: element.year,
-                    favourite: this.checkIfInFavourites(element.ttid),
-                    rating: this.checkIfInRating(element.ttid)
+                    favourite: element.ttid in this.helperService.favourites,
+                    rating: element.ttid in this.helperService.ratings ? this.helperService.ratings[element.ttid].rating : undefined
                 };
                 movies.push(movie);
             });
@@ -57,7 +36,7 @@ export class ResultparserService {
                 let history = <MovieHistory> {
                     timestamp: timestamp,
                     request: this.helperService.movie_request_to_pass,
-                    result: <MovieResult>{id: result_id, result: movies}
+                    result: <MovieResult>{id: result_id, result: movies, timestamp: timestamp}
                 };
                 this.storageService.addMovieHistory(history);
                 return movies;
@@ -70,9 +49,7 @@ export class ResultparserService {
     }
 
     buildRequestBody(search_data) {
-        let body: EngineRequest = {length: 0};
-
-        body.length = search_data.length;
+        let body: EngineRequest = {length: search_data.length};
         if (search_data.data.movies != undefined) {
             search_data.data.movies.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
@@ -137,22 +114,31 @@ export class ResultparserService {
                 }
             });
         }
+        return body;
+    }
+
+    sendRequestToEngine(search_data, show_more=false){
         console.log('Send Request to Engine..');
-        this.apiService.setEngineRequest(body, this.helperService.oneSignalUserId).then(data => {
+        const notificationId = show_more ? '0' : this.helperService.oneSignalUserId;
+        return this.apiService.setEngineRequest(this.buildRequestBody(search_data), notificationId).then(data => {
             if (data.status == 201) {
                 let dataObject = JSON.parse(data.data);
                 if (dataObject.response.includes('ERROR CALCULATING RECOMMENDATIONS!')) {
                     this.helperService.result_calculation_failed = true;
                 } else {
+                    const time = new Date().toISOString();
                     this.helperService.movie_result_to_display = <MovieResult>{
                         id: dataObject.id,
-                        result: this.parseMovieResult(dataObject.response, new Date().toISOString(), dataObject.id)
+                        timestamp: time,
+                        result: this.parseMovieResult(dataObject.response, time, dataObject.id)
                     };
                     this.helperService.result_calculation_finished = true;
                 }
                 this.helperService.waiting_for_movie_result = false;
-                this.helperService.setResultOnMoviePage.next();
+                if(!show_more) this.helperService.setResultOnMoviePage.next();
+                return true;
             }
+            return false;
         });
     }
 }

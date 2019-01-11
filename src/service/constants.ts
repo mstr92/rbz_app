@@ -21,7 +21,6 @@ export enum Constants {
     UUID = "uuid",
     BACKUP_SNYC = "backupSync",
 
-    //Verschlüsselung
-    AES_SECUREKEY = "74e977035b27c7ce22fde5b21205ac59",
-    AES_SECUREIV = "0cfa57d192d00fe8"
+    ENGINE_ERROR = 'ERROR CALCULATING RECOMMENDATIONS!',
+    ONESIGNAL_APP_ID = 'c61624bb-71b9-442f-85aa-ce0ae06c4f51',
 }

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Constants} from '../constants';
 import {HTTP} from '@ionic-native/http/ngx';
 import {Device} from '@ionic-native/device/ngx';
-//import {ResultparserService} from '../resultparser/resultparser.service';
 
 
 @Injectable()
@@ -85,7 +84,7 @@ export class ApiService {
                 'rating': rating,
                 'user_id': user_id,
                 'history': history
-            }, {});
+            }, {'key': Constants.API_KEY});
     }
 
     getBackup(user_id, entity) {
@@ -110,5 +109,17 @@ export class ApiService {
     getEngineResponse(id) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
         return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + id, {}, {'key': Constants.API_KEY});
+    }
+    setVote(uuid, username, recommendation_id, movie_id, vote) {
+        this.http.setSSLCertMode(Constants.CHECK_SSL);
+        this.http.setDataSerializer('json');
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/movie/vote',
+            {
+                'device_uuid': uuid,
+                'username': username,
+                'recommendation_id': recommendation_id,
+                'movie_id': movie_id,
+                'vote': vote
+            }, {'key': Constants.API_KEY});
     }
 }

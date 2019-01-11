@@ -107,3 +107,21 @@ ion-button {
   padding:0;
   --background: var(--ion-color-dark);
 }
+ion-footer > ion-button {
+  float: left;
+  padding: 0;
+  background-color: var(--ion-color-dark);
+  --background: var(--ion-color-dark);
+  --box-shadow: 0;
+  width: 49%;
+}
+ion-footer {
+  background-color: var(--ion-color-dark);
+}
+.unfocus {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  position: absolute;
+}

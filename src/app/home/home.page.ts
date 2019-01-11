@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnChanges} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {HelperService} from '../../service/helper/helper.service';
 import {MovieResult} from '../../interfaces/movieInterface';
@@ -10,10 +10,9 @@ import {ResultparserService} from '../../service/resultparser/resultparser.servi
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss']
 })
-export class HomePage {
+export class HomePage{
 
-    constructor(public navCtrl: NavController, private helperService: HelperService, private apiService: ApiService, private parser: ResultparserService) {
-
+    constructor(public navCtrl: NavController, public helperService: HelperService) {
     }
 
     goToMovies() {

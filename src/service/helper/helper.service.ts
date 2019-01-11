@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
 import {CompleteMovieSearchRequest, Movie, MovieResult, Poster} from '../../interfaces/movieInterface';
 import {Subject} from 'rxjs';
-import {Constants} from '../constants';
-import {StorageService} from '../storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelperService {
-    favourites: Array<Movie>;
-    ratings: Array<Movie>;
+    favourites = new Map<string, Movie>();
+    ratings =  new Map<string, Movie>();
     // Current movie reuquest object for refining oder history
     movie_request_to_pass: CompleteMovieSearchRequest;
     movie_request_refine = false;
@@ -29,9 +27,10 @@ export class HelperService {
 
     setResultOnMoviePage: Subject<boolean> = new Subject<boolean>();
 
+
     constructor() {
         this.movie_request_to_pass = {entity: '', data: {}, length: 0};
-        this.movie_result_to_display = {id: 0, result: []};
+        this.movie_result_to_display = {id: 0, result: [], timestamp: ''};
         this.setResultOnMoviePage.subscribe(() => {});
     }
 

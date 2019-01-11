@@ -4,6 +4,7 @@ import {StorageService} from '../../service/storage/storage.service';
 import {Constants} from '../../service/constants';
 import {HelperService} from '../../service/helper/helper.service';
 import {NotificationService} from '../../service/push/notification.service';
+import {Movie} from '../../interfaces/movieInterface';
 
 
 @Component({
@@ -20,7 +21,18 @@ export class AboutPage implements OnInit {
     }
 
     testPush() {
-       this.notificationService.initPushOneSignal();
+        this.storageService.initHistory();
     }
 
+    setTest() {
+         this.storageService.getUUID().then(data => console.log(data));
+    }
+    setTest1() {
+
+    }
+    getTest(imdb_id) {
+        this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
+            console.log(data)
+        })
+    }
 }

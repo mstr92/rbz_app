@@ -6,6 +6,7 @@ import {HelperService} from '../../service/helper/helper.service';
 import {Constants} from '../../service/constants';
 import {ApiService} from '../../service/apicalls/api.service';
 import {ResultparserService} from '../../service/resultparser/resultparser.service';
+import {StorageService} from '../../service/storage/storage.service';
 
 @Component({
     selector: 'app-movie-query',
@@ -18,7 +19,7 @@ export class MovieQueryPage implements OnInit {
     movie_year_enabled = {positive: false, negative: false};
     year_pos = {upper: Constants.MAX_YEAR, lower: Constants.MIN_YEAR};
     year_neg = {upper: Constants.MAX_YEAR, lower: Constants.MIN_YEAR};
-    number_results = 10;
+    number_results = 5;
     entities = ['movies', 'actors', 'genres', 'keywords'];
     search_data: CompleteMovieSearchRequest = {
         entity: 'Movie',
@@ -32,7 +33,8 @@ export class MovieQueryPage implements OnInit {
     constructor(public modalCtrl: ModalController,
                 public navCtrl: NavController,
                 public helperService: HelperService,
-                public parser: ResultparserService) {
+                public parser: ResultparserService,
+                public storageService: StorageService) {
         if(this.helperService.movie_from_history) {
             this.show_from_history = true;
             this.helperService.movie_from_history = false;
@@ -52,6 +54,7 @@ export class MovieQueryPage implements OnInit {
                     this.movie_year_enabled.positive = true;
                 }
             });
+            this.storageService.loadImages(this.search_data.data.movies);
             this.helperService.movie_request_refine = false;
         }
     }
@@ -85,6 +88,7 @@ export class MovieQueryPage implements OnInit {
             this.search_data.data.genres = data.data.genres;
             this.search_data.data.movies = data.data.movies;
             this.search_data.data.actors = data.data.actors;
+            this.storageService.loadImages(this.search_data.data.movies);
 
             this.entities.forEach(entity => {
                 this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));

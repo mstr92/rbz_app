@@ -14,9 +14,9 @@
     </ion-fab>
 </ion-header>
 <div class="filter-section" *ngIf="filter_enabled">
-    <ion-button expand="full" (click)="setDate('week')">Last Week</ion-button>
-    <ion-button expand="full" (click)="setDate('month')">Last Month</ion-button>
-    <ion-button expand="full" (click)="setDate('year')">Last Year</ion-button>
+    <ion-button expand="block" (click)="setDate('week')">Last Week</ion-button>
+    <ion-button expand="block" (click)="setDate('month')">Last Month</ion-button>
+    <ion-button expand="block" (click)="setDate('year')">Last Year</ion-button>
 
     <ion-grid class="filter-grid">
         <ion-row class="filter-row">
@@ -41,14 +41,14 @@
         </ion-row>
         <ion-row>
             <ion-col class="filter-select-button">
-                <ion-button expand="full" (click)="setDate('selected')" size="small">Filter!</ion-button>
+                <ion-button expand="block" (click)="setDate('selected')" size="small">Filter!</ion-button>
             </ion-col>
         </ion-row>
     </ion-grid>
 </div>
 <ion-content padding (click)="filter_enabled? openFilter():''">
     <div [class]="!filter_enabled? 'light': 'dark'">
-        <ion-card *ngFor="let element of movieHistory" class="outer-class">
+        <ion-card *ngFor="let element of movieHistoryArray; trackBy: trackById" class="outer-class">
             <ion-list #slidingList>
                 <ion-item-sliding>
                     <ion-item>
@@ -150,9 +150,12 @@
             <ion-card-content *ngIf="!close_map[element.timestamp]">
                 <div>
                 <ion-button expand="full" class="show-btn left"  (click)="repeatRequest(element.request)">Show <br> Request</ion-button>
-                <ion-button expand="full" class="show-btn right" (click)="showRecommendation(element.result)">Show <br> Recommendation</ion-button>
+                <ion-button expand="full" class="show-btn right" (click)="showRecommendation(element.result)" [disabled]="element.result.result.length == 0">Show <br> Recommendation</ion-button>
                 </div>
             </ion-card-content>
         </ion-card>
+        <div class="entry-text">Displayed entries: {{show_entries_size}} of  {{this.total_history_entries}}</div>
     </div>
+    <ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()" class="show-more-btn">Show More</ion-button>
 </ion-content>
+

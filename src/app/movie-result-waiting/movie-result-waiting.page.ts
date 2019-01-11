@@ -11,7 +11,7 @@ import {NavController} from '@ionic/angular';
 export class MovieResultWaitingPage implements OnInit {
 
   constructor(private parser:ResultparserService, private helperService:HelperService, private navController: NavController) {
-      this.parser.buildRequestBody(this.helperService.movie_request_to_pass);
+      this.parser.sendRequestToEngine(this.helperService.movie_request_to_pass);
       this.helperService.setResultOnMoviePage.subscribe(() => {
           this.navController.navigateForward('/movie-result')
       });

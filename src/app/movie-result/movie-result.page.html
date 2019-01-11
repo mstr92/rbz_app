@@ -72,7 +72,6 @@
                     </ion-fab-button>
                 </ion-fab-list>
             </ion-fab>
-            <!--<ion-fab vertical="top" horizontal="end" class="fab-favourite" >-->
             <ion-icon *ngIf="disableCorrectFavourite(movie)" [name]="movie.favourite ? 'heart' : 'heart-empty'"
                       class="favourite-icon" (click)="addToFavourite(movie)"></ion-icon>
             <ion-card-header>
@@ -101,20 +100,20 @@
                 </ion-grid>
             </ion-card-content>
             <ion-button *ngIf="movie_rec_rating_map[movie.id]" expand="block" class="rate-button goTo-Button"
-                        (click)="displayRecommendationRating(movie)">How satisfied are you<br>with the recommended
+                        (click)="changeVote(movie)">How satisfied are you<br>with the recommended
                 movie?
             </ion-button>
             <div class="vote-line">
                 <img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji pos-1"
-                     (click)="setRecommendationRating(1, movie)">
+                     (click)="setRecommendationVote(1, movie)">
                 <img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji pos-2"
-                     (click)="setRecommendationRating(2, movie)">
+                     (click)="setRecommendationVote(2, movie)">
                 <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji pos-3"
-                     (click)="setRecommendationRating(3, movie)">
+                     (click)="setRecommendationVote(3, movie)">
                 <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji pos-4"
-                     (click)="setRecommendationRating(4, movie)">
+                     (click)="setRecommendationVote(4, movie)">
                 <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji pos-5"
-                     (click)="setRecommendationRating(5, movie)">
+                     (click)="setRecommendationVote(5, movie)">
                 <div [id]="'vote_res' + movie.id" class="vote-text invisible"></div>
                 <div [id]="'vote_change' + movie.id" class="vote-change invisible" (click)="changeVote(movie)">Change
                     Decision

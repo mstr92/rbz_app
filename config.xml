@@ -16,6 +16,7 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="none" />
     <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="fullscreen" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />

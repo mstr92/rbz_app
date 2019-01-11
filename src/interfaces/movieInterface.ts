@@ -45,6 +45,7 @@ export interface CompleteMovieSearchRequest {
 
 export interface MovieResult {
     id: number,
+    timestamp: string;
     result: Array<Movie>
 }
 export interface Poster {
@@ -70,4 +71,7 @@ export interface EngineRequest {
     'pos_genre'?: Array<String>,
     'neg_keyword'?: Array<String>,
     'pos_keyword'?: Array<String>
+}
+export interface Test {
+    entry: Map<String,Movie>
 }
