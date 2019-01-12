@@ -80,7 +80,7 @@ export class AppComponent{
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
             this.notificationService.initPushOneSignal();
-            this.showSplash = true;
+            this.showSplash = false;
             timer(3000).subscribe(() => this.showSplash = false); // <-- hide animation after 3s
             // Initialize storage
            this.initStorages();
@@ -96,7 +96,7 @@ export class AppComponent{
                 }
             },error => console.log(error));
             // Check if device is already registered. If not, register in database
-            this.storageService.getUUID().then(is_set => {
+            this.storageService.getStorageEntries(Constants.UUID).then(is_set => {
                 if (!is_set.data) {
                     this.apiService.setUUID(this.device.uuid).then(data => {
                         if (data.status = 201) {
@@ -105,6 +105,7 @@ export class AppComponent{
                     });
                 }
             }, error => console.log(error));
+            // Set data in helperService
             this.helperService.favourites = new Map<string, Movie>();
             this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(data => {
                 this.helperService.favourites = new Map(Object.entries(data));
@@ -114,6 +115,18 @@ export class AppComponent{
             this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
                 this.helperService.ratings = new Map(Object.entries(data));
             }, error => console.log(error));
+
+            this.helperService.waiting_for_movie_result = false;
+            this.storageService.getStorageEntries(Constants.MOVIE_WAIT).then(data => {
+                this.helperService.waiting_for_movie_result = data;
+            }, error => console.log(error));
+
+            this.helperService.movie_request_to_pass =  {entity: '', data: {}, length: 0};
+            this.storageService.getStorageEntries(Constants.MOVIE_REQUEST).then(data => {
+                this.helperService.movie_request_to_pass = data;
+            }, error => console.log(error));
+
+
         });
         this.statusBar.hide();
     }
@@ -140,6 +153,12 @@ export class AppComponent{
             }
             if (!keys.includes(Constants.UUID)) {
                 this.storageService.initUUID();
+            }
+            if (!keys.includes(Constants.MOVIE_REQUEST)) {
+                this.storageService.initMovieRequest();
+            }
+            if (!keys.includes(Constants.MOVIE_WAIT)) {
+                this.storageService.initMovieWait();
             }
         });
     }

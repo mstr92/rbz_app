@@ -35,8 +35,8 @@
             </ion-col>
             <ion-col size="8" align-self-center>
                 <ion-datetime id="test" displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max"
-                              [value]="from_year"
-                              [(ngModel)]="from_year"></ion-datetime>
+                              [value]="from_year_select"
+                              [(ngModel)]="from_year_select"></ion-datetime>
             </ion-col>
         </ion-row>
         <ion-row>
@@ -154,8 +154,10 @@
                 </div>
             </ion-card-content>
         </ion-card>
-        <div class="entry-text">Displayed entries: {{show_entries_size}} of  {{this.total_history_entries}}</div>
+        <div [class]="!disableShowMore?'entry-text button-displayed':'entry-text'">Displayed entries: {{show_entries_size}} of  {{total_history_entries}}</div>
     </div>
-    <ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()" class="show-more-btn">Show More</ion-button>
+    <ion-footer>
+        <ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()" class="show-more-btn">Show More</ion-button>
+    </ion-footer>
 </ion-content>
 

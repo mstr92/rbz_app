@@ -17,6 +17,12 @@
         </ion-fab-button>
         <ion-fab-list>
             <div>
+                <ion-label class="fab-label">New Request</ion-label>
+                <ion-button (click)="newRequest()">
+                    <ion-icon name="refresh"></ion-icon>
+                </ion-button>
+            </div>
+            <div>
                 <ion-label class="fab-label">Refine Request</ion-label>
                 <ion-button (click)="refineRequest()">
                     <ion-icon name="md-swap"></ion-icon>

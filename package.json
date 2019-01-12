@@ -59,6 +59,7 @@
     "core-js": "^2.5.3",
     "es6-promise-plugin": "^4.2.2",
     "fs": "0.0.1-security",
+    "intro.js": "^2.9.3",
     "ionic2-auto-complete": "^1.6.2-alpha",
     "mysql-ssh": "^1.0.6",
     "mysql2": "^1.6.4",

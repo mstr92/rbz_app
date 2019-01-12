@@ -12,8 +12,8 @@ export class HelperService {
     movie_request_to_pass: CompleteMovieSearchRequest;
     movie_request_refine = false;
     // Check if a user is logged in, flag + username
-    isUserLoggedIn;
-    username;
+    isUserLoggedIn : boolean;
+    username : string;
     //Data to display on Result Page
     movie_result_to_display: MovieResult;
     movie_result_id: 0;

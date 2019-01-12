@@ -134,7 +134,7 @@ export class ResultparserService {
                     };
                     this.helperService.result_calculation_finished = true;
                 }
-                this.helperService.waiting_for_movie_result = false;
+                this.storageService.setMovieWait(false);
                 if(!show_more) this.helperService.setResultOnMoviePage.next();
                 return true;
             }

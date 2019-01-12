@@ -52,7 +52,202 @@ export class SettingsPage implements OnInit {
     ngOnInit() {
     }
 
-    async presentConfirm(entity) {
+    //---------------------------------------------------------
+    // User-Registration
+    //---------------------------------------------------------
+    createErrorMsg(msg) {
+        return '- ' + msg + '\n';
+    }
+
+    sendRegistration() {
+        const pattern_mail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        const pattern_user = /[^A-Za-z0-9]+/;
+        let error_count = 0;
+        let error_text = '';
+        if (this.account.username.length < 3) {
+            error_text += this.createErrorMsg(Constants.ERROR_USERNAME_LENGTH);
+            error_count++;
+        }
+        else if (this.account.username.match(pattern_user) != null) {
+            error_text += this.createErrorMsg(Constants.ERROR_USERNAME_CHARS);
+            error_count++;
+        }
+        if (this.account.password.length < 5) {
+            error_text += this.createErrorMsg(Constants.ERROR_PASSWORD_LENGTH);
+            error_count++;
+        }
+        else if (this.account.password != this.account.password1) {
+            error_text += this.createErrorMsg(Constants.ERROR_PASSWORD_CONFIRM);
+            error_count++;
+        }
+
+        if (this.account.email.match(pattern_mail) == null) {
+            error_text += this.createErrorMsg(Constants.ERROR_MAIL_PATTERN);
+            error_count++;
+        }
+        if (error_count > 0) {
+            this.register_error_msg.nativeElement.innerText = error_text;
+            return;
+        } else {
+            this.register_error_msg.nativeElement.innerText = '';
+        }
+        this.apiService.setUser(this.account).then(() => {
+            this.displayToast('Account (' + this.account.username + ') registered! You can now login with your username and password.');
+            this.open('register');
+        }, error => {
+            if (error.status == 410) {
+                this.register_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_USERNAME_USE);
+            }
+            else {
+                this.displayToast('Registration failed! Please try again.');
+            }
+        });
+    }
+
+    //---------------------------------------------------------
+    // User-Login / Logout
+    //---------------------------------------------------------
+    checkLogin() {
+        const pattern_user = /[^A-Za-z0-9]+/;
+        if (this.login.username.match(pattern_user) != null) {
+            this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_USERNAME_INVALID);
+            return;
+        }
+        if (this.login.username.length < 3) {
+            this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_USERNAME_INVALID);
+            return;
+        }
+        if (this.login.password.length < 5) {
+            this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_PASSWORD_INVALID);
+            return;
+        }
+
+        this.apiService.getUserPassword(this.login.username, this.login.password).then(check => {
+            if (check.status == 201) {
+                this.apiService.getUser(this.login.username).then(user => {
+                    const dataPreprocess = JSON.parse(user);
+                    const dataJson = JSON.parse(dataPreprocess);
+                    this.storageService.addUser(<User>{id: dataJson[0].id, email: dataJson[0].email, username: dataJson[0].username});
+                    this.helperService.isUserLoggedIn = true;
+                    this.helperService.username = dataJson[0].username;
+                    this.view_control.login = !this.view_control.login;
+                    this.view_control.loggedIn = !this.view_control.loggedIn;
+                    this.setLastDates();
+                });
+            }
+        }, (check) => {
+            if (check.status == 410) {
+                this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_PASSWORD_WRONG);
+            } else if (check.status == 411) {
+                this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_USERNAME_EXIST);
+            } else {
+                this.login_error_msg.nativeElement.innerText = this.createErrorMsg(Constants.ERROR_PASSWORD_USERNAME);
+            }
+        });
+    }
+
+    logout() {
+        this.storageService.initUser();
+        this.helperService.isUserLoggedIn = false;
+        this.helperService.username = '';
+        this.view_control.buttons = !this.view_control.buttons;
+        this.view_control.loggedIn = !this.view_control.loggedIn;
+    }
+
+    open(form) {
+        if (form == 'login') {
+            this.view_control.login = !this.view_control.login;
+            this.login = {username: '', password: ''};
+        }
+        if (form == 'register') {
+            this.view_control.register = !this.view_control.register;
+            this.account = {username: '', email: '', password: '', password1: ''};
+        }
+        this.view_control.buttons = !this.view_control.buttons;
+    }
+
+    async displayToast(msg) {
+        const toast = await this.toastController.create({
+            message: msg,
+            showCloseButton: true,
+            position: 'bottom',
+            closeButtonText: 'close',
+            duration: 3000
+        });
+        toast.present();
+    }
+
+    //---------------------------------------------------------
+    // Synchronize Data
+    //---------------------------------------------------------
+    syncData(entity) {
+        let storage = '';
+        if (entity == 'rating') storage = Constants.MOVIE_RATING;
+        if (entity == 'favourite') storage = Constants.MOVIE_FAVOURITE;
+        if (entity == 'history') storage = Constants.MOVIE_HISTORY;
+
+        this.storageService.getUser().then(user => {
+            this.apiService.getBackup(user.id, entity).then(data => {
+                if (data != undefined || data != null) {
+                    const parseData1 = JSON.parse(data.data);
+                    const parseData2 = JSON.parse(parseData1);
+                    if (entity == 'rating') this.helperService.ratings = new Map(Object.entries(parseData2));
+                    if (entity == 'favourite') this.helperService.favourites = new Map(Object.entries(parseData2));
+                    this.storageService.setFullData(storage, parseData2).then(() => {
+                            this.displayToast('SUCCESS: Data synchronized from Database');
+                            this.backup_sync[entity] = new Date().toISOString();
+                            this.storageService.addBackupSync(this.backup_sync);
+                        }, () => {
+                            this.displayToast('ERROR: Data not synchronized. Please try again');
+                        }
+                    );
+                }
+            });
+        });
+    }
+
+    //---------------------------------------------------------
+    // Upload Data to Database
+    //---------------------------------------------------------
+    uploadData(entity) {
+        let storage = '';
+        let entry_index = 0;
+        let entries = {ratingMovies: '', favouriteMovies: '', movie_history: ''};
+        if (entity == 'rating') {
+            storage = Constants.MOVIE_RATING;
+            entry_index = 0;
+        }
+        if (entity == 'history') {
+            storage = Constants.MOVIE_HISTORY;
+            entry_index = 1;
+        }
+        if (entity == 'favourite') {
+            storage = Constants.MOVIE_FAVOURITE;
+            entry_index = 2;
+        }
+        this.storageService.getUser().then(user => {
+            this.storageService.getStorageEntries(storage).then(data => {
+                if (data != undefined || data != null) {
+                    entries[storage] = JSON.stringify(data);
+                    this.apiService.setBackup(entries.movie_history, entries.ratingMovies, entries.favouriteMovies, user.id).then(data => {
+                            this.displayToast('SUCCESS: Data uploaded to Database');
+                            this.apiService.getBackupLastDate(user.id).then(dates => {
+                                let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
+                                this.backup_upload[entity] = new Date(date_arr[entry_index]).toISOString();
+                            });
+                        },
+                        () => {
+                            this.displayToast('ERROR: Data not stored. Please try again');
+                        });
+                }
+            });
+        });
+    }
+
+    //---------------------------------------------------------
+    // PopUps
+    //---------------------------------------------------------
+    async confirmDeleteStorage(entity) {
         const alert = await this.alertController.create({
             header: 'Delete ' + entity,
             message: 'Are you sure to delete <strong>all</strong> entries? You can not undo this anymore',
@@ -90,128 +285,6 @@ export class SettingsPage implements OnInit {
             ]
         });
         await alert.present();
-    }
-
-    sendRegistration() {
-        const pattern_mail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-        const pattern_user = /[^A-Za-z0-9]+/;
-        let error_count = 0;
-        let error_text = '';
-        if (this.account.username.length < 3) {
-            error_text += '- Username must contain at least 3 characters\n';
-            error_count++;
-        }
-        else if (this.account.username.match(pattern_user) != null) {
-            error_text += '- Only letters and numbers are allow for username \n';
-            error_count++;
-        }
-        if (this.account.password.length < 5) {
-            error_text += '- Password must contain at least 5 characters\n';
-            error_count++;
-        }
-        else if (this.account.password != this.account.password1) {
-            error_text += '- Password confirmation does not match \n';
-            error_count++;
-        }
-
-        if (this.account.email.match(pattern_mail) == null) {
-            error_text += '- Email address does not match \n';
-            error_count++;
-        }
-        if (error_count > 0) {
-            this.register_error_msg.nativeElement.innerText = error_text;
-            return;
-        } else {
-            this.register_error_msg.nativeElement.innerText = '';
-        }
-        this.apiService.setUser(this.account).then(() => {
-            this.displayToast('Account (' + this.account.username + ') registered! You can now login with your username and password.');
-            this.open('register');
-        }, error => {
-            if (error.status == 410) {
-                this.register_error_msg.nativeElement.innerText = '- Username already in use';
-            }
-            else {
-                this.displayToast('Registration failed! Please try again.');
-            }
-        });
-    }
-
-    open(form) {
-        if (form == 'login') {
-            this.view_control.login = !this.view_control.login;
-            this.login = {username: '', password: ''};
-        }
-        if (form == 'register') {
-            this.view_control.register = !this.view_control.register;
-            this.account = {username: '', email: '', password: '', password1: ''};
-        }
-        this.view_control.buttons = !this.view_control.buttons;
-    }
-
-    async displayToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            showCloseButton: true,
-            position: 'bottom',
-            closeButtonText: 'close',
-            duration: 3000
-        });
-        toast.present();
-    }
-
-    checkLogin() {
-        const pattern_user = /[^A-Za-z0-9]+/;
-        if (this.login.username.match(pattern_user) != null) {
-            this.login_error_msg.nativeElement.innerText = '- Invalid username \n';
-            return;
-        }
-        if (this.login.username.length < 3) {
-            this.login_error_msg.nativeElement.innerText = '- Invalid username \n';
-            return;
-        }
-        if (this.login.password.length < 5) {
-            this.login_error_msg.nativeElement.innerText = '- Invalid password \n';
-            return;
-        }
-
-        this.apiService.getUserPassword(this.login.username, this.login.password).then(check => {
-            if (check.status == 201) {
-                this.apiService.getUser(this.login.username).then(user => {
-                    const dataPreprocess = JSON.parse(user);
-                    const dataJson = JSON.parse(dataPreprocess);
-                    this.storageService.addUser(<User>{id: dataJson[0].id, email: dataJson[0].email, username: dataJson[0].username});
-                    this.helperService.isUserLoggedIn = true;
-                    this.helperService.username = dataJson[0].username;
-                    this.view_control.login = !this.view_control.login;
-                    this.view_control.loggedIn = !this.view_control.loggedIn;
-                    this.setLastDates();
-                    this.apiService.setUserUUID(this.login.username).then(data => {
-                        console.log(data);
-                        console.log('testst');
-                    }, error => {
-                        console.log(error);
-                        console.log('testst');
-                    });
-                });
-            }
-        }, (check) => {
-            if (check.status == 410) {
-                this.login_error_msg.nativeElement.innerText = '- Wrong Password';
-            } else if (check.status == 411) {
-                this.login_error_msg.nativeElement.innerText = '- Username does not exist';
-            } else {
-                this.login_error_msg.nativeElement.innerText = '- Wrong Username or Password';
-            }
-        });
-    }
-
-    logout() {
-        this.storageService.initUser();
-        this.helperService.isUserLoggedIn = false;
-        this.helperService.username = '';
-        this.view_control.buttons = !this.view_control.buttons;
-        this.view_control.loggedIn = !this.view_control.loggedIn;
     }
 
     async confirmLogout() {
@@ -252,68 +325,6 @@ export class SettingsPage implements OnInit {
         await alert.present();
     }
 
-    syncData(entity) {
-
-        let storage = '';
-        if (entity == 'rating') storage = Constants.MOVIE_RATING;
-        if (entity == 'favourite') storage = Constants.MOVIE_FAVOURITE;
-        if (entity == 'history') storage = Constants.MOVIE_HISTORY;
-
-        this.storageService.getUser().then(user => {
-            this.apiService.getBackup(user.id, entity).then(data => {
-                if (data != undefined || data != null) {
-                    const parseData1 = JSON.parse(data.data);
-                    const parseData2 = JSON.parse(parseData1);
-                    if (entity == 'rating') this.helperService.ratings = new Map(Object.entries(parseData2));
-                    if (entity == 'favourite') this.helperService.favourites = new Map(Object.entries(parseData2));
-                    this.storageService.setFullData(storage, parseData2).then(() => {
-                            this.displayToast('SUCCESS: Data synchronized from Database');
-                            this.backup_sync[entity] = new Date().toISOString();
-                            this.storageService.addBackupSync(this.backup_sync);
-                        }, () => {
-                            this.displayToast('ERROR: Data not synchronized. Please try again');
-                        }
-                    );
-                }
-            });
-        });
-    }
-
-    uploadData(entity) {
-        let storage = '';
-        let entry_index = 0;
-        let entries = {ratingMovies: '', favouriteMovies: '', movie_history: ''};
-        if (entity == 'rating') {
-            storage = Constants.MOVIE_RATING;
-            entry_index = 0;
-        }
-        if (entity == 'history') {
-            storage = Constants.MOVIE_HISTORY;
-            entry_index = 1;
-        }
-        if (entity == 'favourite') {
-            storage = Constants.MOVIE_FAVOURITE;
-            entry_index = 2;
-        }
-        this.storageService.getUser().then(user => {
-            this.storageService.getStorageEntries(storage).then(data => {
-                if (data != undefined || data != null) {
-                    entries[storage] = JSON.stringify(data);
-                    this.apiService.setBackup(entries.movie_history, entries.ratingMovies, entries.favouriteMovies, user.id).then(data => {
-                            this.displayToast('SUCCESS: Data uploaded to Database');
-                            this.apiService.getBackupLastDate(user.id).then(dates => {
-                                let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
-                                this.backup_upload[entity] = new Date(date_arr[entry_index]).toISOString();
-                            });
-                        },
-                        () => {
-                            this.displayToast('ERROR: Data not stored. Please try again');
-                        });
-                }
-            });
-        });
-    }
-
     setLastDates() {
         this.storageService.getBackupSync().then(data => {
             if (data != null) {
@@ -323,11 +334,13 @@ export class SettingsPage implements OnInit {
         this.storageService.getUser().then(user => {
             this.apiService.getBackupLastDate(user.id).then(dates => {
                 let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
-                console.log(date_arr);
                 if (date_arr[1] != 'None') this.backup_upload.history = new Date(date_arr[1]).toISOString();
                 if (date_arr[2] != 'None') this.backup_upload.favourite = new Date(date_arr[2]).toISOString();
                 if (date_arr[0] != 'None') this.backup_upload.rating = new Date(date_arr[0]).toISOString();
-            });
+            },
+                () => {
+                this.backup_upload = <BackupDate>{history: '', rating: '', favourite: ''};
+                });
         });
     }
 }

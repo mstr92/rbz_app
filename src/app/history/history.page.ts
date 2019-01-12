@@ -19,6 +19,7 @@ export class HistoryPage implements OnInit {
     close_map: Map<string, string> = new Map<string, string>();
     currentDate;
     from_year;
+    from_year_select;
     to_year;
     to_year_select;
     min = 2016;
@@ -33,9 +34,12 @@ export class HistoryPage implements OnInit {
     constructor(public storageService: StorageService, public helperService: HelperService,
                 public navController: NavController) {
         this.currentDate = new Date();
-        this.from_year = this.currentDate.toISOString();
+
+        this.from_year = this.currentDate;
         this.to_year = this.currentDate;
+
         this.to_year_select = this.currentDate.toISOString();
+        this.from_year_select = this.currentDate.toISOString();
     }
 
     ngOnInit() {
@@ -77,13 +81,15 @@ export class HistoryPage implements OnInit {
 
     setDate(period) {
         this.currentDate = new Date();
+
+        this.from_year = this.currentDate.toISOString();
         if (period == 'week') this.currentDate.setDate(this.currentDate.getDate() - 7);
         if (period == 'month') this.currentDate.setMonth(this.currentDate.getMonth() - 1);
         if (period == 'year') this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
         this.to_year = this.currentDate.toISOString();
 
         if (period == 'selected') {
-            this.from_year = this.createDate(this.from_year);
+            this.from_year = this.createDate(this.from_year_select);
             this.to_year = this.createDate(this.to_year_select);
         }
         this.filter_enabled = false;
@@ -114,10 +120,14 @@ export class HistoryPage implements OnInit {
     setData(size, filter = false, date = null) {
         this.storageService.getHistoryEntries(size, filter, date).then(data => {
             if (data.total_length > 0) {
+                console.log(data);
                 if (data.total_length <= this.show_entries_size) {
                     this.disableShowMore = true;
                     this.show_entries_size = data.total_length;
+                } else {
+                    this.disableShowMore = false;
                 }
+
                 this.total_history_entries = data.total_length;
                 this.movieHistoryArray = data.data_arr;
                 this.movieHistoryArray.forEach(entry => {
@@ -125,7 +135,9 @@ export class HistoryPage implements OnInit {
                 });
                 this.movieHistoryArray.sort((b, a) => (new Date(a.timestamp) > new Date(b.timestamp)) ? 1 : ((new Date(b.timestamp) > new Date(a.timestamp)) ? -1 : 0));
             } else {
+                this.movieHistoryArray = [];
                 this.show_entries_size = 0;
+                this.total_history_entries = 0;
                 this.disableShowMore = true;
             }
         }, error => console.log(error));

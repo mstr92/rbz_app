@@ -1,48 +1,71 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      My Ratings
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            My Ratings
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-<ion-list #slidingList>
-  <div *ngFor="let index of indexlist" class="div-group" >
-  <ion-item-group *ngIf="rating['stars' + index.toString()].length > 0">
-    <ion-item-divider >
-      <ion-label>
-        <ion-icon *ngIf="index >= 1" name="star"></ion-icon>
-        <ion-icon *ngIf="index >= 2" name="star"></ion-icon>
-        <ion-icon *ngIf="index >= 3" name="star"></ion-icon>
-        <ion-icon *ngIf="index >= 4" name="star"></ion-icon>
-        <ion-icon *ngIf="index >= 5" name="star"></ion-icon>
-      </ion-label>
-    </ion-item-divider>
-    <ion-item-sliding *ngFor="let movie of rating['stars'+index.toString()]">
-      <ion-item lines="inset">
-        <ion-avatar slot="start">
-          <img src="{{movie.image}}">
-        </ion-avatar>
-        <ion-label>
-          <h2>{{movie.title}}</h2>
-          <h3>{{movie.year}}</h3>
-        </ion-label>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="secondary" (click)="changeRating($event, index, movie)">
-          Rate Again!
-        </ion-item-option>
-        <ion-item-option color="danger" (click)="deleteMovie(movie, index.toString())">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-item-group>
-  </div>
-</ion-list>
+    <div *ngIf="rating['stars5'].length ==  0 && rating['stars4'].length ==  0 && rating['stars3'].length ==  0 &&
+                rating['stars2'].length ==  0 &&rating['stars1'].length ==  0">
+        <ion-label class="empty-header">OH NO!</ion-label>
+        <ion-label class="empty-header">Your rating list is empty!</ion-label>
+        <ion-card class="empty-body">
+            <ion-grid>
+                <div>Please follow the steps below to add a movie into your list:</div>
+                <ion-row>
+                    <ion-col size="1">●</ion-col>
+                    <ion-col size="11">Go on Home-Page and select Movie.</ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="1">●</ion-col>
+                    <ion-col size="11">Insert your search criteria and start recommendation.</ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="1">●</ion-col>
+                    <ion-col size="11">Rate movie.</ion-col>
+                </ion-row>
+            </ion-grid>
+            <img src="../../assets/image/help/rating.png">
+        </ion-card>
+    </div>
+    <ion-list #slidingList>
+        <div *ngFor="let index of indexlist" class="div-group">
+            <ion-item-group *ngIf="rating['stars' + index.toString()].length > 0">
+                <ion-item-divider>
+                    <ion-label>
+                        <ion-icon *ngIf="index >= 1" name="star"></ion-icon>
+                        <ion-icon *ngIf="index >= 2" name="star"></ion-icon>
+                        <ion-icon *ngIf="index >= 3" name="star"></ion-icon>
+                        <ion-icon *ngIf="index >= 4" name="star"></ion-icon>
+                        <ion-icon *ngIf="index >= 5" name="star"></ion-icon>
+                    </ion-label>
+                </ion-item-divider>
+                <ion-item-sliding *ngFor="let movie of rating['stars'+index.toString()]">
+                    <ion-item lines="inset">
+                        <ion-avatar slot="start">
+                            <img src="{{movie.image}}">
+                        </ion-avatar>
+                        <ion-label>
+                            <h2>{{movie.title}}</h2>
+                            <h3>{{movie.year}}</h3>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item-options side="end">
+                        <ion-item-option color="secondary" (click)="changeRating($event, index, movie)">
+                            Rate Again!
+                        </ion-item-option>
+                        <ion-item-option color="danger" (click)="deleteMovie(movie, index.toString())">
+                            <ion-icon name="trash"></ion-icon>
+                            Delete
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-item-group>
+        </div>
+    </ion-list>
 </ion-content>

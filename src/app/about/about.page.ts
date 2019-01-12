@@ -25,7 +25,7 @@ export class AboutPage implements OnInit {
     }
 
     setTest() {
-         this.storageService.getUUID().then(data => console.log(data));
+       //  this.storageService.getUUID().then(data => console.log(data));
     }
     setTest1() {
 

@@ -3,3 +3,7 @@ ion-toolbar {
   --background: var(--ion-toolbar-background-color);
   --color: var(--ion-color-primary-contrast);
 }
+ion-content {
+  background-image: url("../../assets/image/background.png");
+  background-size: cover;
+}

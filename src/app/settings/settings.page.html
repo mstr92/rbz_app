@@ -202,7 +202,7 @@
                     <ion-icon name="heart"></ion-icon>
                     <div>Favourites ({{size_favourites}})</div>
                 </ion-label>
-                <ion-button class="delete" (click)="presentConfirm('favourites')">
+                <ion-button class="delete" (click)="confirmDeleteStorage('favourites')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>
@@ -212,7 +212,7 @@
                     <ion-icon name="clock"></ion-icon>
                     <div>History ({{size_history}})</div>
                 </ion-label>
-                <ion-button class="delete" (click)="presentConfirm('history')">
+                <ion-button class="delete" (click)="confirmDeleteStorage('history')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>
@@ -222,7 +222,7 @@
                     <ion-icon name="star"></ion-icon>
                     <div>Ratings ({{size_ratings}})</div>
                 </ion-label>
-                <ion-button class="delete" (click)="presentConfirm('ratings')">
+                <ion-button class="delete" (click)="confirmDeleteStorage('ratings')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>
@@ -232,7 +232,7 @@
                     <ion-icon name="albums"></ion-icon>
                     <div>Posters ({{size_posters}})</div>
                 </ion-label>
-                <ion-button class="delete" (click)="presentConfirm('posters')">
+                <ion-button class="delete" (click)="confirmDeleteStorage('posters')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>
@@ -242,7 +242,7 @@
                     <ion-icon name="close"></ion-icon>
                     <div>Reset Complete Storage</div>
                 </ion-label>
-                <ion-button class="delete" (click)="presentConfirm('full')">
+                <ion-button class="delete" (click)="confirmDeleteStorage('full')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>

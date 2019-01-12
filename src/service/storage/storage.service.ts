@@ -19,9 +19,11 @@ export class StorageService {
 
     constructor(public storage: NativeStorage, public toastController: ToastController, public helperService: HelperService, private apiService: ApiService) {
     }
+
     clearFull() {
         this.storage.clear();
     }
+
     getKeys() {
         return this.storage.keys();
     }
@@ -38,12 +40,26 @@ export class StorageService {
         this.storage.setItem(Constants.UUID, {data: false});
     }
 
-    setUUID() {
-        return this.storage.setItem(Constants.UUID, {data: true});
+    initMovieRequest() {
+        this.storage.setItem(Constants.MOVIE_REQUEST, {data: null});
     }
 
-    getUUID() {
-        return this.storage.getItem(Constants.UUID);
+    initMovieWait() {
+        this.storage.setItem(Constants.MOVIE_WAIT, {data: false});
+    }
+
+    setMovieRequest(request) {
+        this.helperService.movie_request_to_pass = request;
+        return this.storage.setItem(Constants.MOVIE_REQUEST, {data: request});
+    }
+
+    setMovieWait(flag) {
+        this.helperService.waiting_for_movie_result = flag;
+        return this.storage.setItem(Constants.MOVIE_WAIT, {data: flag});
+    }
+
+    setUUID() {
+        return this.storage.setItem(Constants.UUID, {data: true});
     }
 
     setFullData(storage_name, data) {
@@ -308,9 +324,18 @@ export class StorageService {
                 dataArr.forEach(entry => {
                     let timestamp = new Date(entry[0]);
                     timestamp.setHours(0, 0, 0, 0);
+                    console.log(from_date);
+                    console.log(timestamp);
+                    console.log(to_date);
+                    console.log('------------');
+                    console.log(to_date <= timestamp);
+                    console.log(timestamp <= from_date);
+                    console.log('------------');
+
                     if (to_date <= timestamp && timestamp <= from_date)
-                        resArr.push(entry[1]);
+                        resArr.push(entry);
                 });
+                console.log(resArr);
                 dataArr = resArr;
                 resArr = [];
             }
@@ -330,4 +355,5 @@ export class StorageService {
             else return data.data;
         }, error => console.error(error));
     }
+
 }

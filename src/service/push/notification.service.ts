@@ -7,6 +7,7 @@ import {MovieResult} from '../../interfaces/movieInterface';
 import {ResultparserService} from '../resultparser/resultparser.service';
 import {Router} from '@angular/router';
 import {Constants} from '../constants';
+import {StorageService} from '../storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class NotificationService {
 
 
     constructor(private oneSignal: OneSignal, public navCtrl: NavController, private helperService: HelperService, private apiService: ApiService,
-                private parser: ResultparserService, private router: Router) {
+                private parser: ResultparserService, private router: Router, private storageService: StorageService) {
 
     }
 
@@ -43,10 +44,10 @@ export class NotificationService {
 
     getResultData(data, from_openNotification) {
         this.apiService.getEngineResponse(data.id).then(res => {
-            if (res.data.includes(Constants.ENGINE_ERROR)) {
+            if (res.data.includes(Constants.ERROR_ENGINE)) {
                 this.helperService.result_calculation_failed = true;
             } else {
-                let date = new Date().toISOString()
+                let date = new Date().toISOString();
                 this.helperService.movie_result_to_display = <MovieResult>{
                     id: data.id,
                     timestamp: date,
@@ -54,7 +55,7 @@ export class NotificationService {
                 };
                 this.helperService.result_calculation_finished = true;
             }
-            this.helperService.waiting_for_movie_result = false;
+            this.storageService.setMovieWait(false);
 
             if (from_openNotification) {
                 this.navCtrl.navigateForward('/movie-result');
