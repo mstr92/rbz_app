@@ -57,13 +57,13 @@ export class HistoryPage implements OnInit {
         this.helperService.movie_request_to_pass = request;
         this.helperService.movie_request_refine = true;
         this.helperService.movie_from_history = true;
-        this.navController.navigateForward('movie-query');
+        this.navController.navigateRoot('movie-query');
     }
 
     showRecommendation(result) {
         this.helperService.movie_from_history = true;
         this.helperService.movie_result_to_display = result;
-        this.navController.navigateForward('movie-result');
+        this.navController.navigateRoot('movie-result');
     }
 
 

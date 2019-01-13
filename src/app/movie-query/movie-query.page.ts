@@ -132,7 +132,7 @@ export class MovieQueryPage implements OnInit {
         this.search_data.length = this.number_results;
         this.storageService.setMovieRequest(this.search_data);
         this.helperService.movie_request_refine = false;
-        this.navCtrl.navigateForward('/movie-result-waiting');
+        this.navCtrl.navigateRoot('/movie-result-waiting');
     }
     clearEntries() {
         this.search_data.data.genres = [];

@@ -17,11 +17,11 @@ export class HomePage{
 
     goToMovies() {
         if (this.helperService.waiting_for_movie_result) {
-            this.navCtrl.navigateForward('movie-result-waiting');
+            this.navCtrl.navigateRoot('movie-result-waiting');
         } else if (this.helperService.result_calculation_finished) {
-            this.navCtrl.navigateForward('movie-result');
+            this.navCtrl.navigateRoot('movie-result');
         } else {
-            this.navCtrl.navigateForward('movie-query');
+            this.navCtrl.navigateRoot('movie-query');
         }
     }
 }

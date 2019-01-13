@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Events, Platform} from '@ionic/angular';
+import {Events, NavController, Platform} from '@ionic/angular';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Network} from '@ionic-native/network/ngx';
 import {NetworkServiceService} from '../service/network/network-service.service';
@@ -46,8 +46,8 @@ export class AppComponent{
             icon: 'settings'
         },
         {
-            title: 'Help',
-            url: '/help',
+            title: 'Tour',
+            url: '/tour',
             icon: 'help-circle'
         },
         {
@@ -70,7 +70,8 @@ export class AppComponent{
         private screenOrientation: ScreenOrientation,
         public helperService: HelperService,
         public apiService: ApiService,
-        public notificationService: NotificationService
+        public notificationService: NotificationService,
+        public navCtrl: NavController
     ) {
         this.initializeApp();
     }
@@ -80,8 +81,16 @@ export class AppComponent{
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
             this.notificationService.initPushOneSignal();
-            this.showSplash = false;
-            timer(3000).subscribe(() => this.showSplash = false); // <-- hide animation after 3s
+            this.showSplash = true;
+
+            this.storageService.getStorageEntries(Constants.NOT_SHOW_INTRO).then(data => {
+                if(data == false) {
+                    this.navCtrl.navigateRoot('/tour');
+                }
+            });
+            timer(3000).subscribe(() => {
+                this.showSplash = false;
+            }); // <-- hide animation after 3s
             // Initialize storage
            this.initStorages();
             // Check if a user is logged in
@@ -159,6 +168,9 @@ export class AppComponent{
             }
             if (!keys.includes(Constants.MOVIE_WAIT)) {
                 this.storageService.initMovieWait();
+            }
+            if (!keys.includes(Constants.NOT_SHOW_INTRO)) {
+                this.storageService. initIntro();
             }
         });
     }

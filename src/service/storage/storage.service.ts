@@ -40,6 +40,13 @@ export class StorageService {
         this.storage.setItem(Constants.UUID, {data: false});
     }
 
+    initIntro() {
+        this.storage.setItem(Constants.NOT_SHOW_INTRO, {data: false});
+    }
+    setIntro(flag) {
+        this.storage.setItem(Constants.NOT_SHOW_INTRO, {data: flag});
+    }
+
     initMovieRequest() {
         this.storage.setItem(Constants.MOVIE_REQUEST, {data: null});
     }

@@ -7,7 +7,7 @@
             Recommendation
         </ion-title>
         <ion-buttons slot="end" *ngIf="helperService.movie_from_history">
-            <ion-back-button defaultHref="home" text=""></ion-back-button>
+            <ion-back-button defaultHref="/history" text=""></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
 
@@ -16,12 +16,6 @@
             <ion-icon name="settings"></ion-icon>
         </ion-fab-button>
         <ion-fab-list>
-            <div>
-                <ion-label class="fab-label">New Request</ion-label>
-                <ion-button (click)="newRequest()">
-                    <ion-icon name="refresh"></ion-icon>
-                </ion-button>
-            </div>
             <div>
                 <ion-label class="fab-label">Refine Request</ion-label>
                 <ion-button (click)="refineRequest()">

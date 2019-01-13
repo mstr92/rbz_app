@@ -35,7 +35,7 @@
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of searchdata.search_movie; trackBy: trackByMovie"
+                <ion-item tappable lines="inset" *ngFor="let entry of searchdata.search_movie; trackBy: trackByMovie"
                           (click)="addToList('movie', entry[0].id)">
                     <!--<ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"-->
                     <!--checked="true"-->
@@ -65,7 +65,7 @@
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let entry of searchdata.search_actor; trackBy: trackByActor"
+                <ion-item tappable lines="inset" *ngFor="let entry of searchdata.search_actor; trackBy: trackByActor"
                           (click)="addToList('actor', entry[0].id)">
                     <ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>
                     <ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>
@@ -83,7 +83,7 @@
         </ion-card-header>
         <ion-card-content>
             <ion-list>
-                <ion-item lines="inset" *ngFor="let genre of searchdata.search_genre; trackBy: trackByGenre"
+                <ion-item tappable lines="inset" *ngFor="let genre of searchdata.search_genre; trackBy: trackByGenre"
                           (click)="addToList('genre', genre[0].id)">
                     <ion-checkbox *ngIf="genre[1]" [class]="genre[0].alignment" checked="true"></ion-checkbox>
                     <ion-checkbox *ngIf="!genre[1]" [class]="genre[0].alignment" checked="false"></ion-checkbox>
@@ -103,7 +103,7 @@
                     {{searchTerm}}
                 </ion-item>
                 <ion-item *ngFor="let keyword of keywords">
-                    <ion-checkbox [class]="keyword.alignment" checked="true"
+                    <ion-checkbox [class]="keyword.alignment" checked="true" tappable
                                   (click)="deleteKeywordFromList(keyword)"></ion-checkbox>
                     {{keyword.name}}
                 </ion-item>

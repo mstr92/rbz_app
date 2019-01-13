@@ -24,6 +24,7 @@ export enum Constants {
     BACKUP_SNYC = "backupSync",
     USER = 'user',
     UUID = "uuid",
+    NOT_SHOW_INTRO = 'intro',
     //Error Messages
     ERROR_ENGINE = 'ERROR CALCULATING RECOMMENDATIONS!',
     ERROR_USERNAME_LENGTH = "Username must contain at least 3 characters",

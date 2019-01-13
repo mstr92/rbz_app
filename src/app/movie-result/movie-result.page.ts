@@ -101,10 +101,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
         this.helperService.movie_request_refine = true;
         this.navCtrl.navigateBack('/movie-query');
     }
-    newRequest (){
-        this.navCtrl.navigateBack('/movie-query');
-    }
-
+   
     shareResult() {
         let msg = 'Checkout my movie recommendation from *rbz.io*:\n';
         if (this.movies.result != null) {

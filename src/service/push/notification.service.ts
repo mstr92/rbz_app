@@ -19,14 +19,20 @@ export class NotificationService {
                 private parser: ResultparserService, private router: Router, private storageService: StorageService) {
 
     }
+    enableNotification(value) {
+        this.oneSignal.setSubscription(value)
+    }
 
     initPushOneSignal() {
         this.oneSignal.startInit(Constants.ONESIGNAL_APP_ID, 'ANDROID_ID');
         this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert);
         this.oneSignal.handleNotificationReceived().subscribe((data) => {
+            console.log("received")
             this.getResultData(data.payload.additionalData, false);
+
         });
         this.oneSignal.handleNotificationOpened().subscribe((data) => {
+            console.log("opend")
             if (!this.helperService.result_calculation_finished) {
                 this.getResultData(data.notification.payload.additionalData, true);
             }
@@ -34,6 +40,7 @@ export class NotificationService {
                 //Hack to refresh Page after click
                 document.getElementById("refresh_page").click();
             }
+            this.oneSignal.setSubscription(false)
 
         });
         this.oneSignal.endInit();
@@ -58,7 +65,7 @@ export class NotificationService {
             this.storageService.setMovieWait(false);
 
             if (from_openNotification) {
-                this.navCtrl.navigateForward('/movie-result');
+                this.navCtrl.navigateRoot('/movie-result');
             } else {
                 if (this.router.url == '/movie-result-waiting') {
                     this.helperService.setResultOnMoviePage.next();

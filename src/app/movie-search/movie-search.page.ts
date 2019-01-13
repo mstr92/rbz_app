@@ -6,6 +6,7 @@ import {HelperService} from '../../service/helper/helper.service';
 import {ApiService} from '../../service/apicalls/api.service';
 import {Constants} from '../../service/constants';
 import {Keyboard} from '@ionic-native/keyboard/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 interface SearchData {
     search_genre: Array<[Genre, boolean]>;
@@ -48,6 +49,7 @@ export class MovieSearchPage implements OnInit {
                 public helperService: HelperService,
                 public apiService: ApiService,
                 private keyboard: Keyboard,
+                private statusBar: StatusBar
     ) {
         // Disable Hardware Back Button in Modal
         this.platform.backButton.subscribe(() => {
@@ -66,6 +68,7 @@ export class MovieSearchPage implements OnInit {
         this.keyboard.onKeyboardHide().subscribe(() => {
             document.getElementById("unfocus").focus();
             document.getElementById("unfocus").blur();
+            this.statusBar.hide();
         })
     }
 

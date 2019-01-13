@@ -11,7 +11,7 @@
 
 <ion-content padding class="card-background-page">
 
-  <ion-card (click)='goToMovies($event)' class="movie">
+  <ion-card tappable  (click)='goToMovies($event)' class="movie">
     <div class="coming-soon" *ngIf="helperService.waiting_for_movie_result || helperService.result_calculation_finished"></div>
     <div class="info-text result-info-finish" *ngIf="helperService.result_calculation_finished">Result<br>Available!</div>
     <div class="info-text result-info-waiting" *ngIf="helperService.waiting_for_movie_result">Waiting <br> for result!</div>
@@ -20,7 +20,7 @@
     <div class="card-title">Movies</div>
   </ion-card>
 
-  <ion-card class="video-games">
+  <ion-card tappable class="video-games">
     <div class="coming-soon"></div>
     <div class="info-text coming-soon-text">Coming<br>Soon!</div>
     <ion-img src="assets/image/video_games.jpg" class="card-image" ></ion-img>
@@ -28,7 +28,7 @@
     <div class="card-title">Video Games</div>
   </ion-card>
 
-  <ion-card class="animated infinite bounce delay-2s">
+  <ion-card tappable class="animated infinite bounce delay-2s">
     <div class="coming-soon"></div>
     <div class="info-text coming-soon-text">Coming<br>Soon!</div>
     <ion-img src="assets/image/board_games.jpg" class="card-image" ></ion-img>

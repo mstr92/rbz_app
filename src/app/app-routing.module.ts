@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
   { path: 'ratings', loadChildren: './ratings/ratings.module#RatingsPageModule' },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },  { path: 'movie-result-waiting', loadChildren: './movie-result-waiting/movie-result-waiting.module#MovieResultWaitingPageModule' },
+  { path: 'tour', loadChildren: './tour/tour.module#TourPageModule' },
 
 
 
