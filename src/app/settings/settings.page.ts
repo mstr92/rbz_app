@@ -16,7 +16,6 @@ export class SettingsPage implements OnInit {
 
     size_favourites = 0;
     size_history = 0;
-    size_posters = 0;
     size_ratings = 0;
     account = {username: '', email: '', password: '', password1: ''};
     login = {username: '', password: ''};
@@ -34,9 +33,6 @@ export class SettingsPage implements OnInit {
         });
         this.storageService.getStorageEntries(Constants.MOVIE_RATING).then(data => {
             this.size_ratings = Object.keys(data).length;
-        });
-        this.storageService.getStorageEntries(Constants.MOVIE_POSTER).then(data => {
-            this.size_posters = Object.keys(data).length;
         });
         this.storageService.getStorageEntries(Constants.MOVIE_HISTORY).then(data => {
             this.size_history = Object.keys(data).length;
@@ -288,10 +284,6 @@ export class SettingsPage implements OnInit {
                         if (entity === 'history') {
                             this.storageService.initHistory();
                             this.size_history = 0;
-                        }
-                        if (entity === 'posters') {
-                            this.storageService.initPoster();
-                            this.size_posters = 0;
                         }
                         if (entity === 'ratings') {
                             this.storageService.initRating();

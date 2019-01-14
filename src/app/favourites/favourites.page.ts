@@ -25,9 +25,7 @@ export class FavouritesPage implements OnInit {
         console.log(this.helperService.favourites)
         console.log(this.helperService.favourites.size)
         if (this.helperService.favourites.size > 0) {
-            console.log("1")
             this.helperService.favourites.forEach((value, key) => {
-                console.log("2")
                 this.fav_movies_arr.push(value);
             });
             this.storageService.loadImages(this.fav_movies_arr);

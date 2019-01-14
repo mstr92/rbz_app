@@ -20,7 +20,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     movie_tmp = [];
     movie_vote_map: Map<string, boolean> = new Map<string, boolean>();
     rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
-    history_init = false;
+    init_flag= false;
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public navCtrl: NavController, private apiService: ApiService, private device: Device,
@@ -36,15 +36,21 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     ngAfterViewChecked() {
-        if (this.helperService.movie_from_history && !this.history_init) {
-            this.movies.result.forEach(movie => {
-                movie.favourite = this.helperService.favourites.has(movie.imdb_id);
-                movie.rating = this.helperService.ratings.has(movie.imdb_id) ? this.helperService.ratings.get(movie.imdb_id).rating : undefined;
-                if (movie.vote != undefined) {
-                    this.displayRecommendationVote(movie.vote, movie);
-                }
-            });
-            this.history_init = true;
+        if (!this.init_flag) {
+            if (this.helperService.movie_from_history) {
+                this.movies.result.forEach(movie => {
+                    movie.favourite = this.helperService.favourites.has(movie.imdb_id);
+                    movie.rating = this.helperService.ratings.has(movie.imdb_id) ? this.helperService.ratings.get(movie.imdb_id).rating : undefined;
+                    if (movie.vote != undefined) {
+                        this.displayRecommendationVote(movie.vote, movie);
+                    }
+                });
+
+            } else {
+                if(this.movies.result != null)
+                    this.storageService.loadImages(this.movies.result);
+            }
+            this.init_flag = true;
         }
     }
 
@@ -59,12 +65,13 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     // Set Data
     //----------------------------------
     setData() {
+        console.log('Set Data!!');
         console.log(this.helperService.movie_result_to_display);
         this.movies = this.helperService.movie_result_to_display;
         if (this.movies != null) {
-            if (!this.helperService.movie_from_history) {
-                this.storageService.loadImages(this.movies.result);
-            }
+            // if (!this.helperService.movie_from_history) {
+                // this.storageService.loadImages(this.movies.result);
+            // }
             this.movies.result.forEach(movie => {
                 this.movie_vote_map[movie.id] = movie.vote == undefined;
             });
@@ -116,8 +123,11 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
             this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
         } else {
             this.storageService.addMovieToFavourites(movie);
+            this.storageService.addMovieToRating(movie, true);
         }
+        //Hack to refresh Page after click
         movie.favourite = !movie.favourite;
+        document.getElementById('poster' + movie.id).click();
     }
 
     //----------------------------------
@@ -167,7 +177,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     displayRecommendationVote(vote, movie) {
-        console.log("Display Recommendation")
+        console.log('Display Recommendation');
         let vote_text = document.getElementById('vote_res' + movie.id) as HTMLDivElement;
         let text = 'The recommendation was ' + this.rec_text[vote - 1] + '!';
         let vote_change = document.getElementById('vote_change' + movie.id) as HTMLDivElement;

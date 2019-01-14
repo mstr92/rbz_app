@@ -42,7 +42,7 @@
         <ion-virtual-scroll [items]="movies.result">
         <ion-item *virtualItem="let movie">
             <ion-card>
-            <ion-img class="poster small" src="{{movie.image}}"></ion-img>
+            <ion-img class="poster small" [id]="'poster'+ movie.id"src="{{movie.image}}"></ion-img>
             <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
                 <ion-fab-button>
                     <ion-icon name="star"

@@ -128,7 +128,7 @@ export class StorageService {
         this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: new Map<string, Movie>()});
     }
 
-    addMovieToFavourites(movie: Movie, with_rating=false) {
+    addMovieToFavourites(movie: Movie, with_rating = false) {
         this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
                 const movie_tmp = <Movie>{
                     id: movie.id,
@@ -140,7 +140,7 @@ export class StorageService {
                     favourite_date: new Date().toISOString(),
                     genre: movie.genre,
                 };
-                if(with_rating) {
+                if (with_rating) {
                     data.data[movie_tmp.imdb_id].rating = movie.rating;
                 } else {
                     data.data[movie_tmp.imdb_id] = movie_tmp;
@@ -177,7 +177,7 @@ export class StorageService {
         this.storage.setItem(Constants.MOVIE_RATING, {data: new Map<string, Movie>()});
     }
 
-    addMovieToRating(movie: Movie) {
+    addMovieToRating(movie: Movie, with_favourite = false) {
         this.storage.getItem(Constants.MOVIE_RATING).then(data => {
                 const movie_tmp = <Movie>{
                     id: movie.id,
@@ -189,13 +189,17 @@ export class StorageService {
                     rating_date: new Date().toISOString(),
                     genre: movie.genre,
                 };
-                if (movie_tmp.imdb_id in data.data) {
-                    data.data[movie_tmp.imdb_id].rating = movie.rating;
-                    data.data[movie_tmp.imdb_id].rating_date= new Date().toISOString();
+                if (with_favourite) {
+                    data.data[movie_tmp.imdb_id].favourite = movie.favourite;
                 } else {
-                    data.data[movie_tmp.imdb_id] = movie_tmp;
-                }
+                    if (movie_tmp.imdb_id in data.data) {
+                        data.data[movie_tmp.imdb_id].rating = movie.rating;
+                        data.data[movie_tmp.imdb_id].rating_date = new Date().toISOString();
 
+                    } else {
+                        data.data[movie_tmp.imdb_id] = movie_tmp;
+                    }
+                }
                 this.helperService.ratings = new Map(Object.entries(data.data));
                 this.storage.setItem(Constants.MOVIE_RATING, {data: data.data});
             },
@@ -204,40 +208,14 @@ export class StorageService {
     }
 
     //---------------------------------------------------------------------------------------------------------
-    // Posters
+    // Images
     //---------------------------------------------------------------------------------------------------------
-    initPoster() {
-        this.storage.setItem(Constants.MOVIE_POSTER, {data: new Map<string, Poster>()});
-    }
-
-    getMoviePosterByID(imdb_id) {
-        return this.storage.getItem(Constants.MOVIE_POSTER).then(data => {
-                return data.data[imdb_id];
-            },
-            error => console.error(error)
-        );
-    }
-
-    addMoviePoster(poster: Poster) {
-        this.storage.getItem(Constants.MOVIE_POSTER).then(data => {
-                data.data[poster.imdb_id] = poster;
-                this.storage.setItem(Constants.MOVIE_POSTER, {data: data.data});
-            },
-            error => console.error(error)
-        );
-    }
-
-    loadImages(array) {
+    loadImages(array, store = true) {
         if (array != undefined || array != null) {
             array.forEach(movie => {
-                this.getMoviePosterByID(movie.imdb_id).then(data => {
-                    if (data != undefined) {
-                        movie.image = data.poster;
-                    }
-                    else {
-                        this.loadExternalImage(movie,true);
-                    }
-                });
+                if (movie.image == undefined || movie.image == '') {
+                    this.loadExternalImage(movie, store);
+                }
             });
         }
     }
@@ -246,42 +224,18 @@ export class StorageService {
         if (array != undefined || array != null) {
             Object.keys(array).forEach(key => {
                 const movie = array[key];
-                this.getMoviePosterByID(movie.imdb_id).then(data => {
-                    if (data != undefined) {
-                        movie.image = data.poster;
-                    }
-                    else {
-                        //this.loadExternalImage(movie, true);
-                    }
-                });
+                this.loadExternalImage(movie, true);
             });
         }
     }
-    //https://stackoverflow.com/questions/6150289/how-to-convert-image-into-base64-string-using-javascript
     loadExternalImage(movie, store) {
-        console.log(movie)
         this.apiService.getDetailedMovieInfo(movie.imdb_id).then(data => {
             if (data != null || data != undefined) {
-                console.log(data);
                 let dataObj: any = JSON.parse(data.data);
                 let size = store ? 'w300' : 'w92';
-                const url1 = 'https://image.tmdb.org/t/p/' + size + '/';
+                const url = 'https://image.tmdb.org/t/p/' + size + '/';
                 const poster = dataObj.movie_results[0].poster_path;
-                const toDataURL = url => fetch(url)
-                    .then(response => response.blob())
-                    .then(blob => new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result);
-                        reader.onerror = reject
-                        reader.readAsDataURL(blob)
-                    }));
-
-                toDataURL(url1+ poster)
-                    .then(dataUrl => {
-                        movie.image = dataUrl;
-                        this.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: dataUrl});
-                    })
-
+                movie.image = url + poster;
             }
         });
     }
@@ -312,7 +266,6 @@ export class StorageService {
         this.storage.getItem(Constants.MOVIE_HISTORY).then(data => {
                 if (timestamp in data.data) {
                     data.data[timestamp].result.result.forEach(mov => {
-                        console.log(mov.imdb_id + '  ' + movie.imdb_id);
                         if (mov.imdb_id == movie.imdb_id) {
                             mov.vote = movie.vote;
                         }
@@ -342,7 +295,6 @@ export class StorageService {
                     if (to_date <= timestamp && timestamp <= from_date)
                         resArr.push(entry);
                 });
-                console.log(resArr);
                 dataArr = resArr;
                 resArr = [];
             }

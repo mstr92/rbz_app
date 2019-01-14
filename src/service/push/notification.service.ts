@@ -21,6 +21,7 @@ export class NotificationService {
     }
 
     enableNotification(value) {
+
         this.oneSignal.setSubscription(value);
     }
 
@@ -61,50 +62,22 @@ export class NotificationService {
             this.storageService.setMovieWait(false);
             this.storageService.setMovieShowMore(false);
 
-            if (from_openNotification) {
-                this.zone.run(async () => {
-                    this.navCtrl.navigateRoot('/movie-result');
-                });
-            } else {
+            if (!from_openNotification) {
                 this.zone.run(async () => {
                     if (this.router.url == '/movie-result-waiting') {
-                        this.helperService.setResultOnMoviePage.next();
-                    }
-                    if (this.router.url == '/movie-result') {
+                        this.helperService.setResultOnMovieWaitingPage.next();
+                    } else if (this.router.url == '/movie-result') {
                         this.helperService.setResultOnMoviePage.next();
                     }
                 });
+
+            } else {
+                // this.zone.run(async () => {
+                //     this.navCtrl.navigateRoot('/movie-result');
+                // });
             }
         });
     }
 
-    // getResultDataShowMore(data, from_openNotification) {
-    //     this.apiService.getEngineResponse(data.id).then(res => {
-    //         if (res.data.includes(Constants.ERROR_ENGINE)) {
-    //             this.helperService.result_calculation_failed = true;
-    //         } else {
-    //             let timestamp = this.helperService.movie_result_to_display.timestamp;
-    //             this.storageService.setMovieResponse(<MovieResult>{
-    //                 id: data.id,
-    //                 timestamp: timestamp,
-    //                 result: this.parser.parseMovieResult(res.data, timestamp, data.id)
-    //             });
-    //             this.helperService.result_calculation_finished = true;
-    //         }
-    //         this.storageService.setMovieShowMore(false);
-    //
-    //         if (from_openNotification) {
-    //             this.zone.run(async () => {
-    //                 this.navCtrl.navigateRoot('/movie-result');
-    //             });
-    //         } else {
-    //             this.zone.run(async () => {
-    //                 if (this.router.url == '/movie-result') {
-    //                     this.helperService.setResultOnMoviePage.next();
-    //                 }
-    //             });
-    //         }
-    //     });
-    // }
 }
 

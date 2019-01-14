@@ -80,14 +80,14 @@ export class AppComponent{
         this.platform.ready().then(() => {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
-            this.notificationService.initPushOneSignal();
-            this.showSplash = false;
+            this.showSplash = true;
 
             this.storageService.getStorageEntries(Constants.NOT_SHOW_INTRO).then(data => {
                 if(data == false) {
                     this.navCtrl.navigateRoot('/tour');
                 }
             });
+
             timer(3000).subscribe(() => {
                 this.showSplash = false;
             }); // <-- hide animation after 3s
@@ -143,6 +143,7 @@ export class AppComponent{
                 this.helperService.result_show_more = data;
             }, error => console.log(error));
 
+            this.notificationService.initPushOneSignal();
         });
         this.statusBar.hide();
     }
@@ -154,9 +155,6 @@ export class AppComponent{
             }
             if (!keys.includes(Constants.MOVIE_HISTORY)) {
                 this.storageService.initHistory();
-            }
-            if (!keys.includes(Constants.MOVIE_POSTER)) {
-                this.storageService.initPoster();
             }
             if (!keys.includes(Constants.MOVIE_RATING)) {
                 this.storageService.initRating();

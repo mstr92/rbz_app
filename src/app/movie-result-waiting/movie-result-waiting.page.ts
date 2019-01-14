@@ -20,7 +20,7 @@ export class MovieResultWaitingPage implements OnInit {
             this.notificationService.enableNotification(true);
             this.storageService.setMovieWait(true);
         }
-        this.helperService.setResultOnMoviePage.subscribe(() => {
+        this.helperService.setResultOnMovieWaitingPage.subscribe(() => {
             this.navController.navigateRoot('/movie-result');
         });
     }

@@ -16,7 +16,6 @@ export enum Constants {
     MAX_YEAR = 2020,
     //Storage
     MOVIE_FAVOURITE = 'favouriteMovies',
-    MOVIE_POSTER = 'posterMovies',
     MOVIE_HISTORY = 'movie_history',
     MOVIE_RATING = 'ratingMovies',
     MOVIE_REQUEST = 'movieRequest',

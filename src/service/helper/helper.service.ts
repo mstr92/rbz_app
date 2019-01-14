@@ -26,12 +26,14 @@ export class HelperService {
     oneSignalUserId = '';
 
     setResultOnMoviePage: Subject<boolean> = new Subject<boolean>();
+    setResultOnMovieWaitingPage: Subject<boolean> = new Subject<boolean>();
 
 
     constructor() {
         this.movie_request_to_pass = {entity: '', data: {}, length: 0};
         this.movie_result_to_display = {id: 0, result: [], timestamp: ''};
         this.setResultOnMoviePage.subscribe(() => {});
+        this.setResultOnMovieWaitingPage.subscribe(() => {});
     }
 
 

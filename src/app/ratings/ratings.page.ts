@@ -65,4 +65,9 @@ export class RatingsPage implements OnInit {
         this.storageService.deleteMapEntry(movie, Constants.MOVIE_RATING);
         await this.slidingList.closeSlidingItems();
     }
+    addToFavourite(movie){
+        this.storageService.addMovieToFavourites(movie);
+        this.storageService.addMovieToRating(movie, true);
+        movie.favourite = !movie.favourite;
+    }
 }

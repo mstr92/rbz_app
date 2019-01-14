@@ -54,7 +54,7 @@ export class MovieQueryPage implements OnInit {
                     this.movie_year_enabled.positive = true;
                 }
             });
-            this.storageService.loadImages(this.search_data.data.movies);
+            this.storageService.loadImages(this.search_data.data.movies, false);
             this.helperService.movie_request_refine = false;
         }
     }
@@ -88,7 +88,7 @@ export class MovieQueryPage implements OnInit {
             this.search_data.data.genres = data.data.genres;
             this.search_data.data.movies = data.data.movies;
             this.search_data.data.actors = data.data.actors;
-            this.storageService.loadImages(this.search_data.data.movies);
+            this.storageService.loadImages(this.search_data.data.movies, false);
 
             this.entities.forEach(entity => {
                 this.search_data.data[entity].sort((b, a) => (a.alignment > b.alignment) ? 1 : ((b.alignment > a.alignment) ? -1 : 0));

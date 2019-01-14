@@ -136,7 +136,7 @@ export class ResultparserService {
                         this.helperService.result_calculation_finished = true;
                     }
                     this.storageService.setMovieWait(false);
-                    this.helperService.setResultOnMoviePage.next();
+                    this.helperService.setResultOnMovieWaitingPage.next();
                     return true;
                 }
                 return false;

@@ -46,13 +46,17 @@
                     </ion-label>
                 </ion-item-divider>
                 <ion-item-sliding *ngFor="let movie of rating['stars'+index.toString()]">
-                    <ion-item lines="inset">
+                    <ion-item lines="full">
                         <ion-avatar slot="start">
                             <img src="{{movie.image}}">
                         </ion-avatar>
                         <ion-label>
-                            <h2>{{movie.title}}</h2>
+                            <div text-wrap class="item-title">{{movie.title}}</div>
                             <h3>{{movie.year}}</h3>
+                            <h3 class="item-genre">{{movie.genre}}</h3>
+                            <h3 class="item-date" >{{movie.rating_date | date:'dd.MM.yyyy'}}</h3>
+                            <ion-icon [name]="movie.favourite ? 'heart' : 'heart-empty'"
+                                      class="item-icon" (click)="addToFavourite(movie)"></ion-icon>
                         </ion-label>
                     </ion-item>
                     <ion-item-options side="end">

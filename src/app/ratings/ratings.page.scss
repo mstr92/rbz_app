@@ -51,3 +51,30 @@ ion-col {
   padding:0.2em;
 }
 
+.item-date {
+  position:absolute;
+  bottom: 2px;
+  right: 4px;
+}
+.item-title {
+  max-width: 11em;
+  word-wrap:break-word;
+  font-weight: bold;
+  padding-bottom:0.5em;
+}
+.item-genre {
+  padding-bottom: 1em;
+}
+ion-avatar {
+  max-height: 6em;
+  height: 100%;
+  width:4em;
+}
+.item-icon {
+  font-size: 2em;
+  position: absolute;
+  top: 0.15em;
+  right: 0.25em;
+  color: var(--ion-color-danger);
+}
+
