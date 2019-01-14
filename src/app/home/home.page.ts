@@ -20,6 +20,8 @@ export class HomePage{
             this.navCtrl.navigateRoot('movie-result-waiting');
         } else if (this.helperService.result_calculation_finished) {
             this.navCtrl.navigateRoot('movie-result');
+        } else if (this.helperService.result_show_more) {
+            this.navCtrl.navigateRoot('movie-result');
         } else {
             this.navCtrl.navigateRoot('movie-query');
         }

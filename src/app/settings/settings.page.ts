@@ -147,7 +147,7 @@ export class SettingsPage implements OnInit {
     }
 
     logout() {
-        this.storageService.initUser();
+        this.storageService.initStorage(Constants.USER, null);
         this.helperService.isUserLoggedIn = false;
         this.helperService.username = '';
         this.view_control.buttons = !this.view_control.buttons;

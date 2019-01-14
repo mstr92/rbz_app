@@ -183,14 +183,14 @@ ion-col {
   --box-shadow: 0;
 }
 .show-more-spinner{
-  --color: var(--ion-color-primary-contrast);
-  position: absolute;
-  right: 1em;
-  top: 20%
+  --color: var(--ion-color-dark);
+  left: 15%;
 }
-.show-more-loading {
-  height: 3.2em;
-  color: var(--ion-color-primary-contrast);
+.show-more-waiting {
+  position:relative;
+  color: var(--ion-color-dark);
+  font-weight: bold;
+  text-align: center;
 }
 .loading-text {
   position: absolute;

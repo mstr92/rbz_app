@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="!helperService.result_calculation_failed || helperService.movie_from_history">
-        <ion-card *ngFor="let movie of movies.result">
+        <ion-card *ngFor="let movie of movies.result; trackBy: trackByFct">
             <img class="poster small" (click)="openFullPoster($event)" src="{{movie.image}}">
             <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
                 <ion-fab-button>
@@ -99,7 +99,7 @@
                     </ion-row>
                 </ion-grid>
             </ion-card-content>
-            <ion-button *ngIf="movie_rec_rating_map[movie.id]" expand="block" class="rate-button goTo-Button"
+            <ion-button *ngIf="movie_vote_map[movie.id]" expand="block" class="rate-button goTo-Button"
                         (click)="changeVote(movie)">How satisfied are you<br>with the recommended
                 movie?
             </ion-button>
@@ -120,17 +120,17 @@
                 </div>
             </div>
         </ion-card>
+        <div *ngIf="helperService.result_show_more" class="show-more-waiting">
+                <ion-spinner class="show-more-spinner" name="crescent"></ion-spinner>
+                <div class="loading-text">Loading...</div>
+            </div>
         <ion-card class="show-more-btn" *ngIf="!helperService.movie_from_history">
-            <ion-button *ngIf="show_more && !no_more_results" expand="full" (click)="showMore()" class="show-more-btn">
+            <ion-button *ngIf="!helperService.result_show_more" expand="full" (click)="showMore()" class="show-more-btn">
                 Show More...
             </ion-button>
-            <ion-card-content *ngIf="!show_more && !no_more_results" class="show-more-loading">
-                <div class="loading-text">Loading...</div>
-                <ion-spinner class="show-more-spinner" name="crescent"></ion-spinner>
-            </ion-card-content>
-            <ion-card-content *ngIf="no_more_results" class="show-more-loading">
-                <div class="results-text">No further results available!</div>
-            </ion-card-content>
+            <ion-button *ngIf="helperService.result_show_more" expand="full" (click)="cancelShowMore()" class="show-more-btn">
+                Cancel
+            </ion-button>
         </ion-card>
     </div>
 </ion-content>

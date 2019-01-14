@@ -109,7 +109,7 @@ export class AppComponent{
                 if (!is_set.data) {
                     this.apiService.setUUID(this.device.uuid).then(data => {
                         if (data.status = 201) {
-                            this.storageService.setUUID();
+                            this.storageService.setUUID(true);
                         }
                     });
                 }
@@ -135,6 +135,13 @@ export class AppComponent{
                 this.helperService.movie_request_to_pass = data;
             }, error => console.log(error));
 
+            this.storageService.getStorageEntries(Constants.MOVIE_CURRENT_RESPONSE).then(data => {
+                this.helperService.movie_result_to_display = data;
+            }, error => console.log(error));
+
+            this.storageService.getStorageEntries(Constants.SHOW_MORE).then(data => {
+                this.helperService.result_show_more = data;
+            }, error => console.log(error));
 
         });
         this.statusBar.hide();
@@ -155,22 +162,28 @@ export class AppComponent{
                 this.storageService.initRating();
             }
             if (!keys.includes(Constants.USER)) {
-                this.storageService.initUser();
+                this.storageService.initStorage(Constants.USER, null);
             }
             if (!keys.includes(Constants.BACKUP_SNYC)) {
-                this.storageService.initBackup();
+                this.storageService.initStorage(Constants.BACKUP_SNYC, null);
             }
             if (!keys.includes(Constants.UUID)) {
-                this.storageService.initUUID();
+                this.storageService.initStorage(Constants.UUID, false);
             }
             if (!keys.includes(Constants.MOVIE_REQUEST)) {
-                this.storageService.initMovieRequest();
+                this.storageService.initStorage(Constants.MOVIE_REQUEST, null);
             }
             if (!keys.includes(Constants.MOVIE_WAIT)) {
-                this.storageService.initMovieWait();
+                this.storageService.initStorage(Constants.MOVIE_WAIT, false);
             }
             if (!keys.includes(Constants.NOT_SHOW_INTRO)) {
-                this.storageService. initIntro();
+                this.storageService.initStorage(Constants.NOT_SHOW_INTRO, false);
+            }
+            if (!keys.includes(Constants.SHOW_MORE)) {
+                this.storageService.initStorage(Constants.SHOW_MORE, false);
+            }
+            if (!keys.includes(Constants.MOVIE_CURRENT_RESPONSE)) {
+                this.storageService.initStorage(Constants.MOVIE_CURRENT_RESPONSE, null);
             }
         });
     }

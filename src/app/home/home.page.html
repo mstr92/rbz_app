@@ -12,9 +12,10 @@
 <ion-content padding class="card-background-page">
 
   <ion-card tappable  (click)='goToMovies($event)' class="movie">
-    <div class="coming-soon" *ngIf="helperService.waiting_for_movie_result || helperService.result_calculation_finished"></div>
+    <div class="coming-soon" *ngIf="helperService.waiting_for_movie_result || helperService.result_calculation_finished || helperService.result_show_more"></div>
     <div class="info-text result-info-finish" *ngIf="helperService.result_calculation_finished">Result<br>Available!</div>
-    <div class="info-text result-info-waiting" *ngIf="helperService.waiting_for_movie_result">Waiting <br> for result!</div>
+    <div class="info-text result-info-waiting" *ngIf="helperService.waiting_for_movie_result">Waiting<br>for result!</div>
+    <div class="info-text result-info-waiting" *ngIf="helperService.result_show_more">Waiting<br>Show More!</div>
     <ion-img src="assets/image/movie.jpg" class="card-image"></ion-img>
     <ion-icon name="ios-videocam" class="card-subtitle"></ion-icon>
     <div class="card-title">Movies</div>

@@ -28,31 +28,15 @@ export class StorageService {
         return this.storage.keys();
     }
 
-    initUser() {
-        this.storage.setItem(Constants.USER, {data: null});
+    //--------------------------------
+    initStorage(storage_name, value) {
+        this.storage.setItem(storage_name, {data: value});
     }
 
-    initBackup() {
-        this.storage.setItem(Constants.BACKUP_SNYC, {data: null});
-    }
+    //---------------------------------
 
-    initUUID() {
-        this.storage.setItem(Constants.UUID, {data: false});
-    }
-
-    initIntro() {
-        this.storage.setItem(Constants.NOT_SHOW_INTRO, {data: false});
-    }
     setIntro(flag) {
         this.storage.setItem(Constants.NOT_SHOW_INTRO, {data: flag});
-    }
-
-    initMovieRequest() {
-        this.storage.setItem(Constants.MOVIE_REQUEST, {data: null});
-    }
-
-    initMovieWait() {
-        this.storage.setItem(Constants.MOVIE_WAIT, {data: false});
     }
 
     setMovieRequest(request) {
@@ -60,13 +44,23 @@ export class StorageService {
         return this.storage.setItem(Constants.MOVIE_REQUEST, {data: request});
     }
 
+    setMovieResponse(response) {
+        this.helperService.movie_result_to_display = response;
+        return this.storage.setItem(Constants.MOVIE_CURRENT_RESPONSE, {data: response});
+    }
+
     setMovieWait(flag) {
         this.helperService.waiting_for_movie_result = flag;
         return this.storage.setItem(Constants.MOVIE_WAIT, {data: flag});
     }
 
-    setUUID() {
-        return this.storage.setItem(Constants.UUID, {data: true});
+    setMovieShowMore(flag) {
+        this.helperService.result_show_more = flag;
+        return this.storage.setItem(Constants.SHOW_MORE, {data: flag});
+    }
+
+    setUUID(flag) {
+        return this.storage.setItem(Constants.UUID, {data: flag});
     }
 
     setFullData(storage_name, data) {
@@ -101,11 +95,6 @@ export class StorageService {
         );
     }
 
-    // restructureFavourites(movie_arr) {
-    //     this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: movie_arr});
-    // }
-
-
     addUser(user: User) {
         this.storage.setItem(Constants.USER, {data: user});
     }
@@ -131,7 +120,6 @@ export class StorageService {
             return data.data;
         });
     }
-
 
     //---------------------------------------------------------------------------------------------------------
     // Favourites
@@ -229,6 +217,9 @@ export class StorageService {
     }
 
     loadImages(array) {
+        // array.forEach(movie => {
+        //     movie.image = "../../assets/image/theraid.jpg"
+        // });
         if (array != undefined || array != null) {
             array.forEach(movie => {
                 this.getMoviePosterByID(movie.imdb_id).then(data => {
@@ -236,9 +227,10 @@ export class StorageService {
                         movie.image = data.poster;
                     }
                     else {
-                        this.loadExternalImage(movie, true);
+                        this.loadExternalImage(movie,true);
                     }
                 });
+
             });
         }
     }
@@ -252,30 +244,39 @@ export class StorageService {
                         movie.image = data.poster;
                     }
                     else {
-                        this.loadExternalImage(movie, true);
+                        //this.loadExternalImage(movie, true);
                     }
                 });
             });
         }
     }
-
+    //https://stackoverflow.com/questions/6150289/how-to-convert-image-into-base64-string-using-javascript
     loadExternalImage(movie, store) {
+        console.log(movie)
         this.apiService.getDetailedMovieInfo(movie.imdb_id).then(data => {
             if (data != null || data != undefined) {
+                console.log(data);
                 let dataObj: any = JSON.parse(data.data);
                 let size = store ? 'w300' : 'w92';
-                const url = 'https://image.tmdb.org/t/p/' + size + '/';
+                const url1 = 'https://image.tmdb.org/t/p/' + size + '/';
                 const poster = dataObj.movie_results[0].poster_path;
-                movie.image = url + poster;
-                if (store) {
-                    this.helperService.convertToDataURLviaCanvas(url + poster, 'image/jpeg')
-                        .then(base64Img => {
-                            this.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: base64Img.toString()});
-                        });
-                }
+                const toDataURL = url => fetch(url)
+                    .then(response => response.blob())
+                    .then(blob => new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject
+                        reader.readAsDataURL(blob)
+                    }));
+
+                toDataURL(url1+ poster)
+                    .then(dataUrl => {
+                        movie.image = dataUrl;
+                        this.addMoviePoster(<Poster>{imdb_id: movie.imdb_id, poster: dataUrl});
+                    })
+
             }
         });
-
     }
 
     //---------------------------------------------------------------------------------------------------------
@@ -331,14 +332,6 @@ export class StorageService {
                 dataArr.forEach(entry => {
                     let timestamp = new Date(entry[0]);
                     timestamp.setHours(0, 0, 0, 0);
-                    console.log(from_date);
-                    console.log(timestamp);
-                    console.log(to_date);
-                    console.log('------------');
-                    console.log(to_date <= timestamp);
-                    console.log(timestamp <= from_date);
-                    console.log('------------');
-
                     if (to_date <= timestamp && timestamp <= from_date)
                         resArr.push(entry);
                 });

@@ -7,6 +7,7 @@ import {ApiService} from '../../service/apicalls/api.service';
 import {Constants} from '../../service/constants';
 import {Keyboard} from '@ionic-native/keyboard/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
+import {StorageService} from '../../service/storage/storage.service';
 
 interface SearchData {
     search_genre: Array<[Genre, boolean]>;
@@ -49,7 +50,8 @@ export class MovieSearchPage implements OnInit {
                 public helperService: HelperService,
                 public apiService: ApiService,
                 private keyboard: Keyboard,
-                private statusBar: StatusBar
+                private statusBar: StatusBar,
+                private storageService: StorageService
     ) {
         // Disable Hardware Back Button in Modal
         this.platform.backButton.subscribe(() => {
@@ -130,8 +132,13 @@ export class MovieSearchPage implements OnInit {
                         if (entity == Constants.MOVIE) this.searchdata['search_' + Constants.MOVIE].push(MovieSearchPage.createMovieArray(element, '', false));
                         if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, '', false));
                     }
+                    if (entity == Constants.MOVIE) {
+                        console.log(this.searchdata['search_' + Constants.MOVIE])
+                        console.log(this.searchdata['search_' + Constants.MOVIE][this.searchdata['search_' + Constants.MOVIE].length-1])
+                    }
                 });
-               // if (entity == Constants.MOVIE) this.storageService.loadImagesSearch(this.searchdata['search_' + Constants.MOVIE]);
+
+
             }
         });
 

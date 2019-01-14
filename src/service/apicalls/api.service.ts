@@ -101,10 +101,10 @@ export class ApiService {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
         return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/uuid/' + uuid, {}, {'key': Constants.API_KEY});
     }
-    setEngineRequest(request_body, oneSignal_id) {
+    setEngineRequest(request_body, oneSignal_id, show_more) {
         this.http.setDataSerializer('json');
         this.http.setSSLCertMode(Constants.CHECK_SSL);
-        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + oneSignal_id, request_body, {'key': Constants.API_KEY});
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/movies/' + oneSignal_id + '/' + show_more, request_body, {'key': Constants.API_KEY});
     }
     getEngineResponse(id) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);

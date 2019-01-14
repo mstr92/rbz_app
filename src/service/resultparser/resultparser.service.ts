@@ -21,14 +21,13 @@ export class ResultparserService {
         let movies: Array<Movie> = [];
         if (parsedObject != undefined) {
             parsedObject.recommendation_list.forEach((element) => {
-
                 let movie: Movie = {
                     id: element.id,
                     imdb_id: element.ttid,
                     title: element.title.substring(0, element.title.length - 7),
                     year: element.year,
-                    favourite: element.ttid in this.helperService.favourites,
-                    rating: element.ttid in this.helperService.ratings ? this.helperService.ratings[element.ttid].rating : undefined
+                    favourite: this.helperService.favourites.has( element.ttid),
+                    rating: this.helperService.ratings.has(element.ttid) ? this.helperService.ratings.get(element.ttid).rating : undefined
                 };
                 movies.push(movie);
             });
@@ -117,10 +116,10 @@ export class ResultparserService {
         return body;
     }
 
-    sendRequestToEngine(search_data, show_more=false){
+    sendRequestToEngine(search_data){
         console.log('Send Request to Engine..');
-        const notificationId = show_more ? '0' : this.helperService.oneSignalUserId;
-        return this.apiService.setEngineRequest(this.buildRequestBody(search_data), notificationId).then(data => {
+        const notificationId = this.helperService.oneSignalUserId;
+        return this.apiService.setEngineRequest(this.buildRequestBody(search_data), notificationId, 0).then(data => {
             if (data.status == 201) {
                 let dataObject = JSON.parse(data.data);
                 if (dataObject.response.includes('ERROR CALCULATING RECOMMENDATIONS!')) {
@@ -135,10 +134,34 @@ export class ResultparserService {
                     this.helperService.result_calculation_finished = true;
                 }
                 this.storageService.setMovieWait(false);
-                if(!show_more) this.helperService.setResultOnMoviePage.next();
+                this.helperService.setResultOnMoviePage.next();
                 return true;
             }
             return false;
+        }, () => {
+            this.storageService.setMovieWait(false);
         });
+    }
+    sendRequestToEngineShowMore(search_data, timestamp){
+        console.log('Send Request to Engine..');
+        const notificationId = this.helperService.oneSignalUserId;
+        return this.apiService.setEngineRequest(this.buildRequestBody(search_data), notificationId, 1).then(data => {
+            if (data.status == 201) {
+                let dataObject = JSON.parse(data.data);
+                if (dataObject.response.includes('ERROR CALCULATING RECOMMENDATIONS!')) {
+                    this.helperService.result_calculation_failed = true;
+                } else {
+                    this.helperService.movie_result_to_display = <MovieResult>{
+                        id: dataObject.id,
+                        timestamp: timestamp,
+                        result: this.parseMovieResult(dataObject.response, timestamp, dataObject.id)
+                    };
+                   this.helperService.result_calculation_finished = true;
+                }
+                this.storageService.setMovieShowMore(false);
+                return true;
+            }
+            return false;
+        }, () =>   this.storageService.setMovieShowMore(false));
     }
 }
