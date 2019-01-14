@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
 import {MovieResult} from '../../interfaces/movieInterface';
 import {ResultparserService} from '../../service/resultparser/resultparser.service';
@@ -15,11 +15,12 @@ import {NotificationService} from '../../service/push/notification.service';
     templateUrl: './movie-result.page.html',
     styleUrls: ['./movie-result.page.scss'],
 })
-export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
+export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     movies: MovieResult;
     movie_tmp = [];
     movie_vote_map: Map<string, boolean> = new Map<string, boolean>();
     rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
+    history_init = false;
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public navCtrl: NavController, private apiService: ApiService, private device: Device,
@@ -34,15 +35,16 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
         this.setData();
     }
 
-    ngAfterViewInit() {
-        if (this.helperService.movie_from_history) {
+    ngAfterViewChecked() {
+        if (this.helperService.movie_from_history && !this.history_init) {
             this.movies.result.forEach(movie => {
                 movie.favourite = this.helperService.favourites.has(movie.imdb_id);
                 movie.rating = this.helperService.ratings.has(movie.imdb_id) ? this.helperService.ratings.get(movie.imdb_id).rating : undefined;
-                if (!movie.vote != undefined) {
+                if (movie.vote != undefined) {
                     this.displayRecommendationVote(movie.vote, movie);
                 }
             });
+            this.history_init = true;
         }
     }
 
@@ -57,6 +59,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
     // Set Data
     //----------------------------------
     setData() {
+        console.log(this.helperService.movie_result_to_display);
         this.movies = this.helperService.movie_result_to_display;
         if (this.movies != null) {
             if (!this.helperService.movie_from_history) {
@@ -123,6 +126,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
     setRating(rating, movie) {
         movie.rating = rating;
         this.storageService.addMovieToRating(movie);
+        this.storageService.addMovieToFavourites(movie, true);
     }
 
     disableFavourite(movie) {
@@ -163,6 +167,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     displayRecommendationVote(vote, movie) {
+        console.log("Display Recommendation")
         let vote_text = document.getElementById('vote_res' + movie.id) as HTMLDivElement;
         let text = 'The recommendation was ' + this.rec_text[vote - 1] + '!';
         let vote_change = document.getElementById('vote_change' + movie.id) as HTMLDivElement;
@@ -184,7 +189,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewInit {
     //----------------------------------
     // Show details
     //----------------------------------
-    openFullPoster(event) {
+    openFullPoster() {
         event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
     }
 

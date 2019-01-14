@@ -35,4 +35,12 @@ export class AboutPage implements OnInit {
             console.log(data)
         })
     }
+    resetShowMore() {
+        this.helperService.result_show_more = false;
+        this.storageService.initStorage(Constants.SHOW_MORE, false);
+    }
+    resetWaiting(){
+        this.helperService.waiting_for_movie_result = false;
+        this.storageService.initStorage(Constants.MOVIE_WAIT, false);
+    }
 }

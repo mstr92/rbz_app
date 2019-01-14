@@ -3,6 +3,8 @@ import {StorageService} from '../../service/storage/storage.service';
 import {Movie, Poster} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
 import {Constants} from '../../service/constants';
+import {ChangeRatingComponent} from '../change-rating/change-rating.component';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
     selector: 'app-favourites',
@@ -15,7 +17,7 @@ export class FavouritesPage implements OnInit {
     isSorted = false;
     @ViewChild('slidingList') slidingList;
 
-    constructor(public storageService: StorageService, public helperService: HelperService) {
+    constructor(public storageService: StorageService, public helperService: HelperService, private popoverController: PopoverController) {
     }
 
     ngOnInit() {
@@ -37,27 +39,22 @@ export class FavouritesPage implements OnInit {
         this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
         await this.slidingList.closeSlidingItems();
     }
+    async changeRating(ev: any, star, movie) {
+        const popover = await this.popoverController.create({
+            component: ChangeRatingComponent,
+            event: ev,
+            translucent: true,
+            componentProps: {rating: star}
+        });
 
-    reorderItems(ev) {
-        // this.isSorted = true;
-        // let itemToMove = this.fav_movies_arr.splice(ev.detail.from, 1)[0];
-        // this.fav_movies_arr.splice(ev.detail.to, 0, itemToMove);
-        // console.log()
-    }
-
-    saveSortedList() {
-        // this.storageService.restructureFavourites(this.fav_movies);
-        // this.isSorted = false;
-    }
-
-    cancelSortedList() {
-        //     this.storageService.getStorageEntries(Constants.MOVIE_FAVOURITE).then(value => {
-        //         if (value != undefined || value != null) {
-        //             this.fav_movies = value;
-        //             this.storageService.loadImages(this.fav_movies);
-        //         }
-        //     });
-        //     this.isSorted = false;
-        // }
+        popover.onDidDismiss().then(data => {
+            if (data.data > 0) {
+                movie.rating = data.data;
+                this.storageService.addMovieToRating(movie);
+                this.storageService.addMovieToFavourites(movie);
+            }
+        });
+        await this.slidingList.closeSlidingItems();
+        return await popover.present();
     }
 }

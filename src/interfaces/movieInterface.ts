@@ -7,8 +7,11 @@ export interface Movie {
     actors?: string;
     alignment?: string;
     favourite?: boolean;
+    favourite_date?: string;
     rating?: number;
+    rating_date?: string;
     vote?:number;
+    genre?:Array<string>
 }
 export interface Actor {
     id: number;

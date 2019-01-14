@@ -6,8 +6,9 @@ ion-content {
 }
 ion-card {
   background: var(--ion-color-primary-contrast);
-  margin-top: 15px;
-  margin-bottom: 15px;
+  //margin-top: 15px;
+  margin: 0 10px 10px 0;
+  width: 100%;
 }
 ion-card-title {
   font-size: 1.5em;
@@ -155,7 +156,7 @@ ion-col {
   padding-left: 0.35em;
   padding-right: 0.35em;
   --border-radius: 3px;
-  --height: 3.2em;
+  --height: 45px;
   z-index:99;
   position:absolute;
 }
@@ -178,9 +179,14 @@ ion-col {
   border-radius: 10px;
 }
 .show-more-btn {
-  background-color:var(--ion-color-primary);
-  --background: var(--ion-color-primary);
+  padding: 0;
+  background-color: var(--ion-color-dark);
+  --background: var(--ion-color-dark);
   --box-shadow: 0;
+  bottom: 0;
+  width: 90%;
+  margin-right: 5%;
+  margin-left: 5%;
 }
 .show-more-spinner{
   --color: var(--ion-color-dark);
@@ -205,7 +211,7 @@ ion-col {
 
 .vote-line {
   position: relative;
-  height: 3.5em;
+  height: 48px;
   border-radius: 3px;
   background-color: var(--ion-background-color-light);
   width: 97%;
@@ -214,7 +220,7 @@ ion-col {
   justify-content: center !important;
   visibility: inherit;
   padding: 0.3em 0.35em;
-  margin: 0.2em 0.2em 0.2em 0.35em;
+  margin: 0.2em 0.2em 0.5em 0.35em;
 }
 .emoji {
   height: 75%;
@@ -244,28 +250,28 @@ ion-col {
 .animate-1
 {
   position: absolute;
-  animation: move-first 2s;
+//  animation: move-first 2s;
   left: 80%;
   z-index: 99;
 }
 .animate-2
 {
   position: absolute;
-  animation: move-second 1.5s;
+ // animation: move-second 1.5s;
   left: 80%;
   z-index: 99;
 }
 .animate-3
 {
   position: absolute;
-  animation: move-third 1s;
+  //animation: move-third 1s;
   left: 80%;
   z-index: 99;
 }
 .animate-4
 {
   position: absolute;
-  animation: move-fourth 1s;
+ // animation: move-fourth 1s;
   left: 80%;
   z-index: 99;
 }

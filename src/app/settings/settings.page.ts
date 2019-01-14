@@ -228,7 +228,28 @@ export class SettingsPage implements OnInit {
         this.storageService.getUser().then(user => {
             this.storageService.getStorageEntries(storage).then(data => {
                 if (data != undefined || data != null) {
-                    entries[storage] = JSON.stringify(data);
+                    if (entity = 'history') {
+
+                        let dataMap = new Map(Object.entries(data));
+                        let dataArr = Array.from(dataMap);
+                        let length = dataArr.length;
+                        let resArr = [];
+                        if (length > 30) {
+                            for (let index = length - 1; index >= length - 30; index--) {
+                                resArr.push(dataArr[index]);
+                            }
+                        } else {
+                            resArr = dataArr;
+                        }
+                        const map_to_object = ( map => {
+                            const obj = {};
+                            map.forEach ((v,k) => { obj[k] = v });
+                            return obj;
+                        });
+                        entries[storage] = JSON.stringify(map_to_object(new Map(resArr)));
+                    } else {
+                        entries[storage] = JSON.stringify(data);
+                    }
                     this.apiService.setBackup(entries.movie_history, entries.ratingMovies, entries.favouriteMovies, user.id).then(data => {
                             this.displayToast('SUCCESS: Data uploaded to Database');
                             this.apiService.getBackupLastDate(user.id).then(dates => {
@@ -236,7 +257,8 @@ export class SettingsPage implements OnInit {
                                 this.backup_upload[entity] = new Date(date_arr[entry_index]).toISOString();
                             });
                         },
-                        () => {
+                        error => {
+                            console.log(error);
                             this.displayToast('ERROR: Data not stored. Please try again');
                         });
                 }
@@ -333,13 +355,13 @@ export class SettingsPage implements OnInit {
         });
         this.storageService.getUser().then(user => {
             this.apiService.getBackupLastDate(user.id).then(dates => {
-                let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
-                if (date_arr[1] != 'None') this.backup_upload.history = new Date(date_arr[1]).toISOString();
-                if (date_arr[2] != 'None') this.backup_upload.favourite = new Date(date_arr[2]).toISOString();
-                if (date_arr[0] != 'None') this.backup_upload.rating = new Date(date_arr[0]).toISOString();
-            },
+                    let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
+                    if (date_arr[1] != 'None') this.backup_upload.history = new Date(date_arr[1]).toISOString();
+                    if (date_arr[2] != 'None') this.backup_upload.favourite = new Date(date_arr[2]).toISOString();
+                    if (date_arr[0] != 'None') this.backup_upload.rating = new Date(date_arr[0]).toISOString();
+                },
                 () => {
-                this.backup_upload = <BackupDate>{history: '', rating: '', favourite: ''};
+                    this.backup_upload = <BackupDate>{history: '', rating: '', favourite: ''};
                 });
         });
     }

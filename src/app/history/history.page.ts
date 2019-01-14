@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {CompleteMovieSearchRequest, MovieHistory, MovieResult, PartialMovieSearchRequest} from '../../interfaces/movieInterface';
 import {StorageService} from '../../service/storage/storage.service';
 import {HelperService} from '../../service/helper/helper.service';

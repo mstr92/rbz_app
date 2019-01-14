@@ -53,6 +53,7 @@ export class RatingsPage implements OnInit {
                 this.rating['stars' + star] = this.helperService.arrayRemoveById(this.rating['stars' + star], movie);
                 this.rating['stars' + data.data].push(movie);
                 this.storageService.addMovieToRating(movie);
+                this.storageService.addMovieToFavourites(movie, true);
             }
         });
         await this.slidingList.closeSlidingItems();

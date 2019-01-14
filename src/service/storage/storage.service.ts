@@ -128,7 +128,7 @@ export class StorageService {
         this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: new Map<string, Movie>()});
     }
 
-    addMovieToFavourites(movie: Movie) {
+    addMovieToFavourites(movie: Movie, with_rating=false) {
         this.storage.getItem(Constants.MOVIE_FAVOURITE).then(data => {
                 const movie_tmp = <Movie>{
                     id: movie.id,
@@ -136,15 +136,23 @@ export class StorageService {
                     title: movie.title,
                     favourite: movie.favourite,
                     year: movie.year,
-                    rating: movie.rating
+                    rating: movie.rating,
+                    favourite_date: new Date().toISOString(),
+                    genre: movie.genre,
                 };
-                data.data[movie_tmp.imdb_id] = movie_tmp;
+                if(with_rating) {
+                    data.data[movie_tmp.imdb_id].rating = movie.rating;
+                } else {
+                    data.data[movie_tmp.imdb_id] = movie_tmp;
+                }
+
                 this.helperService.favourites = new Map(Object.entries(data.data));
-                this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: data.data}).then(() => {
-                        this.displayToast('"' + movie.title + '" was added to Favourite List!');
-                    },
-                    error => console.error('Error storing item', error)
-                );
+                this.storage.setItem(Constants.MOVIE_FAVOURITE, {data: data.data});
+                // .then(() => {
+                //         this.displayToast('"' + movie.title + '" was added to Favourite List!');
+                //     },
+                //     error => console.error('Error storing item', error)
+                // );
             },
             error => console.error(error)
         );
@@ -177,10 +185,13 @@ export class StorageService {
                     title: movie.title,
                     favourite: movie.favourite,
                     year: movie.year,
-                    rating: movie.rating
+                    rating: movie.rating,
+                    rating_date: new Date().toISOString(),
+                    genre: movie.genre,
                 };
                 if (movie_tmp.imdb_id in data.data) {
                     data.data[movie_tmp.imdb_id].rating = movie.rating;
+                    data.data[movie_tmp.imdb_id].rating_date= new Date().toISOString();
                 } else {
                     data.data[movie_tmp.imdb_id] = movie_tmp;
                 }
@@ -217,9 +228,6 @@ export class StorageService {
     }
 
     loadImages(array) {
-        // array.forEach(movie => {
-        //     movie.image = "../../assets/image/theraid.jpg"
-        // });
         if (array != undefined || array != null) {
             array.forEach(movie => {
                 this.getMoviePosterByID(movie.imdb_id).then(data => {
@@ -230,7 +238,6 @@ export class StorageService {
                         this.loadExternalImage(movie,true);
                     }
                 });
-
             });
         }
     }

@@ -16,7 +16,7 @@
             <ion-icon name="settings"></ion-icon>
         </ion-fab-button>
         <ion-fab-list>
-            <div>
+            <div *ngIf="!helperService.result_show_more">
                 <ion-label class="fab-label">Refine Request</ion-label>
                 <ion-button (click)="refineRequest()">
                     <ion-icon name="md-swap"></ion-icon>
@@ -38,10 +38,11 @@
             <ion-label class="waiting-text-line">Please try again!</ion-label>
         </div>
     </div>
-
     <div *ngIf="!helperService.result_calculation_failed || helperService.movie_from_history">
-        <ion-card *ngFor="let movie of movies.result; trackBy: trackByFct">
-            <img class="poster small" (click)="openFullPoster($event)" src="{{movie.image}}">
+        <ion-virtual-scroll [items]="movies.result">
+        <ion-item *virtualItem="let movie">
+            <ion-card>
+            <ion-img class="poster small" src="{{movie.image}}"></ion-img>
             <ion-fab vertical="top" horizontal="start" class="fab-rating" (click)="disableFavourite(movie)">
                 <ion-fab-button>
                     <ion-icon name="star"
@@ -82,18 +83,18 @@
                     <ion-row>
                         <ion-col>
                             <ion-button expand="block" side="left" (click)="openImdb(movie)" class="goTo-Button">
-                                <img class="button-img" src="../../assets/image/logo/imdb_logo.png">
+                                <ion-img class="button-img" src="../../assets/image/logo/imdb_logo.png"></ion-img>
                             </ion-button>
                         </ion-col>
                         <ion-col>
                             <ion-button expand="block" side="right" (click)="openAmazonVideo(movie)"
                                         class="goTo-Button">
-                                <img class="button-img" src="../../assets/image/logo/amazon_logo.png">
+                                <ion-img class="button-img" src="../../assets/image/logo/amazon_logo.png"></ion-img>
                             </ion-button>
                         </ion-col>
                         <ion-col>
                             <ion-button expand="block" side="right" (click)="openYoutube(movie)" class="goTo-Button">
-                                <img class="button-img" src="../../assets/image/logo/youtube.png">
+                                <ion-img class="button-img" src="../../assets/image/logo/youtube.png"></ion-img>
                             </ion-button>
                         </ion-col>
                     </ion-row>
@@ -104,33 +105,35 @@
                 movie?
             </ion-button>
             <div class="vote-line">
-                <img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji pos-1"
-                     (click)="setRecommendationVote(1, movie)">
-                <img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji pos-2"
-                     (click)="setRecommendationVote(2, movie)">
-                <img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji pos-3"
-                     (click)="setRecommendationVote(3, movie)">
-                <img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji pos-4"
-                     (click)="setRecommendationVote(4, movie)">
-                <img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji pos-5"
-                     (click)="setRecommendationVote(5, movie)">
+                <ion-img [id]="'recrating1img' + movie.id" src="../../assets/image/rating/1_line.svg" class="emoji pos-1"
+                     (click)="setRecommendationVote(1, movie)"></ion-img>
+                <ion-img [id]="'recrating2img' + movie.id" src="../../assets/image/rating/2_line.svg" class="emoji pos-2"
+                     (click)="setRecommendationVote(2, movie)"></ion-img>
+                <ion-img [id]="'recrating3img' + movie.id" src="../../assets/image/rating/3_line.svg" class="emoji pos-3"
+                     (click)="setRecommendationVote(3, movie)"></ion-img>
+                <ion-img [id]="'recrating4img' + movie.id" src="../../assets/image/rating/4_line.svg" class="emoji pos-4"
+                     (click)="setRecommendationVote(4, movie)"></ion-img>
+                <ion-img [id]="'recrating5img' + movie.id" src="../../assets/image/rating/5_line.svg" class="emoji pos-5"
+                     (click)="setRecommendationVote(5, movie)"></ion-img>
                 <div [id]="'vote_res' + movie.id" class="vote-text invisible"></div>
                 <div [id]="'vote_change' + movie.id" class="vote-change invisible" (click)="changeVote(movie)">Change
                     Decision
                 </div>
             </div>
         </ion-card>
+        </ion-item>
+        </ion-virtual-scroll>
         <div *ngIf="helperService.result_show_more" class="show-more-waiting">
                 <ion-spinner class="show-more-spinner" name="crescent"></ion-spinner>
                 <div class="loading-text">Loading...</div>
             </div>
-        <ion-card class="show-more-btn" *ngIf="!helperService.movie_from_history">
+        <div *ngIf="!helperService.movie_from_history">
             <ion-button *ngIf="!helperService.result_show_more" expand="full" (click)="showMore()" class="show-more-btn">
                 Show More...
             </ion-button>
             <ion-button *ngIf="helperService.result_show_more" expand="full" (click)="cancelShowMore()" class="show-more-btn">
                 Cancel
             </ion-button>
-        </ion-card>
+        </div>
     </div>
 </ion-content>

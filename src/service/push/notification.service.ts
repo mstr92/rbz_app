@@ -28,19 +28,11 @@ export class NotificationService {
         this.oneSignal.startInit(Constants.ONESIGNAL_APP_ID, 'ANDROID_ID');
         this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert);
         this.oneSignal.handleNotificationReceived().subscribe((data) => {
-            if (this.helperService.result_show_more) {
-                this.getResultDataShowMore(data.payload.additionalData, false);
-            } else {
-                this.getResultData(data.payload.additionalData, false);
-            }
+            this.getResultData(data.payload.additionalData, false);
         });
         this.oneSignal.handleNotificationOpened().subscribe((data) => {
             if (!this.helperService.result_calculation_finished) {
-                if (this.helperService.result_show_more) {
-                    this.getResultDataShowMore(data.notification.payload.additionalData, true);
-                } else {
-                    this.getResultData(data.notification.payload.additionalData, true);
-                }
+                this.getResultData(data.notification.payload.additionalData, true);
             }
             if (this.router.url == '/home') {
                 //Hack to refresh Page after click
@@ -58,15 +50,16 @@ export class NotificationService {
             if (res.data.includes(Constants.ERROR_ENGINE)) {
                 this.helperService.result_calculation_failed = true;
             } else {
-                let date = new Date().toISOString();
-                this.helperService.movie_result_to_display = <MovieResult>{
+                let timestamp = this.helperService.result_show_more ? this.helperService.movie_result_to_display.timestamp : new Date().toISOString();
+                this.storageService.setMovieResponse(<MovieResult>{
                     id: data.id,
-                    timestamp: date,
-                    result: this.parser.parseMovieResult(res.data, date, data.id)
-                };
+                    timestamp: timestamp,
+                    result: this.parser.parseMovieResult(res.data, timestamp, data.id)
+                });
                 this.helperService.result_calculation_finished = true;
             }
             this.storageService.setMovieWait(false);
+            this.storageService.setMovieShowMore(false);
 
             if (from_openNotification) {
                 this.zone.run(async () => {
@@ -77,32 +70,6 @@ export class NotificationService {
                     if (this.router.url == '/movie-result-waiting') {
                         this.helperService.setResultOnMoviePage.next();
                     }
-                });
-            }
-        });
-    }
-
-    getResultDataShowMore(data, from_openNotification) {
-        this.apiService.getEngineResponse(data.id).then(res => {
-            if (res.data.includes(Constants.ERROR_ENGINE)) {
-                this.helperService.result_calculation_failed = true;
-            } else {
-                let timestamp = this.helperService.movie_result_to_display.timestamp;
-                this.helperService.movie_result_to_display = <MovieResult>{
-                    id: data.id,
-                    timestamp: timestamp,
-                    result: this.parser.parseMovieResult(res.data, timestamp, data.id)
-                };
-                this.helperService.result_calculation_finished = true;
-            }
-            this.storageService.setMovieShowMore(false);
-
-            if (from_openNotification) {
-                this.zone.run(async () => {
-                    this.navCtrl.navigateRoot('/movie-result');
-                });
-            } else {
-                this.zone.run(async () => {
                     if (this.router.url == '/movie-result') {
                         this.helperService.setResultOnMoviePage.next();
                     }
@@ -110,5 +77,34 @@ export class NotificationService {
             }
         });
     }
+
+    // getResultDataShowMore(data, from_openNotification) {
+    //     this.apiService.getEngineResponse(data.id).then(res => {
+    //         if (res.data.includes(Constants.ERROR_ENGINE)) {
+    //             this.helperService.result_calculation_failed = true;
+    //         } else {
+    //             let timestamp = this.helperService.movie_result_to_display.timestamp;
+    //             this.storageService.setMovieResponse(<MovieResult>{
+    //                 id: data.id,
+    //                 timestamp: timestamp,
+    //                 result: this.parser.parseMovieResult(res.data, timestamp, data.id)
+    //             });
+    //             this.helperService.result_calculation_finished = true;
+    //         }
+    //         this.storageService.setMovieShowMore(false);
+    //
+    //         if (from_openNotification) {
+    //             this.zone.run(async () => {
+    //                 this.navCtrl.navigateRoot('/movie-result');
+    //             });
+    //         } else {
+    //             this.zone.run(async () => {
+    //                 if (this.router.url == '/movie-result') {
+    //                     this.helperService.setResultOnMoviePage.next();
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
 }
 
