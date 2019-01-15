@@ -9,29 +9,28 @@
     </ion-toolbar>
 </ion-header>
 <ion-content padding>
-    <!--<div *ngIf="fav_movies_arr.length == 0">-->
-    <!--<ion-label class="empty-header">OH NO!</ion-label>-->
-    <!--<ion-label class="empty-header">Your favourite list is empty!</ion-label>-->
-    <!--<ion-card class="empty-body">-->
-        <!--<ion-grid>-->
-            <!--<div>Please follow the steps below to add a movie into your list:</div>-->
-            <!--<ion-row>-->
-                <!--<ion-col size="1">•</ion-col>-->
-                <!--<ion-col size="11">Go on Home-Page and select Movie.</ion-col>-->
-            <!--</ion-row>-->
-            <!--<ion-row>-->
-                <!--<ion-col size="1">•</ion-col>-->
-                <!--<ion-col size="11">Insert your search criteria and start recommendation.</ion-col>-->
-            <!--</ion-row>-->
-            <!--<ion-row>-->
-                <!--<ion-col size="1">•</ion-col>-->
-                <!--<ion-col size="11">Add movie to <b>My Favourites.</b></ion-col>-->
-            <!--</ion-row>-->
-        <!--</ion-grid>-->
-        <!--<img src="../../assets/image/help/favourite.png">-->
-    <!--</ion-card>-->
-    <!--</div>-->
-
+    <div *ngIf="fav_movies_arr.length == 0">
+    <ion-label class="empty-header">OH NO!</ion-label>
+    <ion-label class="empty-header">Your favourite list is empty!</ion-label>
+    <ion-card class="empty-body">
+        <ion-grid>
+            <div>Please follow the steps below to add a movie into your list:</div>
+            <ion-row>
+                <ion-col size="1">•</ion-col>
+                <ion-col size="11">Go on Home-Page and select Movie.</ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="1">•</ion-col>
+                <ion-col size="11">Insert your search criteria and start recommendation.</ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="1">•</ion-col>
+                <ion-col size="11">Add movie to <b>My Favourites.</b></ion-col>
+            </ion-row>
+        </ion-grid>
+        <img src="../../assets/image/help/favourite.png">
+    </ion-card>
+    </div>
     <ion-list #slidingList *ngIf="fav_movies_arr.length > 0">
         <ion-item-sliding *ngFor="let movie of fav_movies_arr">
             <ion-item lines="full">
@@ -43,7 +42,7 @@
                 <h3>{{movie.year}}</h3>
                 <h3 class="item-genre">{{movie.genre}}</h3>
                 <h3 class="item-date" >{{movie.favourite_date | date:'dd.MM.yyyy'}}</h3>
-                <ion-icon name="star" class="item-icon" (click)="changeRating($event, movie.rating, movie)"></ion-icon>
+                <ion-icon name="star" [class]="movie.rating != undefined? 'item-icon active' :'item-icon inactive'" (click)="changeRating($event, movie.rating, movie)"></ion-icon>
                 <div class="item-rating">{{movie.rating}}</div>
             </ion-label>
             </ion-item>

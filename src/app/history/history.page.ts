@@ -10,11 +10,11 @@ import {Constants} from '../../service/constants';
     templateUrl: './history.page.html',
     styleUrls: ['./history.page.scss'],
 })
-export class HistoryPage implements OnInit {
+export class HistoryPage implements OnInit, AfterViewChecked {
 
     slideOpts = {
-        slidesPerView: 1.3,
-        slidesPerColumn: 2
+        slidesPerView: 3.2,
+        // slidesPerColumn: 2
     };
     close_map: Map<string, string> = new Map<string, string>();
     currentDate;
@@ -45,10 +45,19 @@ export class HistoryPage implements OnInit {
     ngOnInit() {
         this.setData(this.show_entries_size);
     }
+    ngAfterViewChecked() {
+
+
+
+    }
 
     openSelectedHistory(timestamp, result_movies) {
         if (this.close_map[timestamp]) {
             this.storageService.loadImages(result_movies);
+            result_movies.forEach(movie => {
+            movie.favourite = this.helperService.favourites.has(movie.imdb_id);
+            movie.rating = this.helperService.ratings.has(movie.imdb_id) ? this.helperService.ratings.get(movie.imdb_id).rating : undefined;
+        });
         }
         this.close_map[timestamp] = !this.close_map[timestamp];
     }
@@ -120,17 +129,16 @@ export class HistoryPage implements OnInit {
     setData(size, filter = false, date = null) {
         this.storageService.getHistoryEntries(size, filter, date).then(data => {
             if (data.total_length > 0) {
-                console.log(data);
                 if (data.total_length <= this.show_entries_size) {
                     this.disableShowMore = true;
                     this.show_entries_size = data.total_length;
                 } else {
                     this.disableShowMore = false;
                 }
-
                 this.total_history_entries = data.total_length;
                 this.movieHistoryArray = data.data_arr;
                 this.movieHistoryArray.forEach(entry => {
+
                     this.close_map[entry.timestamp] = true;
                 });
                 this.movieHistoryArray.sort((b, a) => (new Date(a.timestamp) > new Date(b.timestamp)) ? 1 : ((new Date(b.timestamp) > new Date(a.timestamp)) ? -1 : 0));

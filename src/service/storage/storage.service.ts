@@ -140,8 +140,10 @@ export class StorageService {
                     favourite_date: new Date().toISOString(),
                     genre: movie.genre,
                 };
-                if (with_rating) {
-                    data.data[movie_tmp.imdb_id].rating = movie.rating;
+                if (movie_tmp.imdb_id in data.data) {
+                    if (with_rating) {
+                        data.data[movie_tmp.imdb_id].rating = movie.rating;
+                    }
                 } else {
                     data.data[movie_tmp.imdb_id] = movie_tmp;
                 }
@@ -179,27 +181,29 @@ export class StorageService {
 
     addMovieToRating(movie: Movie, with_favourite = false) {
         this.storage.getItem(Constants.MOVIE_RATING).then(data => {
-                const movie_tmp = <Movie>{
-                    id: movie.id,
-                    imdb_id: movie.imdb_id,
-                    title: movie.title,
-                    favourite: movie.favourite,
-                    year: movie.year,
-                    rating: movie.rating,
-                    rating_date: new Date().toISOString(),
-                    genre: movie.genre,
-                };
                 if (with_favourite) {
-                    data.data[movie_tmp.imdb_id].favourite = movie.favourite;
+                    if (movie.imdb_id in data.data) {
+                        data.data[movie.imdb_id].favourite = movie.favourite;
+                    }
                 } else {
+                    const movie_tmp = <Movie>{
+                        id: movie.id,
+                        imdb_id: movie.imdb_id,
+                        title: movie.title,
+                        favourite: movie.favourite,
+                        year: movie.year,
+                        rating: movie.rating,
+                        rating_date: new Date().toISOString(),
+                        genre: movie.genre,
+                    };
                     if (movie_tmp.imdb_id in data.data) {
                         data.data[movie_tmp.imdb_id].rating = movie.rating;
                         data.data[movie_tmp.imdb_id].rating_date = new Date().toISOString();
-
                     } else {
                         data.data[movie_tmp.imdb_id] = movie_tmp;
                     }
                 }
+
                 this.helperService.ratings = new Map(Object.entries(data.data));
                 this.storage.setItem(Constants.MOVIE_RATING, {data: data.data});
             },
@@ -224,15 +228,16 @@ export class StorageService {
         if (array != undefined || array != null) {
             Object.keys(array).forEach(key => {
                 const movie = array[key];
-                this.loadExternalImage(movie, true);
+                this.loadExternalImage(movie, false);
             });
         }
     }
+
     loadExternalImage(movie, store) {
         this.apiService.getDetailedMovieInfo(movie.imdb_id).then(data => {
             if (data != null || data != undefined) {
                 let dataObj: any = JSON.parse(data.data);
-                let size = store ? 'w300' : 'w92';
+                let size = store ? 'w300' : 'w154';
                 const url = 'https://image.tmdb.org/t/p/' + size + '/';
                 const poster = dataObj.movie_results[0].poster_path;
                 movie.image = url + poster;

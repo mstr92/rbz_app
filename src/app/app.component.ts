@@ -80,7 +80,7 @@ export class AppComponent{
         this.platform.ready().then(() => {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.networkService.initializeNetworkEvents();
-            this.showSplash = true;
+            this.showSplash = false;
 
             this.storageService.getStorageEntries(Constants.NOT_SHOW_INTRO).then(data => {
                 if(data == false) {

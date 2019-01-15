@@ -69,7 +69,12 @@ padding-bottom: 1em;
   position: absolute;
   top: 0.15em;
   right: 0.25em;
+}
+.active {
   color: var(--ion-color-warning);
+}
+.inactive {
+  color: var( --ion-background-color-dark);
 }
 .item-rating {
   position: absolute;

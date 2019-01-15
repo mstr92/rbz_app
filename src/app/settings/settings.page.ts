@@ -193,6 +193,7 @@ export class SettingsPage implements OnInit {
                             this.displayToast('SUCCESS: Data synchronized from Database');
                             this.backup_sync[entity] = new Date().toISOString();
                             this.storageService.addBackupSync(this.backup_sync);
+                            document.getElementById("title-"+entity).click();
                         }, () => {
                             this.displayToast('ERROR: Data not synchronized. Please try again');
                         }
@@ -207,25 +208,20 @@ export class SettingsPage implements OnInit {
     //---------------------------------------------------------
     uploadData(entity) {
         let storage = '';
-        let entry_index = 0;
         let entries = {ratingMovies: '', favouriteMovies: '', movie_history: ''};
         if (entity == 'rating') {
             storage = Constants.MOVIE_RATING;
-            entry_index = 0;
         }
         if (entity == 'history') {
             storage = Constants.MOVIE_HISTORY;
-            entry_index = 1;
         }
         if (entity == 'favourite') {
             storage = Constants.MOVIE_FAVOURITE;
-            entry_index = 2;
         }
         this.storageService.getUser().then(user => {
             this.storageService.getStorageEntries(storage).then(data => {
                 if (data != undefined || data != null) {
                     if (entity = 'history') {
-
                         let dataMap = new Map(Object.entries(data));
                         let dataArr = Array.from(dataMap);
                         let length = dataArr.length;
@@ -237,9 +233,11 @@ export class SettingsPage implements OnInit {
                         } else {
                             resArr = dataArr;
                         }
-                        const map_to_object = ( map => {
+                        const map_to_object = (map => {
                             const obj = {};
-                            map.forEach ((v,k) => { obj[k] = v });
+                            map.forEach((v, k) => {
+                                obj[k] = v;
+                            });
                             return obj;
                         });
                         entries[storage] = JSON.stringify(map_to_object(new Map(resArr)));
@@ -248,10 +246,7 @@ export class SettingsPage implements OnInit {
                     }
                     this.apiService.setBackup(entries.movie_history, entries.ratingMovies, entries.favouriteMovies, user.id).then(data => {
                             this.displayToast('SUCCESS: Data uploaded to Database');
-                            this.apiService.getBackupLastDate(user.id).then(dates => {
-                                let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
-                                this.backup_upload[entity] = new Date(date_arr[entry_index]).toISOString();
-                            });
+                            this.setLastDates()
                         },
                         error => {
                             console.log(error);
@@ -267,8 +262,13 @@ export class SettingsPage implements OnInit {
     //---------------------------------------------------------
     async confirmDeleteStorage(entity) {
         const alert = await this.alertController.create({
-            header: 'Delete ' + entity,
-            message: 'Are you sure to delete <strong>all</strong> entries? You can not undo this anymore',
+            header: entity == 'full' ?
+                'Delete ' + entity:
+                'Reset Storage',
+            message: entity == 'full' ?
+                'Are you sure to delete <strong>all</strong> entries? You can not undo this anymore':
+                'Are you sure to delete the complete storage? >After that a restart of the app is required,' +
+                'otherwise the app won\'t work anymore! ',
             buttons: [
                 {
                     text: 'Cancel',
@@ -348,9 +348,20 @@ export class SettingsPage implements OnInit {
         this.storageService.getUser().then(user => {
             this.apiService.getBackupLastDate(user.id).then(dates => {
                     let date_arr = dates.data.substring(1, dates.data.length - 2).split(',');
-                    if (date_arr[1] != 'None') this.backup_upload.history = new Date(date_arr[1]).toISOString();
-                    if (date_arr[2] != 'None') this.backup_upload.favourite = new Date(date_arr[2]).toISOString();
-                    if (date_arr[0] != 'None') this.backup_upload.rating = new Date(date_arr[0]).toISOString();
+                    if (date_arr[1] == 'None' || date_arr[1] == undefined || date_arr[1] == '' || date_arr[1] == null)
+                        this.backup_upload.history = '';
+                    else
+                        this.backup_upload.history = new Date(date_arr[1]).toISOString();
+
+                    if (date_arr[2] == 'None' || date_arr[2] == undefined || date_arr[2] == '' || date_arr[2] == null)
+                        this.backup_upload.favourite = '';
+                    else
+                        this.backup_upload.favourite = new Date(date_arr[2]).toISOString();
+
+                    if (date_arr[0] == 'None' || date_arr[0] == undefined || date_arr[0] == '' || date_arr[0] == null)
+                        this.backup_upload.rating = '';
+                    else
+                        this.backup_upload.rating = new Date(date_arr[0]).toISOString();
                 },
                 () => {
                     this.backup_upload = <BackupDate>{history: '', rating: '', favourite: ''};

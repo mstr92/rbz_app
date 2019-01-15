@@ -160,6 +160,7 @@
                             <ion-label>
                                 <h2>History</h2>
                                 <h3>Last Sync: {{backup_sync.history | date:'dd/MM/yy HH:mm'}}</h3>
+                                <div id="title-history"></div>
                             </ion-label>
                             <ion-button [disabled]="backup_upload.history == ''" class="data-btn" (click)="confirmSync('history')">
                                 <ion-icon name="cloud-download"></ion-icon>
@@ -167,8 +168,9 @@
                         </ion-item>
                         <ion-item>
                             <ion-label>
-                                <h2>My Favourites</h2>
+                                <h2 >My Favourites</h2>
                                 <h3>Last Sync: {{backup_sync.favourite | date:'dd/MM/yy HH:mm'}}</h3>
+                                <div id="title-favourite"></div>
                             </ion-label>
                             <ion-button [disabled]="backup_upload.favourite == ''"class="data-btn" (click)="confirmSync('favourite')">
                                 <ion-icon name="cloud-download"></ion-icon>
@@ -176,8 +178,9 @@
                         </ion-item>
                         <ion-item>
                             <ion-label>
-                                <h2>My Ratings</h2>
+                                <h2 >My Ratings</h2>
                                 <h3>Last Sync: {{backup_sync.rating | date:'dd/MM/yy HH:mm'}}</h3>
+                                <div id="title-rating"></div>
                             </ion-label>
                             <ion-button [disabled]="backup_upload.rating == ''" class="data-btn" (click)="confirmSync('rating')">
                                 <ion-icon name="cloud-download"></ion-icon>
@@ -223,16 +226,6 @@
                     <div>Ratings ({{size_ratings}})</div>
                 </ion-label>
                 <ion-button class="delete" (click)="confirmDeleteStorage('ratings')">
-                    <ion-icon name="trash"></ion-icon>
-                    Delete
-                </ion-button>
-            </ion-item>
-            <ion-item>
-                <ion-label>
-                    <ion-icon name="albums"></ion-icon>
-                    <div>Posters ({{size_posters}})</div>
-                </ion-label>
-                <ion-button class="delete" (click)="confirmDeleteStorage('posters')">
                     <ion-icon name="trash"></ion-icon>
                     Delete
                 </ion-button>

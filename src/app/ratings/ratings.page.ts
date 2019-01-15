@@ -31,7 +31,9 @@ export class RatingsPage implements OnInit {
 
     ngOnInit() {
         if (this.helperService.ratings.size > 0) {
-            this.helperService.ratings.forEach((value,movie) => {
+            console.log(this.helperService.ratings)
+            this.helperService.ratings.forEach((value,key) => {
+                value.favourite = this.helperService.favourites.has(value.imdb_id);
                 this.rating['stars' + value.rating.toString()].push(value);
             });
             for (let i = 1; i <= 5; i++) {
@@ -67,7 +69,7 @@ export class RatingsPage implements OnInit {
     }
     addToFavourite(movie){
         this.storageService.addMovieToFavourites(movie);
-        this.storageService.addMovieToRating(movie, true);
+       // this.storageService.addMovieToRating(movie, true);
         movie.favourite = !movie.favourite;
     }
 }

@@ -21,14 +21,14 @@ export class FavouritesPage implements OnInit {
     }
 
     ngOnInit() {
-        console.log('History set data');
-        console.log(this.helperService.favourites)
-        console.log(this.helperService.favourites.size)
         if (this.helperService.favourites.size > 0) {
             this.helperService.favourites.forEach((value, key) => {
                 this.fav_movies_arr.push(value);
             });
-            this.storageService.loadImages(this.fav_movies_arr);
+            this.fav_movies_arr.forEach(movie => {
+                movie.rating = this.helperService.ratings.has(movie.imdb_id) ? this.helperService.ratings.get(movie.imdb_id).rating : undefined;
+            });
+            this.storageService.loadImages(this.fav_movies_arr, false);
         }
     }
 
@@ -49,7 +49,7 @@ export class FavouritesPage implements OnInit {
             if (data.data > 0) {
                 movie.rating = data.data;
                 this.storageService.addMovieToRating(movie);
-                this.storageService.addMovieToFavourites(movie);
+               // this.storageService.addMovieToFavourites(movie);
             }
         });
         await this.slidingList.closeSlidingItems();

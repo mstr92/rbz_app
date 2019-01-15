@@ -47,18 +47,20 @@ export class ResultparserService {
         return null;
 
     }
-
+    toUnicode(value) {
+        return "u'" + value + "'";
+    }
     buildRequestBody(search_data) {
         let body: EngineRequest = {length: search_data.length};
         if (search_data.data.movies != undefined) {
             search_data.data.movies.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_movie == undefined) body.neg_movie = [];
-                    body.neg_movie.push(entry.title);
+                    body.neg_movie.push(this.toUnicode(entry.title));
                 }
                 if (entry.alignment == Constants.POSITIVE) {
                     if (body.pos_movie == undefined) body.pos_movie = [];
-                    body.pos_movie.push(entry.title);
+                    body.pos_movie.push(this.toUnicode(entry.title));
                 }
             });
         }
@@ -66,11 +68,11 @@ export class ResultparserService {
             search_data.data.keywords.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_keyword == undefined) body.neg_keyword = [];
-                    body.neg_keyword.push(entry.name);
+                    body.neg_keyword.push(this.toUnicode(entry.name));
                 }
                 if (entry.alignment == Constants.POSITIVE) {
                     if (body.pos_keyword == undefined) body.pos_keyword = [];
-                    body.pos_keyword.push(entry.name);
+                    body.pos_keyword.push(this.toUnicode(entry.name));
                 }
             });
         }
@@ -78,11 +80,11 @@ export class ResultparserService {
             search_data.data.genres.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_genre == undefined) body.neg_genre = [];
-                    body.neg_genre.push(entry.name);
+                    body.neg_genre.push(this.toUnicode(entry.name));
                 }
                 if (entry.alignment == Constants.POSITIVE) {
                     if (body.pos_genre == undefined) body.pos_genre = [];
-                    body.pos_genre.push(entry.name);
+                    body.pos_genre.push(this.toUnicode(entry.name));
                 }
             });
         }
@@ -90,11 +92,11 @@ export class ResultparserService {
             search_data.data.actors.forEach(entry => {
                 if (entry.alignment == Constants.NEGATIVE) {
                     if (body.neg_actor == undefined) body.neg_actor = [];
-                    body.neg_actor.push(entry.firstname + ' ' + entry.lastname);
+                    body.neg_actor.push(this.toUnicode( entry.firstname + ' ' + entry.lastname));
                 }
                 if (entry.alignment == Constants.POSITIVE) {
                     if (body.pos_actor == undefined) body.pos_actor = [];
-                    body.pos_actor.push(entry.firstname + ' ' + entry.lastname);
+                    body.pos_actor.push(this.toUnicode( entry.firstname + ' ' + entry.lastname));
                 }
             });
         }

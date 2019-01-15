@@ -18,6 +18,7 @@ ion-img {
 ion-card-content {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
 
 ion-card-header {
@@ -40,8 +41,8 @@ ion-card-title {
 
 .inner-card > ion-card-content {
   padding: 0;
-  font-size: 1em;
-  width: 18em;
+  //font-size: 1em;
+  //width: 18em;
   background-color: var(--ion-background-color-card)
   //background-color: var(--ion-color-dark);
 }
@@ -89,17 +90,6 @@ ion-avatar {
 }
 .time {
   font-size: 0.8em;
-}
-.title {
-  text-align: start;
-  font-weight: bold;
-  padding-left: 1.6em;
-  padding-right: 1em;
-  vertical-align:middle;
-  position:absolute;
-  left: 3em;
-  top: 50%;
-  transform: translateY(-50%);
 }
 .repeat-request{
  // float: right;
@@ -189,4 +179,61 @@ ion-footer {
   position: fixed;
   width: 100%;
   z-index: 99;
+}
+.slide-card {
+  height: 10em;
+  width: 10em;
+}
+.poster {
+  height: 4em;
+  object-fit: cover;
+}
+.title {
+  margin: 0;
+  font-weight: bold;
+}
+.favourite {
+  //position: absolute;
+  font-size: 25px;
+  //bottom: 2px;
+  //left: 2px;
+  color: var(--ion-color-danger)
+}
+.vote {
+  //position: absolute;
+  height: 25px;
+  //bottom: 2px;
+  //left: 2.2em;
+}
+.rating {
+  //position: absolute;
+  font-size: 25px;
+  //bottom: 5px;
+  //left: 35%;
+}
+.active {
+  color: var(--ion-color-warning)
+}
+.inactive {
+  color: var(--ion-background-color-dark)
+}
+.rating-info {
+  //position: absolute;
+  //bottom: 5px;
+  //left: 3.85em;
+  font-weight: bold;
+  font-size: 0.8em;
+  position: absolute;
+  left: 1.25em;
+  top: 0.95em;
+  z-index: 9;
+  color: black;
+}
+.slider-grid {
+  padding:0;
+  bottom: 0;
+  position: absolute;
+}
+.vote-img {
+  padding-top: 7px;
 }

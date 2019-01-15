@@ -133,8 +133,7 @@ export class MovieSearchPage implements OnInit {
                         if (entity == Constants.ACTOR) this.searchdata['search_' + Constants.ACTOR].push(MovieSearchPage.createActorArray(element, '', false));
                     }
                     if (entity == Constants.MOVIE) {
-                        console.log(this.searchdata['search_' + Constants.MOVIE])
-                        console.log(this.searchdata['search_' + Constants.MOVIE][this.searchdata['search_' + Constants.MOVIE].length-1])
+                        this.storageService.loadExternalImage(this.searchdata['search_' + Constants.MOVIE][this.searchdata['search_' + Constants.MOVIE].length-1][0], false);
                     }
                 });
 

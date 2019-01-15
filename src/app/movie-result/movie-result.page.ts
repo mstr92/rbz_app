@@ -65,13 +65,8 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     // Set Data
     //----------------------------------
     setData() {
-        console.log('Set Data!!');
-        console.log(this.helperService.movie_result_to_display);
         this.movies = this.helperService.movie_result_to_display;
         if (this.movies != null) {
-            // if (!this.helperService.movie_from_history) {
-                // this.storageService.loadImages(this.movies.result);
-            // }
             this.movies.result.forEach(movie => {
                 this.movie_vote_map[movie.id] = movie.vote == undefined;
             });
@@ -123,7 +118,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
             this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
         } else {
             this.storageService.addMovieToFavourites(movie);
-            this.storageService.addMovieToRating(movie, true);
+           // this.storageService.addMovieToRating(movie, true);
         }
         //Hack to refresh Page after click
         movie.favourite = !movie.favourite;
@@ -136,7 +131,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     setRating(rating, movie) {
         movie.rating = rating;
         this.storageService.addMovieToRating(movie);
-        this.storageService.addMovieToFavourites(movie, true);
+      //  this.storageService.addMovieToFavourites(movie, true);
     }
 
     disableFavourite(movie) {

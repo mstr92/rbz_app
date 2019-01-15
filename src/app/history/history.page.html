@@ -54,7 +54,7 @@
                     <ion-item>
                         <ion-card-header>
                             <ion-card-title tappable
-                                    (click)="!filter_enabled?openSelectedHistory(element.timestamp, element.result.result):''">
+                                            (click)="!filter_enabled?openSelectedHistory(element.timestamp, element.result.result):''">
                                 <div class="date">
                                     <ion-icon name="calendar"></ion-icon>
                                     {{element.timestamp| date:'dd. MMMM yyyy'}}
@@ -136,12 +136,25 @@
                 <div class="small-header">Recommendation</div>
                 <ion-slides id="slides" pager="false" [options]="slideOpts">
                     <ion-slide *ngFor="let elem of element.result.result">
-                        <ion-card class="inner-card">
+                        <ion-card class="slide-card">
                             <ion-card-content>
-                                <ion-avatar>
-                                    <img src="{{elem.image}}">
-                                </ion-avatar>
-                                <div class="title">{{elem.title}} ({{elem.year}})</div>
+                                <img class="poster" src="{{elem.image}}">
+                                <ion-label class="title">{{elem.title}}</ion-label>
+                                <h3>{{elem.year}}</h3>
+                                    <ion-grid class="slider-grid">
+                                        <ion-row>
+                                            <ion-col size="4" >
+                                                <ion-icon class="favourite" [name]="elem.favourite ? 'heart' : 'heart-empty'"></ion-icon>
+                                            </ion-col>
+                                            <ion-col size="4">
+                                                <div class="rating-info">{{elem.rating}}</div>
+                                                <ion-icon [class]="elem.rating > 0 || elem.rating != undefined? 'rating active':'rating inactive'" name="star"></ion-icon>
+                                            </ion-col >
+                                            <ion-col size="4">
+                                                <img class="vote" [src]="elem.vote != undefined || elem.vote > 0?'../../assets/image/rating/'+elem.vote+'_full.svg': '../../assets/image/rating/inactive.svg'">
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
                             </ion-card-content>
                         </ion-card>
                     </ion-slide>
@@ -168,4 +181,97 @@
         </ion-button>
     </ion-footer>
 </ion-content>
+
+
+        <!--<ion-card class="outer-class">-->
+            <!--<ion-list #slidingList>-->
+                <!--<ion-item-sliding>-->
+                    <!--<ion-item>-->
+                        <!--<ion-card-header>-->
+                            <!--<ion-card-title>-->
+                                <!--<div class="date">-->
+                                    <!--<ion-icon name="calendar"></ion-icon>-->
+                                    <!--testest-->
+                                <!--</div>-->
+                                <!--<div class="time">-->
+                                    <!--<ion-icon name="time"></ion-icon>-->
+                                    <!--etsetstes-->
+                                <!--</div>-->
+                                <!--<ion-icon></ion-icon>-->
+                            <!--</ion-card-title>-->
+                        <!--</ion-card-header>-->
+                    <!--</ion-item>-->
+                    <!--<ion-item-options>-->
+                        <!--<ion-item-option color="danger">-->
+                            <!--<ion-icon name="trash"></ion-icon>-->
+                            <!--Delete-->
+                        <!--</ion-item-option>-->
+                    <!--</ion-item-options>-->
+                <!--</ion-item-sliding>-->
+            <!--</ion-list>-->
+            <!--<ion-card-content class="result-content">-->
+                <!--<div class="small-header">Recommendation</div>-->
+                <!--<ion-slides pager="false" [options]="slideOpts">-->
+                    <!--<ion-slide>-->
+                        <!--<ion-card class="slide-card">-->
+                            <!--<ion-card-content>-->
+                                <!--<img class="poster" src="../../assets/image/theraid.jpg">-->
+                                <!--<ion-label class="title">testasdfasf</ion-label>-->
+                                <!--<h3>2016</h3>-->
+                               <!--<ion-grid class="slider-grid">-->
+                                   <!--<ion-row>-->
+                                       <!--<ion-col size="4"  align-self-start>  <ion-icon class="favourite" [name]="'heart'"></ion-icon></ion-col>-->
+                                       <!--<ion-col size="4" align-self-center >-->
+                                           <!--<div class="rating-info">4</div>-->
+                                           <!--<ion-icon class="rating" name="star"></ion-icon></ion-col>-->
+                                       <!--<ion-col size="4" class="vote-img"> <img class="vote" src="../../assets/image/rating/1_full.svg"></ion-col>-->
+                                   <!--</ion-row>-->
+                               <!--</ion-grid>-->
+                            <!--</ion-card-content>-->
+                        <!--</ion-card>-->
+
+                    <!--</ion-slide>-->
+                    <!--<ion-slide>-->
+                        <!--<ion-card>-->
+                            <!--<ion-card-content>-->
+                                <!--<ion-avatar>-->
+                                    <!--<img src="../../assets/image/theraid.jpg">-->
+                                <!--</ion-avatar>-->
+                                <!--<div>Test lalalalala(2016)</div>-->
+                            <!--</ion-card-content>-->
+                        <!--</ion-card>-->
+                    <!--</ion-slide>-->
+                    <!--<ion-slide>-->
+                        <!--<ion-card>-->
+                            <!--<ion-card-content>-->
+                                <!--<ion-avatar>-->
+                                    <!--<img src="../../assets/image/theraid.jpg">-->
+                                <!--</ion-avatar>-->
+                                <!--<div>lord of the rings: return of the real king (2016)</div>-->
+                            <!--</ion-card-content>-->
+                        <!--</ion-card>-->
+                    <!--</ion-slide>-->
+                    <!--<ion-slide>-->
+                        <!--<ion-card>-->
+                            <!--<ion-card-content>-->
+                                <!--<ion-avatar>-->
+                                    <!--<img src="../../assets/image/theraid.jpg">-->
+                                <!--</ion-avatar>-->
+                                <!--<div>Test (2016)</div>-->
+                            <!--</ion-card-content>-->
+                        <!--</ion-card>-->
+                    <!--</ion-slide>-->
+                <!--</ion-slides>-->
+            <!--</ion-card-content>-->
+        <!--</ion-card>-->
+<!--<div [class]="!disableShowMore?'entry-text button-displayed':'entry-text'">Displayed entries:-->
+    <!--{{show_entries_size}} of {{total_history_entries}}-->
+<!--</div>-->
+<!--</div>-->
+<!--<ion-footer>-->
+    <!--<ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()"-->
+                <!--class="show-more-btn">Show More-->
+    <!--</ion-button>-->
+<!--</ion-footer>-->
+<!--</ion-content>-->
 
