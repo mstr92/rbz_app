@@ -1,21 +1,21 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {CompleteMovieSearchRequest, MovieHistory, MovieResult, PartialMovieSearchRequest} from '../../interfaces/movieInterface';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MovieHistory} from '../../interfaces/movieInterface';
 import {StorageService} from '../../service/storage/storage.service';
 import {HelperService} from '../../service/helper/helper.service';
 import {NavController} from '@ionic/angular';
-import {Constants} from '../../service/constants';
+import {ConstantsService} from '../../service/constants/constants.service';
 
 @Component({
     selector: 'app-history',
     templateUrl: './history.page.html',
     styleUrls: ['./history.page.scss'],
 })
-export class HistoryPage implements OnInit, AfterViewChecked {
+export class HistoryPage implements OnInit {
 
     slideOpts = {
         slidesPerView: 3.2,
-        // slidesPerColumn: 2
     };
+
     close_map: Map<string, string> = new Map<string, string>();
     currentDate;
     from_year;
@@ -32,7 +32,7 @@ export class HistoryPage implements OnInit, AfterViewChecked {
     @ViewChild('slidingList') slidingList;
 
     constructor(public storageService: StorageService, public helperService: HelperService,
-                public navController: NavController) {
+                public navController: NavController, public constantsService:ConstantsService) {
         this.currentDate = new Date();
 
         this.from_year = this.currentDate;
@@ -44,11 +44,6 @@ export class HistoryPage implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.setData(this.show_entries_size);
-    }
-    ngAfterViewChecked() {
-
-
-
     }
 
     openSelectedHistory(timestamp, result_movies) {
@@ -107,7 +102,7 @@ export class HistoryPage implements OnInit, AfterViewChecked {
 
     async deleteHistoryEntry(history) {
         this.movieHistoryArray = this.helperService.arrayRemoveByTimestamp(this.movieHistoryArray, history);
-        this.storageService.deleteEntry(history, Constants.MOVIE_HISTORY);
+        this.storageService.deleteEntry(history, this.constantsService.constants.MOVIE_HISTORY);
         this.show_entries_size = this.show_entries_size - 1;
         this.total_history_entries = this.total_history_entries - 1;
         await this.slidingList.closeSlidingItems();

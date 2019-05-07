@@ -1,9 +1,7 @@
-import {Component, OnChanges} from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {HelperService} from '../../service/helper/helper.service';
-import {MovieResult} from '../../interfaces/movieInterface';
-import {ApiService} from '../../service/apicalls/api.service';
-import {ResultparserService} from '../../service/resultparser/resultparser.service';
+import {ConstantsService} from '../../service/constants/constants.service';
 
 @Component({
     selector: 'app-home',
@@ -12,7 +10,7 @@ import {ResultparserService} from '../../service/resultparser/resultparser.servi
 })
 export class HomePage{
 
-    constructor(public navCtrl: NavController, public helperService: HelperService) {
+    constructor(public navCtrl: NavController, public helperService: HelperService, public constantsService:ConstantsService) {
     }
 
     goToMovies() {

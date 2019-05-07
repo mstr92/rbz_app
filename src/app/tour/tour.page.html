@@ -1,0 +1,36 @@
+<ion-slides style="background: black" id="slides" pager >
+    <ion-slide class="slide1">
+        <h1>Welcome to</h1>
+        <img src="../../assets/image/logo.png">
+        <h2>If you don't need the introduction tour, please press <b>SKIP</b> and <b>HAVE FUN!</b></h2>
+        <ion-label>Do not show again</ion-label>
+        <ion-checkbox [(ngModel)]="notShowAgain"></ion-checkbox>
+    </ion-slide>
+    <ion-slide class="slide2">
+        <img src="../../assets/image/help/start.png" class="img-tour">
+    </ion-slide>
+    <ion-slide class="slide5">
+        <img src="../../assets/image/help/Page2.png" class="img-tour">
+    </ion-slide>
+    <ion-slide class="slide4">
+        <img src="../../assets/image/help/Page3.png" class="img-tour">
+    </ion-slide>
+    <ion-slide class="slide4">
+        <img src="../../assets/image/help/Page4.png" class="img-tour">
+    </ion-slide>
+    <ion-slide class="slide6">
+        <h1>TIPS!</h1>
+        <h2 class="tip1">To <b>change</b> or <b>delete</b> entries, <b>slide</b> the entry to the left. <br>
+            <img src="../../assets/image/help/slide.PNG"><br><br>
+            On the search page: Multiple entries of different categories can be <b>inserted simultaneously</b>.<br> <br>
+            <b>General page options</b> can be found in the upper right corner of the page by clicking on the <ion-icon name="settings"></ion-icon> icon</h2>
+    </ion-slide>
+    <ion-slide class="slide5">
+        <h1>Congratulations!</h1>
+        <h2>You finished the introduction tour!<br>Now you are able to create your own recommendations!</h2>
+        <ion-button expand="full" (click)="skip()">Start rbz.io!</ion-button>
+    </ion-slide>
+    <ion-button class="skip-btn" (click)="skip()">SKIP</ion-button>
+</ion-slides>
+
+

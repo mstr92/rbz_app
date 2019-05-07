@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CompleteMovieSearchRequest, Movie, MovieResult, Poster} from '../../interfaces/movieInterface';
+import {CompleteMovieSearchRequest, Movie, MovieResult} from '../../interfaces/movieInterface';
 import {Subject} from 'rxjs';
 
 @Injectable({

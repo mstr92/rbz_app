@@ -21,13 +21,16 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     movie_vote_map: Map<string, boolean> = new Map<string, boolean>();
     rec_text = ['GREAT', 'GOOD', 'OKEY', 'BAD', 'HORRIBLE'];
     init_flag= false;
+    show_more = false;
 
     constructor(public storageService: StorageService, public parser: ResultparserService, public  socialSharing: SocialSharing,
                 public helperService: HelperService, public navCtrl: NavController, private apiService: ApiService, private device: Device,
                 private notificationService: NotificationService) {
         this.movies = {id: 0, result: [], timestamp: ''};
         this.helperService.setResultOnMoviePage.subscribe(() => {
+            this.show_more = true;
             this.setData();
+
         });
     }
 
@@ -36,7 +39,7 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     ngAfterViewChecked() {
-        if (!this.init_flag) {
+       if (!this.init_flag || this.show_more) {
             if (this.helperService.movie_from_history) {
                 this.movies.result.forEach(movie => {
                     movie.favourite = this.helperService.favourites.has(movie.imdb_id);
@@ -51,7 +54,8 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
                     this.storageService.loadImages(this.movies.result);
             }
             this.init_flag = true;
-        }
+            this.show_more = false;
+       }
     }
 
     ngOnDestroy() {
@@ -78,8 +82,10 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
         this.helperService.movie_request_to_pass.length += 5;
         this.notificationService.enableNotification(true);
         this.parser.sendRequestToEngineShowMore(this.helperService.movie_request_to_pass, this.movies.timestamp).then(isDataSet => {
-            if (isDataSet)
+            if (isDataSet) {
+                this.show_more = true;
                 this.setData();
+            }
         });
     }
 
@@ -118,7 +124,6 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
             this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
         } else {
             this.storageService.addMovieToFavourites(movie);
-           // this.storageService.addMovieToRating(movie, true);
         }
         //Hack to refresh Page after click
         movie.favourite = !movie.favourite;
@@ -131,7 +136,6 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     setRating(rating, movie) {
         movie.rating = rating;
         this.storageService.addMovieToRating(movie);
-      //  this.storageService.addMovieToFavourites(movie, true);
     }
 
     disableFavourite(movie) {
@@ -194,10 +198,6 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     //----------------------------------
     // Show details
     //----------------------------------
-    openFullPoster() {
-        event.srcElement.className = event.srcElement.className === 'poster small' ? 'poster full' : 'poster small';
-    }
-
     openImdb(movie) {
         window.open('https://www.imdb.com/title/' + movie.imdb_id, '_system');
     }
@@ -209,9 +209,4 @@ export class MovieResultPage implements OnInit, OnDestroy, AfterViewChecked {
     openYoutube(movie) {
         window.open('  https://www.youtube.com/results?search_query=' + movie.title + '+' + movie.year + '+trailer', '_system');
     }
-
-    trackByFct(index, item) {
-        return index;
-    }
-
 }

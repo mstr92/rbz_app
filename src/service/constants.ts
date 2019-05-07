@@ -38,7 +38,37 @@ export enum Constants {
     ERROR_PASSWORD_INVALID = "Invalid password",
     ERROR_PASSWORD_WRONG = "Wrong Password",
     ERROR_MAIL_PATTERN = "Email address does not match pattern",
-    ERROR_PASSWORD_USERNAME = "Wrong Username or Password"
+    ERROR_PASSWORD_USERNAME = "Wrong Username or Password",
+
+    BTN_CANCEL = "Cancel",
+    BTN_SAVE = "Save",
+    BTN_DELETE = "Delete",
+    BTN_SHOW_MORE = "Show More",
+    //Pages
+    FAVOURITE_HEADER = "My Favourites",
+    HOME_HEADER = "Home",
+    HISTORY_HEADER ="History",
+    MOVIE_QUERY_HEADER = "Movies",
+
+    HISTORY_FILTER_WEEK = "Last Week",
+    HISTORY_FILTER_MONTH = "Last Month",
+    HISTORY_FILTER_YEAR = "Last Year",
+    HISTORY_FILTER_FROM = "FROM",
+    HISTORY_FILTER_TO = "TO",
+    HISTORY_REQUEST = "Request",
+    HISTORY_MOVIE = "Movie",
+    HISTORY_ACTOR = "Actor",
+    HISTORY_GENRE = "Genre",
+    HISTORY_KEYWORD = "Keyword",
+    HISTORY_YEAR = "Year",
+    HISTORY_NUMBER_OF_RESULT = "Number of Results",
+    HISTORY_RECOMMENDATION = "Recommendation",
+
+    HOME_MOVIES =  "Movies",
+    HOME_BOARD_GAMES = "Board Games",
+    HOME_VIDEO_GAMES = "Video Games",
+
+
 
 
 }

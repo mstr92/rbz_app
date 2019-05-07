@@ -37,23 +37,23 @@
             <ion-list>
                 <ion-item tappable lines="inset" *ngFor="let entry of searchdata.search_movie; trackBy: trackByMovie"
                           (click)="addToList('movie', entry[0].id)">
-                    <ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="true"
-                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
-                    </ion-checkbox>
-                    <ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"
-                                  checked="false"
-                                  [style.backgroundImage]="'url('+ entry[0].image +')'">
-                    </ion-checkbox>
-                    <ion-label>
-                        <h2>{{entry[0].title}}</h2>
-                        <h3>{{entry[0].year}}</h3>
-                    </ion-label>
-                    <!--<ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>-->
-                    <!--<ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>-->
+                    <!--<ion-checkbox *ngIf="entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment" checked="true"-->
+                                  <!--[style.backgroundImage]="'url('+ entry[0].image +')'">-->
+                    <!--</ion-checkbox>-->
+                    <!--<ion-checkbox *ngIf="!entry[1]" [class]="'movie-checkbox movie-' + entry[0].alignment"-->
+                                  <!--checked="false"-->
+                                  <!--[style.backgroundImage]="'url('+ entry[0].image +')'">-->
+                    <!--</ion-checkbox>-->
                     <!--<ion-label>-->
-                    <!--<h2>{{entry[0].title}}</h2>-->
-                    <!--<h3>{{entry[0].year}}</h3>-->
+                        <!--<h2>{{entry[0].title}}</h2>-->
+                        <!--<h3>{{entry[0].year}}</h3>-->
                     <!--</ion-label>-->
+                    <ion-checkbox *ngIf="entry[1]" [class]="entry[0].alignment" checked="true"></ion-checkbox>
+                    <ion-checkbox *ngIf="!entry[1]" [class]="entry[0].alignment" checked="false"></ion-checkbox>
+                    <ion-label>
+                    <h2>{{entry[0].title}}</h2>
+                    <h3>{{entry[0].year}}</h3>
+                    </ion-label>
                 </ion-item>
             </ion-list>
         </ion-card-content>

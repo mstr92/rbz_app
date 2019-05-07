@@ -45,15 +45,10 @@ export interface CompleteMovieSearchRequest {
     data: PartialMovieSearchRequest;
     length: number;
 }
-
 export interface MovieResult {
     id: number,
     timestamp: string;
     result: Array<Movie>
-}
-export interface Poster {
-    imdb_id: string;
-    poster: string;
 }
 export interface MovieHistory {
     timestamp: string;

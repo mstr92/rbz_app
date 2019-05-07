@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NavParams, PopoverController} from '@ionic/angular';
+import {ConstantsService} from '../../service/constants/constants.service';
+
 
 @Component({
   selector: 'app-change-rating',
@@ -8,7 +10,7 @@ import {NavParams, PopoverController} from '@ionic/angular';
 })
 export class ChangeRatingComponent implements OnInit {
   rating = 0;
-  constructor(public navParams:NavParams, public popoverController:PopoverController) {
+  constructor(public navParams:NavParams, public popoverController:PopoverController, public constantsService: ConstantsService) {
     this.rating = this.navParams.get('rating');
   }
 

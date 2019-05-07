@@ -262,13 +262,13 @@ export class SettingsPage implements OnInit {
     //---------------------------------------------------------
     async confirmDeleteStorage(entity) {
         const alert = await this.alertController.create({
-            header: entity == 'full' ?
+            header: entity != 'full' ?
                 'Delete ' + entity:
                 'Reset Storage',
-            message: entity == 'full' ?
+            message: entity != 'full' ?
                 'Are you sure to delete <strong>all</strong> entries? You can not undo this anymore':
-                'Are you sure to delete the complete storage? >After that a restart of the app is required,' +
-                'otherwise the app won\'t work anymore! ',
+                'Are you sure to delete the <strong>complete storage</strong>? After that, a restart of the app is required.' +
+                'Otherwise the app won\'t work anymore! ',
             buttons: [
                 {
                     text: 'Cancel',

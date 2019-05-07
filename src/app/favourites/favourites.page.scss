@@ -72,9 +72,11 @@ padding-bottom: 1em;
 }
 .active {
   color: var(--ion-color-warning);
+  visibility: visible;
 }
 .inactive {
   color: var( --ion-background-color-dark);
+  visibility: visible;
 }
 .item-rating {
   position: absolute;

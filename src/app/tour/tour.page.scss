@@ -1,0 +1,96 @@
+ion-slides {
+  height: 100%;
+}
+ion-slide {
+  background-image: url("../../assets/image/background.png");
+  background-size: cover;
+}
+.slide1 > h1 {
+  position:absolute;
+  top:10%;
+  font-size: 2.5em;
+}
+.slide1 > img {
+  position: absolute;
+  top: 25%;
+  height:40%;
+}
+.slide1 > h2 {
+  position:absolute;
+  bottom: 20%;
+  font-size: 1.1em;
+  padding: 1em;
+}
+.slide1 > ion-checkbox {
+  position: absolute;
+  bottom: 4%;
+  left: 3%;
+  --background: var(--ion-background-color-light);
+  --border-color: var(--ion-background-color-light);
+}
+.slide1 > ion-label {
+  position: absolute;
+  bottom: 2.2%;
+  left: 10%;
+}
+.skip-btn {
+  position: absolute;
+  bottom: 2%;
+  right: 3%;
+}
+.slide2 > h1 {
+  position:absolute;
+  top:2%;
+  font-size: 1em;
+}
+.img-tour {
+  position: absolute;
+}
+.slide5 > h1 {
+  position:absolute;
+  top:10%;
+  font-size: 2.5em;
+}
+.slide5 > h2 {
+  position:absolute;
+  top: 37%;
+  font-size: 1.1em;
+  padding: 1em;
+}
+.slide5 > ion-button {
+  position:absolute;
+  bottom: 10%;
+  width: 90%;
+}
+
+.slide6 > h1 {
+  position:absolute;
+  top:10%;
+  font-size: 2.5em;
+}
+
+.slide6 .tip1 {
+  position: absolute;
+  top: 20%;
+  text-align: left;
+  font-size: 1em;
+  padding: 2em;
+}
+.slide6 .tip2 {
+  position: absolute;
+  top: 30%;
+  text-align: left;
+  font-size: 1em;
+  padding: 2em;
+}
+
+.slide6 .tip3 {
+  position: absolute;
+  top: 40%;
+  text-align: left;
+  font-size: 1em;
+  padding: 2em;
+}
+h2 > img {
+  border-radius: 10px;
+}

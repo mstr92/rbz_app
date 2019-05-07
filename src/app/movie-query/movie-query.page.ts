@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ModalController, NavController} from '@ionic/angular';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Item, ItemSliding, ModalController, NavController} from '@ionic/angular';
 import {MovieSearchPage} from '../movie-search/movie-search.page';
 import {CompleteMovieSearchRequest, PartialMovieSearchRequest, Movie, Year} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
 import {Constants} from '../../service/constants';
-import {ApiService} from '../../service/apicalls/api.service';
 import {ResultparserService} from '../../service/resultparser/resultparser.service';
 import {StorageService} from '../../service/storage/storage.service';
+import {ConstantsService} from '../../service/constants/constants.service';
 
 @Component({
     selector: 'app-movie-query',
@@ -34,7 +34,8 @@ export class MovieQueryPage implements OnInit {
                 public navCtrl: NavController,
                 public helperService: HelperService,
                 public parser: ResultparserService,
-                public storageService: StorageService) {
+                public storageService: StorageService,
+                public constantsService:ConstantsService) {
         if(this.helperService.movie_from_history) {
             this.show_from_history = true;
             this.helperService.movie_from_history = false;
@@ -144,4 +145,5 @@ export class MovieQueryPage implements OnInit {
         this.year_neg = {upper: Constants.MAX_YEAR, lower: Constants.MIN_YEAR};
         this.number_results = 10;
     }
+
 }

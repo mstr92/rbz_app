@@ -4,7 +4,7 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-            History
+            {{constantsService.constants.HISTORY_HEADER}}
         </ion-title>
     </ion-toolbar>
     <ion-fab #fab vertical="top" horizontal="end" edge=true>
@@ -14,14 +14,14 @@
     </ion-fab>
 </ion-header>
 <div class="filter-section" *ngIf="filter_enabled">
-    <ion-button expand="block" (click)="setDate('week')">Last Week</ion-button>
-    <ion-button expand="block" (click)="setDate('month')">Last Month</ion-button>
-    <ion-button expand="block" (click)="setDate('year')">Last Year</ion-button>
+    <ion-button expand="block" (click)="setDate('week')">{{constantsService.constants.HISTORY_FILTER_WEEK}}</ion-button>
+    <ion-button expand="block" (click)="setDate('month')">{{constantsService.constants.HISTORY_FILTER_MONTH}}</ion-button>
+    <ion-button expand="block" (click)="setDate('year')">{{constantsService.constants.HISTORY_FILTER_YEAR}}</ion-button>
 
     <ion-grid class="filter-grid">
         <ion-row class="filter-row">
             <ion-col size="4" class="col-text" align-self-center>
-                FROM:
+                {{constantsService.constants.HISTORY_FILTER_FROM}}:
             </ion-col>
             <ion-col size="8" align-self-center>
                 <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max"
@@ -31,7 +31,7 @@
         </ion-row>
         <ion-row class="filter-row">
             <ion-col size="4" class="col-text" align-self-center>
-                TO:
+                {{constantsService.constants.HISTORY_FILTER_TO}}:
             </ion-col>
             <ion-col size="8" align-self-center>
                 <ion-datetime id="test" displayFormat="DD/MM/YYYY" pickerFormat="DD/MMMM/YYYY" [min]="min" [max]="max"
@@ -71,16 +71,16 @@
                     <ion-item-options>
                         <ion-item-option color="danger" (click)="deleteHistoryEntry(element)">
                             <ion-icon name="trash"></ion-icon>
-                            Delete
+                            {{constantsService.constants.BTN_DELETE}}
                         </ion-item-option>
                     </ion-item-options>
                 </ion-item-sliding>
             </ion-list>
             <ion-card-content *ngIf="!close_map[element.timestamp]">
-                <div class="small-header">Request</div>
+                <div class="small-header">{{constantsService.constants.HISTORY_REQUEST}}</div>
                 <ion-grid>
                     <ion-row *ngIf="element.request.data.movies.length > 0">
-                        <ion-col size="4" class="col-header">Movie:</ion-col>
+                        <ion-col size="4" class="col-header">{{constantsService.constants.HISTORY_MOVIE}}:</ion-col>
                         <ion-col size="8">
                             <a *ngFor="let movie of element.request.data.movies, let i = index"
                                class="{{movie.alignment}}">{{movie.title}}
@@ -89,7 +89,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row *ngIf="element.request.data.actors.length > 0">
-                        <ion-col size="4" class="col-header">Actor:</ion-col>
+                        <ion-col size="4" class="col-header">  {{constantsService.constants.HISTORY_ACTOR}}:</ion-col>
                         <ion-col size="8">
                             <a *ngFor="let actor of element.request.data.actors, let i = index"
                                class="{{actor.alignment}}">{{actor.firstname}}&nbsp;{{actor.lastname}}
@@ -98,7 +98,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row *ngIf="element.request.data.genres.length > 0">
-                        <ion-col size="4" class="col-header">Genre:</ion-col>
+                        <ion-col size="4" class="col-header">{{constantsService.constants.HISTORY_GENRE}}:</ion-col>
                         <ion-col size="8">
                             <a *ngFor="let genre of element.request.data.genres, let i = index"
                                class="{{genre.alignment}}">{{genre.name}}
@@ -107,7 +107,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row *ngIf="element.request.data.keywords.length > 0">
-                        <ion-col size="4" class="col-header">Keyword:</ion-col>
+                        <ion-col size="4" class="col-header">{{constantsService.constants.HISTORY_KEYWORD}}:</ion-col>
                         <ion-col size="8">
                             <a *ngFor="let keyword of element.request.data.keywords, let i = index"
                                class="{{keyword.alignment}}">{{keyword.name}}
@@ -116,7 +116,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row *ngIf="element.request.data.timeperiod.length > 0">
-                        <ion-col size="4" class="col-header">Year:</ion-col>
+                        <ion-col size="4" class="col-header">{{constantsService.constants.HISTORY_YEAR}}:</ion-col>
                         <ion-col size="8">
                             <a *ngFor="let year of element.request.data.timeperiod, let i = index"
                                class="{{year.alignment}}">{{year.from}} - {{year.to}}
@@ -125,7 +125,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col size="4" class="col-header">Number of Results:</ion-col>
+                        <ion-col size="4" class="col-header">{{constantsService.constants.HISTORY_NUMBER_OF_RESULT}}:</ion-col>
                         <ion-col size="6">
                             {{element.request.length}}
                         </ion-col>
@@ -133,7 +133,7 @@
                 </ion-grid>
             </ion-card-content>
             <ion-card-content class="result-content" *ngIf="!close_map[element.timestamp]">
-                <div class="small-header">Recommendation</div>
+                <div class="small-header">{{constantsService.constants.HISTORY_RECOMMENDATION}}</div>
                 <ion-slides id="slides" pager="false" [options]="slideOpts">
                     <ion-slide *ngFor="let elem of element.result.result">
                         <ion-card class="slide-card">
@@ -177,101 +177,7 @@
     </div>
     <ion-footer>
         <ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()"
-                    class="show-more-btn">Show More
+                    class="show-more-btn">{{constantsService.constants.BTN_SHOW_MORE}}
         </ion-button>
     </ion-footer>
 </ion-content>
-
-
-        <!--<ion-card class="outer-class">-->
-            <!--<ion-list #slidingList>-->
-                <!--<ion-item-sliding>-->
-                    <!--<ion-item>-->
-                        <!--<ion-card-header>-->
-                            <!--<ion-card-title>-->
-                                <!--<div class="date">-->
-                                    <!--<ion-icon name="calendar"></ion-icon>-->
-                                    <!--testest-->
-                                <!--</div>-->
-                                <!--<div class="time">-->
-                                    <!--<ion-icon name="time"></ion-icon>-->
-                                    <!--etsetstes-->
-                                <!--</div>-->
-                                <!--<ion-icon></ion-icon>-->
-                            <!--</ion-card-title>-->
-                        <!--</ion-card-header>-->
-                    <!--</ion-item>-->
-                    <!--<ion-item-options>-->
-                        <!--<ion-item-option color="danger">-->
-                            <!--<ion-icon name="trash"></ion-icon>-->
-                            <!--Delete-->
-                        <!--</ion-item-option>-->
-                    <!--</ion-item-options>-->
-                <!--</ion-item-sliding>-->
-            <!--</ion-list>-->
-            <!--<ion-card-content class="result-content">-->
-                <!--<div class="small-header">Recommendation</div>-->
-                <!--<ion-slides pager="false" [options]="slideOpts">-->
-                    <!--<ion-slide>-->
-                        <!--<ion-card class="slide-card">-->
-                            <!--<ion-card-content>-->
-                                <!--<img class="poster" src="../../assets/image/theraid.jpg">-->
-                                <!--<ion-label class="title">testasdfasf</ion-label>-->
-                                <!--<h3>2016</h3>-->
-                               <!--<ion-grid class="slider-grid">-->
-                                   <!--<ion-row>-->
-                                       <!--<ion-col size="4"  align-self-start>  <ion-icon class="favourite" [name]="'heart'"></ion-icon></ion-col>-->
-                                       <!--<ion-col size="4" align-self-center >-->
-                                           <!--<div class="rating-info">4</div>-->
-                                           <!--<ion-icon class="rating" name="star"></ion-icon></ion-col>-->
-                                       <!--<ion-col size="4" class="vote-img"> <img class="vote" src="../../assets/image/rating/1_full.svg"></ion-col>-->
-                                   <!--</ion-row>-->
-                               <!--</ion-grid>-->
-                            <!--</ion-card-content>-->
-                        <!--</ion-card>-->
-
-                    <!--</ion-slide>-->
-                    <!--<ion-slide>-->
-                        <!--<ion-card>-->
-                            <!--<ion-card-content>-->
-                                <!--<ion-avatar>-->
-                                    <!--<img src="../../assets/image/theraid.jpg">-->
-                                <!--</ion-avatar>-->
-                                <!--<div>Test lalalalala(2016)</div>-->
-                            <!--</ion-card-content>-->
-                        <!--</ion-card>-->
-                    <!--</ion-slide>-->
-                    <!--<ion-slide>-->
-                        <!--<ion-card>-->
-                            <!--<ion-card-content>-->
-                                <!--<ion-avatar>-->
-                                    <!--<img src="../../assets/image/theraid.jpg">-->
-                                <!--</ion-avatar>-->
-                                <!--<div>lord of the rings: return of the real king (2016)</div>-->
-                            <!--</ion-card-content>-->
-                        <!--</ion-card>-->
-                    <!--</ion-slide>-->
-                    <!--<ion-slide>-->
-                        <!--<ion-card>-->
-                            <!--<ion-card-content>-->
-                                <!--<ion-avatar>-->
-                                    <!--<img src="../../assets/image/theraid.jpg">-->
-                                <!--</ion-avatar>-->
-                                <!--<div>Test (2016)</div>-->
-                            <!--</ion-card-content>-->
-                        <!--</ion-card>-->
-                    <!--</ion-slide>-->
-                <!--</ion-slides>-->
-            <!--</ion-card-content>-->
-        <!--</ion-card>-->
-<!--<div [class]="!disableShowMore?'entry-text button-displayed':'entry-text'">Displayed entries:-->
-    <!--{{show_entries_size}} of {{total_history_entries}}-->
-<!--</div>-->
-<!--</div>-->
-<!--<ion-footer>-->
-    <!--<ion-button *ngIf="!disableShowMore" [disabled]="filter_enabled" expand="full" (click)="showMore()"-->
-                <!--class="show-more-btn">Show More-->
-    <!--</ion-button>-->
-<!--</ion-footer>-->
-<!--</ion-content>-->
-

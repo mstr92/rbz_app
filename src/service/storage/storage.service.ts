@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {
     Movie,
-    MovieHistory,
-    Poster
+    MovieHistory
 } from '../../interfaces/movieInterface';
 import {ToastController} from '@ionic/angular';
 import {HelperService} from '../helper/helper.service';

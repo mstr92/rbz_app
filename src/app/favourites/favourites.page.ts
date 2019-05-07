@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {StorageService} from '../../service/storage/storage.service';
-import {Movie, Poster} from '../../interfaces/movieInterface';
+import {Movie} from '../../interfaces/movieInterface';
 import {HelperService} from '../../service/helper/helper.service';
 import {Constants} from '../../service/constants';
 import {ChangeRatingComponent} from '../change-rating/change-rating.component';
 import {PopoverController} from '@ionic/angular';
+import {ConstantsService} from '../../service/constants/constants.service';
 
 @Component({
     selector: 'app-favourites',
@@ -14,10 +15,10 @@ import {PopoverController} from '@ionic/angular';
 export class FavouritesPage implements OnInit {
 
     fav_movies_arr: Array<Movie> = [];
-    isSorted = false;
     @ViewChild('slidingList') slidingList;
 
-    constructor(public storageService: StorageService, public helperService: HelperService, private popoverController: PopoverController) {
+    constructor(public storageService: StorageService, public helperService: HelperService,
+                private popoverController: PopoverController, public constantsService: ConstantsService) {
     }
 
     ngOnInit() {
@@ -34,7 +35,7 @@ export class FavouritesPage implements OnInit {
 
     async deleteMovie(movie) {
         this.fav_movies_arr = this.helperService.arrayRemoveById(this.fav_movies_arr, movie);
-        this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
+        this.storageService.deleteMapEntry(movie, this.constantsService.constants.MOVIE_FAVOURITE);
         await this.slidingList.closeSlidingItems();
     }
     async changeRating(ev: any, star, movie) {
@@ -49,7 +50,6 @@ export class FavouritesPage implements OnInit {
             if (data.data > 0) {
                 movie.rating = data.data;
                 this.storageService.addMovieToRating(movie);
-               // this.storageService.addMovieToFavourites(movie);
             }
         });
         await this.slidingList.closeSlidingItems();

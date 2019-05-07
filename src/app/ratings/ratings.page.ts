@@ -23,6 +23,7 @@ interface Rating {
 export class RatingsPage implements OnInit {
     indexlist = [5, 4, 3, 2, 1];
     rating: Rating = {stars5: [], stars4: [], stars3: [], stars2: [], stars1: []};
+
     constructor(public storageService: StorageService, public helperService: HelperService,
                 public popoverController: PopoverController) {
     }
@@ -31,8 +32,8 @@ export class RatingsPage implements OnInit {
 
     ngOnInit() {
         if (this.helperService.ratings.size > 0) {
-            console.log(this.helperService.ratings)
-            this.helperService.ratings.forEach((value,key) => {
+            console.log(this.helperService.ratings);
+            this.helperService.ratings.forEach((value, key) => {
                 value.favourite = this.helperService.favourites.has(value.imdb_id);
                 this.rating['stars' + value.rating.toString()].push(value);
             });
@@ -67,9 +68,13 @@ export class RatingsPage implements OnInit {
         this.storageService.deleteMapEntry(movie, Constants.MOVIE_RATING);
         await this.slidingList.closeSlidingItems();
     }
-    addToFavourite(movie){
-        this.storageService.addMovieToFavourites(movie);
-       // this.storageService.addMovieToRating(movie, true);
+
+    addToFavourite(movie) {
+        if (movie.favourite) {
+            this.storageService.deleteMapEntry(movie, Constants.MOVIE_FAVOURITE);
+        } else {
+            this.storageService.addMovieToFavourites(movie);
+        }
         movie.favourite = !movie.favourite;
     }
 }

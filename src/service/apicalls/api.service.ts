@@ -46,17 +46,6 @@ export class ApiService {
             }, {'key': Constants.API_KEY},);
     }
 
-    setUserUUID(username) {
-        this.http.setSSLCertMode(Constants.CHECK_SSL);
-        this.http.setDataSerializer('json');
-        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/deviceId',
-            {
-                'username': username,
-                'deviceId': this.device.uuid,
-            }, {'key': Constants.API_KEY},);
-    }
-
-
     getUser(username) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
         return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/user/' + username, {}, {'key': Constants.API_KEY})
@@ -78,7 +67,8 @@ export class ApiService {
     setBackup(history, rating, favourite, user_id) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
         this.http.setDataSerializer('json');
-        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup',
+        return this.http.post(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT +
+            '/api/rbz/general/backup',
             {
                 'favourite': favourite,
                 'rating': rating,
@@ -89,7 +79,10 @@ export class ApiService {
 
     getBackup(user_id, entity) {
         this.http.setSSLCertMode(Constants.CHECK_SSL);
-        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT + '/api/rbz/general/backup/' + entity + '/' + user_id, {}, {'key': Constants.API_KEY});
+        return this.http.get(Constants.PROTOCOL + Constants.HOST + ':' + Constants.PORT +
+            '/api/rbz/general/backup/' + entity + '/' + user_id,
+            {},
+            {'key': Constants.API_KEY});
     }
 
     getBackupLastDate(user_id) {

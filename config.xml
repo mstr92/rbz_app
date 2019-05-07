@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>rbz.io</name>
-    <description>An recommendation app for movies, board games and video games.</description>
+    <description>A recommendation app for movies, board games and video games.</description>
     <author email="herbert.fuchs@student.tugraz.at" href="">Herbert Fuchs</author>
     <content src="index.html" />
     <access origin="*" />

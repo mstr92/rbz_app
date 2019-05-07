@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      {{constantsService.constants.HOME_HEADER}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,7 +18,7 @@
     <div class="info-text result-info-waiting" *ngIf="helperService.result_show_more">Waiting<br>Show More!</div>
     <ion-img src="assets/image/movie.jpg" class="card-image"></ion-img>
     <ion-icon name="ios-videocam" class="card-subtitle"></ion-icon>
-    <div class="card-title">Movies</div>
+    <div class="card-title">{{constantsService.constants.HOME_MOVIES}}</div>
   </ion-card>
 
   <ion-card tappable class="video-games">
@@ -26,7 +26,7 @@
     <div class="info-text coming-soon-text">Coming<br>Soon!</div>
     <ion-img src="assets/image/video_games.jpg" class="card-image" ></ion-img>
     <ion-icon name="easel" class="card-subtitle"></ion-icon>
-    <div class="card-title">Video Games</div>
+    <div class="card-title">{{constantsService.constants.HOME_VIDEO_GAMES}}</div>
   </ion-card>
 
   <ion-card tappable class="animated infinite bounce delay-2s">
@@ -34,7 +34,7 @@
     <div class="info-text coming-soon-text">Coming<br>Soon!</div>
     <ion-img src="assets/image/board_games.jpg" class="card-image" ></ion-img>
     <ion-icon name="people" class="card-subtitle"></ion-icon>
-    <div class="card-title">Board Games</div>
+    <div class="card-title">{{constantsService.constants.HOME_BOARD_GAMES}}</div>
   </ion-card>
   <div id="refresh_page"></div>
 </ion-content>

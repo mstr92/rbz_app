@@ -4,7 +4,7 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-            Movies
+            {{constantsService.constants.MOVIE_QUERY_HEADER}}
         </ion-title>
         <ion-buttons slot="end" *ngIf="show_from_history">
             <ion-back-button defaultHref="/history" text=""></ion-back-button>
@@ -45,7 +45,7 @@
         <ion-card-content *ngIf="search_data.data.movies.length == 0" class="information-item">
             <ion-item>
                 <ion-icon name="information-circle-outline"></ion-icon>
-                <ion-label class="information"> No Movie selected!</ion-label>
+                <ion-label class="information">No Movie selected!</ion-label>
             </ion-item>
         </ion-card-content>
         <ion-card-content *ngIf="search_data.data.movies.length > 0"
@@ -72,7 +72,7 @@
                     <ion-item-options side="end">
                         <ion-item-option color="secondary" (click)="changeAlignment(entry,'movies')">
                             <ion-icon name="md-swap"></ion-icon>
-                            {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+                            {{entry.alignment === 'positive' ? 'Dislike' : 'Like'}}
                         </ion-item-option>
                         <ion-item-option color="danger" (click)="deleteEntry(entry, 'movies')">
                             <ion-icon name="trash"></ion-icon>
@@ -124,7 +124,7 @@
                     <ion-item-options side="end">
                         <ion-item-option color="secondary" (click)="changeAlignment(entry,'actors')">
                             <ion-icon name="md-swap"></ion-icon>
-                            {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+                            {{entry.alignment === 'positive' ? 'Dislike' : 'Like'}}
                         </ion-item-option>
                         <ion-item-option color="danger" (click)="deleteEntry(entry, 'actors')">
                             <ion-icon name="trash"></ion-icon>
@@ -176,7 +176,7 @@
                     <ion-item-options side="end">
                         <ion-item-option color="secondary" (click)="changeAlignment(entry,'search_genres')">
                             <ion-icon name="md-swap"></ion-icon>
-                            {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+                            {{entry.alignment === 'positive' ? 'Dislike' : 'Like'}}
                         </ion-item-option>
                         <ion-item-option color="danger" (click)="deleteEntry(entry, 'search_genres')">
                             <ion-icon name="trash"></ion-icon>
@@ -228,7 +228,7 @@
                     <ion-item-options side="end">
                         <ion-item-option color="secondary" (click)="changeAlignment(entry,'keywords')">
                             <ion-icon name="md-swap"></ion-icon>
-                            {{entry.alignment === 'positive' ? 'Negative' : 'Positive'}}
+                            {{entry.alignment === 'positive' ? 'Dislike' : 'Like'}}
                         </ion-item-option>
                         <ion-item-option color="danger" (click)="deleteEntry(entry, 'keywords')">
                             <ion-icon name="trash"></ion-icon>
@@ -305,7 +305,7 @@
     <!------------------------------------------------------>
     <ion-card>
         <ion-card-header>
-            <ion-card-title>Number of Results
+            <ion-card-title>Number of Recommendations
             </ion-card-title>
         </ion-card-header>
         <ion-card-content>
